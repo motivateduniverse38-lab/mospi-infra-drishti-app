@@ -363,12 +363,12 @@ st.markdown(f"""
     }}
 
     /* Floating Chat Widget Positioning */
-    div[data-testid="stPopover"] {
+    div[data-testid="stPopover"] {{
         position: fixed !important;
         bottom: 24px !important;
         right: 24px !important;
         z-index: 99999 !important;
-    }
+    }}
     div[data-testid="stPopover"] > button {
         background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
