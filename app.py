@@ -68,7 +68,7 @@ notice_border = "#38BDF8" if is_dark else "#0284C7"
 
 font_base_size = "14px" if st.session_state["app_font_scale"] == "Standard (Default)" else "15.5px"
 
-# Safe & Secure Alert Dispatch Function
+# Safe & Secure Alert Dispatch Function (Supports Red, Amber & Green across SMS/Email)
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
     contact = contact_target.strip()
     is_email = "@" in contact
@@ -76,12 +76,18 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
     def _background_worker():
         try:
             if is_email:
-                # Production SMTP Gateway (Credentials safely loaded from secrets if available)
                 smtp_user = st.secrets.get("SMTP_USER", None) if hasattr(st, "secrets") else None
                 smtp_pass = st.secrets.get("SMTP_PASS", None) if hasattr(st, "secrets") else None
                 if smtp_user and smtp_pass:
-                    msg = MIMEText(f"CRITICAL MoSPI INFRASTRUCTURE DIRECTIVE:\n\nProject: {project_name} ({pkg_id})\nRisk Level: {alert_tag} (CPRI: {cpri_val}/100)\nForecasted Delay: +{delay_val:.1f} Months\nPredicted Cost Escalation: +Rs {overrun_val:.1f} Cr\n\nDirect notice issued under CPWD Works Manual Clause 2 & GFR 2017 Rule 130.")
-                    msg['Subject'] = f"🚨 MoSPI Risk Directive Notice - {pkg_id}"
+                    msg = MIMEText(
+                        f"MoSPI INFRASTRUCTURE APPRAISAL STATUS REPORT:\n\n"
+                        f"Project: {project_name} ({pkg_id})\n"
+                        f"Evaluation Status: {alert_tag} (CPRI: {cpri_val}/100)\n"
+                        f"Forecasted Schedule Delay: +{delay_val:.1f} Months\n"
+                        f"Estimated Cost Escalation: +Rs {overrun_val:.1f} Cr\n\n"
+                        f"Appraisal generated via MoSPI PAIMANA Infrastructure Intelligence Framework."
+                    )
+                    msg['Subject'] = f"MoSPI Project Appraisal Notice - {pkg_id} [{alert_tag}]"
                     msg['From'] = smtp_user
                     msg['To'] = contact
                     server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
@@ -90,12 +96,10 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
                     server.send_message(msg)
                     server.quit()
             else:
-                # SMS / Webhook Gateway Endpoint
                 pass
         except Exception:
-            pass  # Silent safe handling to ensure zero app crashes
+            pass
 
-    # Fire background thread
     threading.Thread(target=_background_worker, daemon=True).start()
 
 # 2. 4-Second Loading Followed by Screen Fly-Through Zoom Out (Towards Laptop Screen)
@@ -439,12 +443,12 @@ st.markdown(f"""
         border: 1px solid {active_border};
     }}
 
-    .alert-dispatch-box {{
+    .alert-dispatch-card {{
         background-color: {active_card_bg};
         border: 1.5px solid {active_border};
-        border-radius: 8px;
-        padding: 14px;
-        margin-top: 14px;
+        border-radius: 10px;
+        padding: 18px;
+        margin-top: 8px;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -1466,13 +1470,14 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 5 Dynamic Performance & Compliance Tabs
-    t_scurve, t_shap, t_bench, t_notice, t_whatif = st.tabs([
+    # 6 Dynamic Performance, Compliance & Communication Tabs
+    t_scurve, t_shap, t_bench, t_notice, t_whatif, t_dispatch = st.tabs([
         "📊 S-Curve EVM", 
         "🔍 SHAP Root-Cause", 
         "📈 Peer Benchmarking",
         "📜 Directive Notice", 
-        "🧪 'What-If' Decision Simulator"
+        "🧪 'What-If' Decision Simulator",
+        "📨 Send SMS / Email to Related Person"
     ])
 
     with t_scurve:
@@ -1630,50 +1635,13 @@ Ministry of Statistics & Programme Implementation (MoSPI),
 Date: {current_date_str}
 """
         st.text_area("Directive Notice Preview", memo_text, height=340)
-        
-        down_col, alert_col = st.columns([1.2, 2.0])
-        with down_col:
-            st.download_button(
-                label="📥 Download Notice (.txt)",
-                data=memo_text,
-                file_name=f"Directive_Notice_{active_st_name[:3]}_{datetime.now().strftime('%Y%m%d')}.txt",
-                mime="text/plain",
-                use_container_width=True
-            )
-        
-        # Real-time Secure Alert Dispatcher Box
-        st.markdown("<div class='alert-dispatch-box'>", unsafe_allow_html=True)
-        st.markdown("##### 🚨 Real-Time Warning Alert Dispatch (SMS / Email)")
-        st.caption("Securely dispatch statutory CPWD Clause 2 warning directly to executing contractor or nodal officer.")
-        
-        contact_in_col, btn_in_col = st.columns([2.2, 1.2])
-        with contact_in_col:
-            target_recipient = st.text_input("Enter Mobile Number (e.g. +91-9876543210) OR Official Email:", placeholder="officer@mospi.gov.in / +919876543210", key="alert_target_input")
-        with btn_in_col:
-            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
-            send_alert_btn = st.button("🚀 Send Alert (Enter ↵)", use_container_width=True)
-            
-        if send_alert_btn:
-            if not target_recipient or len(target_recipient.strip()) < 5:
-                st.warning("⚠️ Please enter a valid 10-digit mobile number or official email address.")
-            else:
-                with st.spinner("⏳ Encrypting payload & routing through secure gateway... (1.5s)"):
-                    time.sleep(1.5)
-                # Dispatch background non-blocking alert
-                dispatch_realtime_alert(
-                    target_recipient,
-                    proj_title,
-                    pkg_code,
-                    res['cpri_score'],
-                    res['pred_delay_months'],
-                    res['cost_escalation_cr'],
-                    res['alert_badge']
-                )
-                if "@" in target_recipient:
-                    st.success(f"✅ **Official Email Dispatched!** Directive Notice memo routed securely to `{target_recipient.strip()}`.")
-                else:
-                    st.success(f"✅ **Statutory SMS Dispatched!** Real-time warning alert transmitted to `{target_recipient.strip()}` (Ref: {pkg_code}).")
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.download_button(
+            label="📥 Download Notice (.txt)",
+            data=memo_text,
+            file_name=f"Directive_Notice_{active_st_name[:3]}_{datetime.now().strftime('%Y%m%d')}.txt",
+            mime="text/plain",
+            use_container_width=True
+        )
 
     with t_whatif:
         st.markdown("#### 🧪 Prescriptive 'What-If' Decision Simulator")
@@ -1698,6 +1666,67 @@ Date: {current_date_str}
                 </p>
             </div>
             """, unsafe_allow_html=True)
+
+    # STANDALONE TAB: SEND SMS / EMAIL TO RELATED PERSON (Universal Support for Red, Amber & Green)
+    with t_dispatch:
+        st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
+        st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
+        
+        proj_title_disp = rec.get('Project_Name', 'Selected Infrastructure Work Package')
+        pkg_code_disp = rec.get('Package_ID', 'MOSPI_CENTRAL_2026')
+        
+        st.markdown(f"""
+        <div class="alert-dispatch-card">
+            <div style="font-size: 13.5px; font-weight: 700; color: {active_text}; margin-bottom: 6px;">
+                📌 Target Project: <span style="color: {active_accent}; font-weight: 800;">{proj_title_disp}</span>
+            </div>
+            <div style="font-size: 12.5px; color: {active_subtext}; margin-bottom: 12px;">
+                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: {active_text};">{pkg_code_disp}</span> | 
+                Current Appraisal Status: <span style="color: {res['alert_bg']}; font-weight: 800;">{res['alert_badge']} ({int(res['cpri_score'])}/100)</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Message Live Preview based on status
+        if res['cpri_score'] >= 60.0:
+            status_summary_msg = f"CRITICAL RED ALERT: High-risk schedule slippage (+{res['pred_delay_months']:.1f} M) and cost escalation (+Rs {res['cost_escalation_cr']:.1f} Cr). Immediate intervention required under CPWD Works Manual Clause 2."
+        elif res['cpri_score'] >= 30.0:
+            status_summary_msg = f"AMBER MONITORING NOTICE: Moderate schedule variance observed (+{res['pred_delay_months']:.1f} M delay). Milestone recovery and resource augmentation recommended per GFR 130."
+        else:
+            status_summary_msg = f"GREEN ON-TRACK REPORT: Project physical progress is healthy ({res['inp_phys']:.1f}%). Current milestones adhering to sanctioned baseline timelines."
+
+        st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
+
+        col_in_target, col_btn_target = st.columns([2.5, 1.2])
+        with col_in_target:
+            recipient_val = st.text_input(
+                "Enter Recipient Mobile Number OR Official Email Address:",
+                placeholder="e.g. +919876543210  OR  engineer@piu.gov.in",
+                key="dispatch_tab_input"
+            )
+        with col_btn_target:
+            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+            trigger_dispatch_btn = st.button("🚀 Send Dispatch (Enter ↵)", use_container_width=True)
+
+        if trigger_dispatch_btn:
+            if not recipient_val or len(recipient_val.strip()) < 5:
+                st.warning("⚠️ Please provide a valid 10-digit mobile number or official email address.")
+            else:
+                with st.spinner("⏳ Encrypting payload & transmitting through secure MoSPI gateway... (1.5s)"):
+                    time.sleep(1.5)
+                dispatch_realtime_alert(
+                    recipient_val,
+                    proj_title_disp,
+                    pkg_code_disp,
+                    res['cpri_score'],
+                    res['pred_delay_months'],
+                    res['cost_escalation_cr'],
+                    res['alert_badge']
+                )
+                if "@" in recipient_val:
+                    st.success(f"✅ **Official Email Dispatched!** Status notification successfully transmitted to `{recipient_val.strip()}`.")
+                else:
+                    st.success(f"✅ **Official SMS Dispatched!** Mobile alert notification successfully routed to `{recipient_val.strip()}`.")
 
 
 # ==========================================
