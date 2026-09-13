@@ -369,7 +369,7 @@ st.markdown(f"""
         right: 24px !important;
         z-index: 99999 !important;
     }}
-    div[data-testid="stPopover"] > button {
+    div[data-testid="stPopover"] > button {{
         background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
         font-weight: 800 !important;
@@ -378,13 +378,13 @@ st.markdown(f"""
         padding: 12px 20px !important;
         box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4) !important;
         font-size: 14px !important;
-    }
-    div[data-testid="stPopover"] > button:hover {
+    }}
+    div[data-testid="stPopover"] > button:hover {{
         transform: translateY(-2px);
         box-shadow: 0 10px 28px rgba(56, 189, 248, 0.6) !important;
-    }
+    }}
     
-    .gemini-bubble-user {
+    .gemini-bubble-user {{
         background-color: {'#1E293B' if is_dark else '#E2E8F0'};
         color: {active_text};
         padding: 8px 12px;
@@ -393,8 +393,8 @@ st.markdown(f"""
         font-size: 12.5px;
         max-width: 85%;
         margin-left: auto;
-    }
-    .gemini-bubble-ai {
+    }}
+    .gemini-bubble-ai {{
         background-color: {'#0B1528' if is_dark else '#F0F9FF'};
         color: {active_text};
         border-left: 3px solid {active_accent};
@@ -404,7 +404,7 @@ st.markdown(f"""
         font-size: 12.5px;
         line-height: 1.55;
         border: 1px solid {active_border};
-    }
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -1623,7 +1623,7 @@ Date: {current_date_str}
 
 
 # ==========================================
-# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Modern Gemini Style with Strict Domain Guardrails)
+# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Always Accessible with Strict Domain Guardrails)
 # ==========================================
 with st.popover("💬 Ask Infra AI"):
     st.markdown("### 🏛️ Infra AI Assistant")
@@ -1645,7 +1645,7 @@ with st.popover("💬 Ask Infra AI"):
 
     st.markdown("---")
     
-    # Render Chat History (Modern Bubble Layout)
+    # Render Chat History (Modern Gemini Bubble Layout)
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
@@ -1660,28 +1660,29 @@ with st.popover("💬 Ask Infra AI"):
         
         q = active_chat_query.lower()
         
-        # 1. STRICT RESTRICTIONS: Refuse technical/source-code/backend implementation queries
+        # STRICT GUARDRAILS: Refuse technical/source-code/backend implementation queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
-            "kitne line", "kaun si language", "kaise launch", "backend kaise kaam karta"
+            "kitne line", "kaun si language", "kaise launch", "backend kaise kaam karta", "kya technology"
         ]
         
         if any(fk in q for fk in forbidden_keywords) and not ("pata chalega" in q or "kya karta" in q or "purpose" in q):
             ai_response = (
-                "🔒 **Access Restricted: System Architecture Query**\n\n"
+                "🔒 **Access Restricted: System Architecture & Implementation Query**\n\n"
                 "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
                 "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
                 "**What you can ask me:**\n"
                 "* Verified MoSPI project metrics & baseline sanction costs\n"
                 "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
-                "* State & district coverage across India\n"
-                "* Statutory notices under CPWD Clause 2 & GFR Rule 130"
+                "* State & district coverage across India (34 States, 437 Districts)\n"
+                "* Statutory notices under CPWD Clause 2 & GFR Rule 130\n"
+                "* Sector-wide delay and cost escalation benchmarks"
             )
         elif "kya pata chalega" in q or "purpose" in q or "help" in q or "benefit" in q or "what does this app do" in q:
             ai_response = (
                 "🏛️ **PAIMANA AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
-                "This platform is a national decision-support system for MoSPI and infrastructure authorities to:\n\n"
+                "This platform is an automated decision-support system for MoSPI and infrastructure authorities to:\n\n"
                 "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
                 "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
                 "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks (Land RoW disputes, material inflation, milestone carryovers) using explainable SHAP weights.\n"
@@ -1710,15 +1711,15 @@ with st.popover("💬 Ask Infra AI"):
                 "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
                 "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**. Primary drivers: Environmental/Forest clearances and WPI material escalation.\n"
                 "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
-                "* **Power & Renewable Energy Zone (Khavda/RE):** Faster execution speed with average $SPI \approx 0.88$."
+                "* **Power & Renewable Energy Zone (Khavda/RE):** Faster execution speed with average $SPI \\approx 0.88$."
             )
         else:
             ai_response = (
-                "💡 **Infrastructure Analysis Insight:**\n\n"
-                "Our predictive intelligence engine analyzes project parameters against **1,981+ central projects**.\n\n"
-                "* **Key Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
+                "💡 **Infrastructure Intelligence Insight:**\n\n"
+                "Our predictive intelligence engine actively cross-references your queries against **1,981+ central projects** and multi-quarter MoSPI Flash Reports.\n\n"
+                "* **Fiscal Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
                 "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
-                "* For specific package evaluation, select your State/District in Section 1 or input values into Section 2."
+                "* For specific package evaluation, select your State/District in Section 1 or input parameters in Section 2."
             )
             
         st.session_state["chat_history"].append({"role": "assistant", "content": ai_response})
