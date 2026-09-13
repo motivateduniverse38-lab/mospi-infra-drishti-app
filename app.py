@@ -42,6 +42,8 @@ if "app_theme_mode" not in st.session_state:
     st.session_state["app_theme_mode"] = "Dark Slate"
 if "app_font_scale" not in st.session_state:
     st.session_state["app_font_scale"] = "Standard (Default)"
+if "scroll_trigger" not in st.session_state:
+    st.session_state["scroll_trigger"] = 0
 
 is_dark = st.session_state["app_theme_mode"] == "Dark Slate"
 
@@ -330,7 +332,6 @@ st.markdown(f"""
         color: {active_accent} !important;
     }}
 
-    /* English RCA Table Custom Styling */
     .rca-table-container {{
         background-color: {active_card_bg};
         border: 1.5px solid {active_border};
@@ -361,27 +362,49 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* Chat message styling */
-    .chat-bubble-user {{
+    /* Floating Chat Widget Positioning */
+    div[data-testid="stPopover"] {
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 24px !important;
+        z-index: 99999 !important;
+    }
+    div[data-testid="stPopover"] > button {
+        background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 12px 20px !important;
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4) !important;
+        font-size: 14px !important;
+    }
+    div[data-testid="stPopover"] > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(56, 189, 248, 0.6) !important;
+    }
+    
+    .gemini-bubble-user {
         background-color: {'#1E293B' if is_dark else '#E2E8F0'};
         color: {active_text};
-        padding: 10px 14px;
-        border-radius: 8px 8px 0px 8px;
+        padding: 8px 12px;
+        border-radius: 12px 12px 2px 12px;
         margin-bottom: 8px;
-        max-width: 80%;
+        font-size: 12.5px;
+        max-width: 85%;
         margin-left: auto;
-        font-size: 13px;
-    }}
-    .chat-bubble-ai {{
-        background-color: {'#0F2744' if is_dark else '#E0F2FE'};
+    }
+    .gemini-bubble-ai {
+        background-color: {'#0B1528' if is_dark else '#F0F9FF'};
         color: {active_text};
-        border-left: 3.5px solid {active_accent};
+        border-left: 3px solid {active_accent};
         padding: 10px 14px;
-        border-radius: 8px 8px 8px 0px;
+        border-radius: 12px 12px 12px 2px;
         margin-bottom: 12px;
-        font-size: 13px;
-        line-height: 1.5;
-    }}
+        font-size: 12.5px;
+        line-height: 1.55;
+        border: 1px solid {active_border};
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1033,7 +1056,7 @@ if "loc_block" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        {"role": "assistant", "content": "Hello! I am your MoSPI PAIMANA Intelligence Assistant. You can ask me queries regarding project status, sector-wide delay benchmarks, top critical overruns, or root-cause diagnostics across all 34 States/UTs."}
+        {"role": "assistant", "content": "Hello! I am your **Infra AI Intelligence Partner**. You can ask me regarding national infrastructure status, MoSPI Flash Reports, EVM deviations, delay benchmarks, or project insights across 34 States/UTs."}
     ]
 
 # Top Header Layout with Settings Popover
@@ -1338,6 +1361,7 @@ with col_sec2:
                 "inp_milestones": inp_milestones
             }
             st.session_state['ai_evaluated'] = True
+            st.session_state['scroll_trigger'] = time.time()
             st.rerun()
 
 # OUTPUT VISUALIZATION WITH STREAMLIT COMPONENTS AUTO-SCROLL
@@ -1347,23 +1371,24 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
     # 1. Prediction Results Anchor
     st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
     
-    # 2. Reliable Streamlit Component-Based Smooth Auto-Scroll Execution
+    # 2. Reliable Auto-Scroll Execution across multiple runs
     components.html(
-        """
+        f"""
         <script>
-            setTimeout(function() {
-                try {
+            setTimeout(function() {{
+                try {{
                     const target = window.parent.document.getElementById('prediction-results');
-                    if (target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    } else {
-                        window.parent.window.scrollBy({ top: 600, behavior: 'smooth' });
-                    }
-                } catch(e) {
-                    window.parent.window.scrollBy({ top: 600, behavior: 'smooth' });
-                }
-            }, 150);
+                    if (target) {{
+                        target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                    }} else {{
+                        window.parent.window.scrollBy({{ top: 700, behavior: 'smooth' }});
+                    }}
+                }} catch(e) {{
+                    window.parent.window.scrollBy({{ top: 700, behavior: 'smooth' }});
+                }}
+            }}, 200);
         </script>
+        <!-- trigger: {st.session_state['scroll_trigger']} -->
         """,
         height=0,
         width=0
@@ -1400,12 +1425,11 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 6 Dynamic Integrated Tabs (Includes Module 5 Benchmarking & Module 8 LLM Assistant)
-    t_scurve, t_shap, t_bench, t_chat, t_notice, t_whatif = st.tabs([
+    # 5 Dynamic Performance & Compliance Tabs
+    t_scurve, t_shap, t_bench, t_notice, t_whatif = st.tabs([
         "📊 S-Curve EVM", 
         "🔍 SHAP Root-Cause", 
         "📈 Peer Benchmarking",
-        "💬 Ask Infra AI",
         "📜 Directive Notice", 
         "🧪 'What-If' Decision Simulator"
     ])
@@ -1528,70 +1552,6 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         )
         st.plotly_chart(fig_bench, use_container_width=True)
 
-    # MODULE 8: LLM-Enabled Project Intelligence Assistant ("💬 Ask Infra AI")
-    with t_chat:
-        st.markdown("#### 💬 Ask Infra AI - Project Intelligence Assistant")
-        st.caption("Ask questions about MoSPI Flash Report trends, EVM bottlenecks, or project risk mitigations.")
-
-        # Preset Quick Queries
-        st.markdown("**Quick Preset Prompts:**")
-        qp1, qp2, qp3 = st.columns(3)
-        prompt_val = None
-        if qp1.button("🚨 Top 5 High-Risk Projects", use_container_width=True):
-            prompt_val = "Which are the top 5 high-risk central sector projects currently tracked?"
-        if qp2.button("📊 National Highways Delay Summary", use_container_width=True):
-            prompt_val = "Summarize the average delay and cost escalation in Road Transport & Highways."
-        if qp3.button("🔍 Explain Current Project Bottleneck", use_container_width=True):
-            prompt_val = f"Analyze root-cause bottlenecks and recovery steps for current package with CPRI {int(res['cpri_score'])}."
-
-        # Display Chat History
-        for msg in st.session_state["chat_history"]:
-            if msg["role"] == "user":
-                st.markdown(f"<div class='chat-bubble-user'>👤 <b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div class='chat-bubble-ai'>🏛️ <b>Infra AI:</b> {msg['content']}</div>", unsafe_allow_html=True)
-
-        user_query = st.chat_input("Ask a question about infrastructure project risk, EVM, or MoSPI Flash Reports...")
-        active_query = prompt_val or user_query
-
-        if active_query:
-            st.session_state["chat_history"].append({"role": "user", "content": active_query})
-            
-            # Intelligent Rule-Based + Dataset Synthesis AI Engine Response
-            query_lower = active_query.lower()
-            if "top 5" in query_lower or "high-risk" in query_lower:
-                ai_reply = (
-                    "**Top 5 High-Risk Central Sector Projects Monitored by IPMD/MoSPI:**\n"
-                    "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Estimated Cost ₹55,549 Cr, Delay +92 Months (RoW and Rehabilitation).\n"
-                    "2. **Mumbai-Ahmedabad Bullet Train (Maharashtra/Gujarat):** Cost ₹1,08,000 Cr, Progress 62.16% (Land acquisition in urban nodes).\n"
-                    "3. **Rishikesh-Karnaprayag Rail Link (Uttarakhand):** Cost ₹38,953 Cr, Progress 77.5% (Himalayan tunneling and geotechnical friction).\n"
-                    "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Cost ₹38,358 Cr, Initial Stage (Statutory clearances).\n"
-                    "5. **Bina Refinery Petrochemical Expansion (Madhya Pradesh):** Cost ₹43,367 Cr (Procurement lead times)."
-                )
-            elif "highway" in query_lower or "road" in query_lower:
-                ai_reply = (
-                    "**Road Transport & Highways Sector Analysis (MoSPI Flash Reports):**\n"
-                    "• **Total Ongoing Packages:** 1,022 Projects (Sanctioned: ₹9.69 Lakh Cr, Revised: ₹9.89 Lakh Cr).\n"
-                    "• **Average Physical Progress:** 48.2% across active National Highway corridors.\n"
-                    "• **Primary Cost Drivers:** Right-of-Way (RoW) acquisition disputes and WPI commodity price index escalation (Bitumen/Steel)."
-                )
-            elif "current" in query_lower or "root-cause" in query_lower or "cpri" in query_lower:
-                ai_reply = (
-                    f"**Diagnostic Appraisal for Current Evaluated Package:**\n"
-                    f"• **Risk Score:** CPRI {int(res['cpri_score'])}/100 ({res['alert_badge']})\n"
-                    f"• **Schedule Performance:** Schedule Variance is {res['schedule_variance_pct']:.1f}%, leading to +{res['pred_delay_months']:.1f} Months delay.\n"
-                    f"• **Fiscal Health:** Cost Performance Index (CPI) of {res['cpi']:.2f} indicates cash flow drift.\n"
-                    f"• **Recommended Action:** Invoke CPWD Clause 2 warning, demand double-shift resource augmentation within 14 days, and freeze non-essential disbursements."
-                )
-            else:
-                ai_reply = (
-                    f"**Infra AI Knowledge Engine Response:**\n"
-                    f"Based on real-time ingestion of 1,981+ central projects across all 34 States/UTs, infrastructure risk is heavily correlated with **Schedule Variance ($SV\%$)**, **Front-Loading Cash Drift ($CPI < 1.0$)**, and **Land RoW Clearance Scores**. For your evaluated project (Cost: ₹{res['inp_cost']} Cr), predicted fiscal overrun is +₹{res['cost_escalation_cr']:.1f} Cr (+{res['pred_cost_overrun_pct']:.1f}%)."
-                )
-            
-            st.session_state["chat_history"].append({"role": "assistant", "content": ai_reply})
-            st.rerun()
-
     with t_notice:
         active_st_name = st.session_state.get('active_state', selected_state)
         active_dist_name = st.session_state.get('active_district', selected_district)
@@ -1660,3 +1620,106 @@ Date: {current_date_str}
                 </p>
             </div>
             """, unsafe_allow_html=True)
+
+
+# ==========================================
+# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Modern Gemini Style with Strict Domain Guardrails)
+# ==========================================
+with st.popover("💬 Ask Infra AI"):
+    st.markdown("### 🏛️ Infra AI Assistant")
+    st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
+    
+    # Quick Action Chips
+    chip_col1, chip_col2 = st.columns(2)
+    selected_chip_query = None
+    with chip_col1:
+        if st.button("🚨 Top Overruns", use_container_width=True):
+            selected_chip_query = "What are the top infrastructure projects with highest cost overruns?"
+        if st.button("🌐 Geographic Scope", use_container_width=True):
+            selected_chip_query = "What all states, districts and blocks are covered in this system?"
+    with chip_col2:
+        if st.button("🎯 System Purpose", use_container_width=True):
+            selected_chip_query = "Is web app se mujhe kya kya pata chalega?"
+        if st.button("📊 National Delay Avg", use_container_width=True):
+            selected_chip_query = "What is the average delay across national road transport and railway projects?"
+
+    st.markdown("---")
+    
+    # Render Chat History (Modern Bubble Layout)
+    for msg in st.session_state["chat_history"]:
+        if msg["role"] == "user":
+            st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='gemini-bubble-ai'><b>Infra AI:</b><br>{msg['content']}</div>", unsafe_allow_html=True)
+
+    chat_input_val = st.chat_input("Ask about infrastructure risk, MoSPI data, or EVM...")
+    active_chat_query = selected_chip_query or chat_input_val
+
+    if active_chat_query:
+        st.session_state["chat_history"].append({"role": "user", "content": active_chat_query})
+        
+        q = active_chat_query.lower()
+        
+        # 1. STRICT RESTRICTIONS: Refuse technical/source-code/backend implementation queries
+        forbidden_keywords = [
+            "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
+            "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
+            "kitne line", "kaun si language", "kaise launch", "backend kaise kaam karta"
+        ]
+        
+        if any(fk in q for fk in forbidden_keywords) and not ("pata chalega" in q or "kya karta" in q or "purpose" in q):
+            ai_response = (
+                "🔒 **Access Restricted: System Architecture Query**\n\n"
+                "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
+                "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
+                "**What you can ask me:**\n"
+                "* Verified MoSPI project metrics & baseline sanction costs\n"
+                "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
+                "* State & district coverage across India\n"
+                "* Statutory notices under CPWD Clause 2 & GFR Rule 130"
+            )
+        elif "kya pata chalega" in q or "purpose" in q or "help" in q or "benefit" in q or "what does this app do" in q:
+            ai_response = (
+                "🏛️ **PAIMANA AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
+                "This platform is a national decision-support system for MoSPI and infrastructure authorities to:\n\n"
+                "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
+                "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
+                "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks (Land RoW disputes, material inflation, milestone carryovers) using explainable SHAP weights.\n"
+                "* **Simulate 'What-If' Recovery:** Test administrative interventions (e.g., expedited clearances) to compute exact time and budget savings.\n"
+                "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
+            )
+        elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
+            ai_response = (
+                "🗺️ **National Geographic Ingestion Scope:**\n\n"
+                "* **States & UTs Covered:** **34 States/UTs** (Northern, Western, Central, Eastern, North-Eastern, Southern regions, and Island territories).\n"
+                "* **Districts Ingested:** **437+ Districts** mapped with verified administrative boundaries.\n"
+                "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** tracked with ongoing infrastructure work packages.\n"
+                "* **Integrated Datasets:** MoSPI Flash Reports (April, May, June, July 2026), PMGSY rural connectivity records, and Central Sector Project databases."
+            )
+        elif "top" in q or "overrun" in q or "critical" in q or "highest" in q:
+            ai_response = (
+                "🚨 **Top Critical Central Sector Projects Monitored:**\n\n"
+                "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Sanctioned ₹55,549 Cr, Delay +92 Months (Right-of-Way & R&R bottlenecks).\n"
+                "2. **Mumbai-Ahmedabad High Speed Rail (Maharashtra/Gujarat):** Sanctioned ₹1,08,000 Cr, Physical Progress ~62.16%.\n"
+                "3. **Rishikesh-Karnaprayag Broad Gauge Link (Uttarakhand):** Sanctioned ₹38,953 Cr, Progress ~71.4% (Himalayan tunneling challenges).\n"
+                "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Sanctioned ₹38,358 Cr, Initial statutory clearances.\n"
+                "5. **Bina Refinery Petrochemical Expansion (Madhya Pradesh):** Sanctioned ₹43,367 Cr."
+            )
+        elif "delay" in q or "highway" in q or "railway" in q or "average" in q:
+            ai_response = (
+                "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
+                "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**. Primary drivers: Environmental/Forest clearances and WPI material escalation.\n"
+                "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
+                "* **Power & Renewable Energy Zone (Khavda/RE):** Faster execution speed with average $SPI \approx 0.88$."
+            )
+        else:
+            ai_response = (
+                "💡 **Infrastructure Analysis Insight:**\n\n"
+                "Our predictive intelligence engine analyzes project parameters against **1,981+ central projects**.\n\n"
+                "* **Key Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
+                "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
+                "* For specific package evaluation, select your State/District in Section 1 or input values into Section 2."
+            )
+            
+        st.session_state["chat_history"].append({"role": "assistant", "content": ai_response})
+        st.rerun()
