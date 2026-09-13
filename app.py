@@ -329,7 +329,6 @@ st.markdown(f"""
         color: {active_accent} !important;
     }}
 
-    /* English RCA Table Custom Styling */
     .rca-table-container {{
         background-color: {active_card_bg};
         border: 1.5px solid {active_border};
@@ -362,7 +361,7 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# 4. MASTER GEOGRAPHIC INGESTION DICTIONARY (Exhaustive mapping of all 34 States, 437 Districts & 838+ Blocks from Flash Reports)
+# 4. MASTER GEOGRAPHIC INGESTION DICTIONARY
 GEO_HIERARCHY = {
     "Bihar": {
         "Patna": ["Danapur", "Bihta", "Maner", "Sherpur", "Digha", "Mokama"],
@@ -1310,10 +1309,26 @@ with col_sec2:
                 "inp_milestones": inp_milestones
             }
             st.session_state['ai_evaluated'] = True
+            st.rerun()
 
-# OUTPUT VISUALIZATION (FROZEN STATE & COMPLETE CONTRAST)
+# OUTPUT VISUALIZATION WITH AUTOMATIC SMOOTH SCROLL ANCHOR
 if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] is not None:
     res = st.session_state['cached_predictions']
+    
+    # 1. HTML Target Anchor
+    st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
+    
+    # 2. JavaScript Smooth Auto-Scroll Execution
+    st.markdown("""
+    <script>
+        setTimeout(function() {
+            var el = document.getElementById('prediction-results');
+            if (el) {
+                el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        }, 300);
+    </script>
+    """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
 
