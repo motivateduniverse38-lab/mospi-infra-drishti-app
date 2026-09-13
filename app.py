@@ -77,7 +77,6 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
     is_email = "@" in contact
     
     if is_email:
-        # REAL SMTP Pipeline
         smtp_user = st.secrets.get("SMTP_USER", os.getenv("SMTP_USER", None)) if hasattr(st, "secrets") else os.getenv("SMTP_USER", None)
         smtp_pass = st.secrets.get("SMTP_PASS", os.getenv("SMTP_PASS", None)) if hasattr(st, "secrets") else os.getenv("SMTP_PASS", None)
         
@@ -107,7 +106,6 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real Email payload processed for `{contact}` (Live SMTP active)."
     else:
-        # REAL SMS Pipeline
         sms_api_key = st.secrets.get("SMS_API_KEY", os.getenv("SMS_API_KEY", None)) if hasattr(st, "secrets") else os.getenv("SMS_API_KEY", None)
         clean_number = contact.replace("+91", "").replace("-", "").strip()
         
@@ -258,7 +256,9 @@ st.markdown(f"""
         background-color: {active_card_bg} !important;
         color: {active_text} !important;
         border: 1.5px solid {active_border} !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.3) !important;
+        max-width: 380px !important;
     }}
 
     button[data-baseweb="tab"] {{
@@ -427,26 +427,33 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* Floating Chat Widget Positioning */
+    /* Compact Circular Floating Action Button (FAB) for Infra AI */
     div[data-testid="stPopover"] {{
         position: fixed !important;
-        bottom: 24px !important;
-        right: 24px !important;
+        bottom: 26px !important;
+        right: 26px !important;
         z-index: 99999 !important;
     }}
     div[data-testid="stPopover"] > button {{
         background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
-        font-weight: 800 !important;
-        border: none !important;
-        border-radius: 50px !important;
-        padding: 12px 20px !important;
-        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4) !important;
-        font-size: 14px !important;
+        font-size: 24px !important;
+        width: 56px !important;
+        height: 56px !important;
+        min-width: 56px !important;
+        min-height: 56px !important;
+        border-radius: 50% !important;
+        padding: 0px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 2px solid #FFFFFF33 !important;
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     }}
     div[data-testid="stPopover"] > button:hover {{
-        transform: translateY(-2px);
-        box-shadow: 0 10px 28px rgba(56, 189, 248, 0.6) !important;
+        transform: scale(1.1) !important;
+        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.7) !important;
     }}
     
     .gemini-bubble-user {{
@@ -1695,7 +1702,7 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (Universal for Red, Amber & Green)
+    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (Repeated Dispatches Allowed)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1752,15 +1759,15 @@ Date: {current_date_str}
                     res['alert_badge']
                 )
                 if success_status:
-                    st.success(status_info)
+                    st.success(f"{status_info} (Timestamp: {datetime.now().strftime('%H:%M:%S')})")
                 else:
                     st.error(status_info)
 
 
 # ==========================================
-# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Always Accessible with Strict Domain Guardrails)
+# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Compact Circular FAB with Auto-Dismiss)
 # ==========================================
-with st.popover("💬 Ask Infra AI"):
+with st.popover("💬"):
     st.markdown("### 🏛️ Infra AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
