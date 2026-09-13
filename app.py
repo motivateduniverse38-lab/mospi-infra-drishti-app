@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -329,6 +330,7 @@ st.markdown(f"""
         color: {active_accent} !important;
     }}
 
+    /* English RCA Table Custom Styling */
     .rca-table-container {{
         background-color: {active_card_bg};
         border: 1.5px solid {active_border};
@@ -1311,24 +1313,34 @@ with col_sec2:
             st.session_state['ai_evaluated'] = True
             st.rerun()
 
-# OUTPUT VISUALIZATION WITH AUTOMATIC SMOOTH SCROLL ANCHOR
+# OUTPUT VISUALIZATION WITH STREAMLIT COMPONENTS AUTO-SCROLL
 if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] is not None:
     res = st.session_state['cached_predictions']
     
-    # 1. HTML Target Anchor
+    # 1. Prediction Results Anchor
     st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
     
-    # 2. JavaScript Smooth Auto-Scroll Execution
-    st.markdown("""
-    <script>
-        setTimeout(function() {
-            var el = document.getElementById('prediction-results');
-            if (el) {
-                el.scrollIntoView({behavior: 'smooth', block: 'start'});
-            }
-        }, 300);
-    </script>
-    """, unsafe_allow_html=True)
+    # 2. Reliable Streamlit Component-Based Smooth Auto-Scroll Execution
+    components.html(
+        """
+        <script>
+            setTimeout(function() {
+                try {
+                    const target = window.parent.document.getElementById('prediction-results');
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        window.parent.window.scrollBy({ top: 600, behavior: 'smooth' });
+                    }
+                } catch(e) {
+                    window.parent.window.scrollBy({ top: 600, behavior: 'smooth' });
+                }
+            }, 150);
+        </script>
+        """,
+        height=0,
+        width=0
+    )
     
     st.markdown("<br>", unsafe_allow_html=True)
 
