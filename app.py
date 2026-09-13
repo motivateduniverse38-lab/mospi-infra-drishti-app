@@ -252,13 +252,22 @@ st.markdown(f"""
         background-color: {active_card_bg} !important;
     }}
 
-    div[data-testid="stPopoverBody"] {{
-        background-color: {active_card_bg} !important;
+    /* Global Buttons (Excluding Popover FAB) */
+    .stButton > button {{
+        background-color: {'#1E293B' if is_dark else '#FFFFFF'} !important;
         color: {active_text} !important;
-        border: 1.5px solid {active_border} !important;
-        border-radius: 12px !important;
-        box-shadow: 0 12px 36px rgba(0,0,0,0.3) !important;
-        max-width: 380px !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border: 1.5px solid {active_accent} !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        padding: 8px 14px !important;
+        transition: all 0.2s ease !important;
+    }}
+    .stButton > button:hover {{
+        background-color: {active_accent} !important;
+        color: {'#0B0F19' if is_dark else '#FFFFFF'} !important;
+        border-color: {active_accent} !important;
     }}
 
     button[data-baseweb="tab"] {{
@@ -270,23 +279,6 @@ st.markdown(f"""
     button[data-baseweb="tab"][aria-selected="true"] {{
         color: {active_accent} !important;
         border-bottom: 2px solid {active_accent} !important;
-    }}
-
-    .stButton button {{
-        background-color: {'#1E293B' if is_dark else '#FFFFFF'} !important;
-        color: {active_text} !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        border: 1.5px solid {active_accent} !important;
-        border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        padding: 8px 14px !important;
-        transition: all 0.2s ease !important;
-    }}
-    .stButton button:hover {{
-        background-color: {active_accent} !important;
-        color: {'#0B0F19' if is_dark else '#FFFFFF'} !important;
-        border-color: {active_accent} !important;
     }}
 
     .brand-title {{
@@ -427,33 +419,50 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* Compact Circular Floating Action Button (FAB) for Infra AI */
-    div[data-testid="stPopover"] {{
+    /* ========================================================
+       PERFECT CIRCULAR FLOATING ACTION BUTTON (FAB) FOR INFRA AI
+       ======================================================== */
+    div.stPopover {{
         position: fixed !important;
-        bottom: 26px !important;
-        right: 26px !important;
+        bottom: 30px !important;
+        right: 30px !important;
         z-index: 99999 !important;
+        width: auto !important;
+        display: block !important;
     }}
-    div[data-testid="stPopover"] > button {{
+    div.stPopover > button {{
         background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
-        font-size: 24px !important;
-        width: 56px !important;
-        height: 56px !important;
-        min-width: 56px !important;
-        min-height: 56px !important;
+        font-size: 26px !important;
+        width: 58px !important;
+        height: 58px !important;
+        min-width: 58px !important;
+        max-width: 58px !important;
+        min-height: 58px !important;
+        max-height: 58px !important;
         border-radius: 50% !important;
         padding: 0px !important;
+        margin: 0px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        border: 2px solid #FFFFFF33 !important;
-        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45) !important;
+        border: 2px solid #FFFFFF55 !important;
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5) !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        cursor: pointer !important;
     }}
-    div[data-testid="stPopover"] > button:hover {{
+    div.stPopover > button:hover {{
         transform: scale(1.1) !important;
-        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.7) !important;
+        box-shadow: 0 12px 32px rgba(56, 189, 248, 0.75) !important;
+    }}
+    div[data-testid="stPopoverBody"] {{
+        background-color: {active_card_bg} !important;
+        color: {active_text} !important;
+        border: 1.5px solid {active_border} !important;
+        border-radius: 12px !important;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.4) !important;
+        width: 360px !important;
+        max-width: 90vw !important;
     }}
     
     .gemini-bubble-user {{
