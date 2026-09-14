@@ -1094,7 +1094,7 @@ def load_data():
                     rec["State"] = st_name
                     rec["District"] = d_name
                     rec["Subdivision"] = f"{d_name} Project Division"
-                    rec["Block"] = b_name
+                    
                     project_rows.append(rec)
                 else:
                     h_val = abs(hash(st_name + d_name + b_name))
@@ -1107,7 +1107,7 @@ def load_data():
                         "State": st_name,
                         "District": d_name,
                         "Subdivision": f"{d_name} Division",
-                        "Block": b_name,
+                        
                         "Package_ID": pkg_code,
                         "Project_Name": f"{b_name} ({d_name}) Infrastructure Modernisation & Connectivity Project",
                         "Contractor_Name": f"Empanelled State & Central Line Agency ({st_name})",
