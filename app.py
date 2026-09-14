@@ -420,29 +420,7 @@ st.markdown(f"""
     }}
 
     /* ========================================================
-       1. SETTINGS COMPACT RECTANGULAR BOX FIXED AT TOP RIGHT
-       ======================================================== */
-    div.stPopover:has(button[aria-label*="Settings"]) {{
-        position: fixed !important;
-        top: 16px !important;
-        right: 20px !important;
-        z-index: 99999 !important;
-        width: auto !important;
-        display: block !important;
-    }}
-    div.stPopover:has(button[aria-label*="Settings"]) > button {{
-        background: {active_card_bg} !important;
-        color: {active_text} !important;
-        font-weight: 700 !important;
-        font-size: 12px !important;
-        border: 1.5px solid {active_border} !important;
-        border-radius: 6px !important;
-        padding: 5px 12px !important;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
-    }}
-
-    /* ========================================================
-       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT
+       INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT
        ======================================================== */
     div.stPopover:not(:has(button[aria-label*="Settings"])) {{
         position: fixed !important;
@@ -1164,7 +1142,7 @@ if "loc_state" not in st.session_state:
 if "loc_dist" not in st.session_state:
     st.session_state["loc_dist"] = "All Districts"
 if "loc_block" not in st.session_state:
-    st.session_state["loc_block"] = "All Blocks / Divisions"
+    st.session_state["loc_block"] = "All Sub-Divisions"
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
@@ -1220,18 +1198,18 @@ with col_geo:
     selected_district = st.selectbox("2. District / Sector", district_list, index=dist_idx)
     st.session_state["loc_dist"] = selected_district
 
-    # 3. Block / Sub-Division Dropdown (Cascades directly from selected district)
+    # 3. Sub-Division Dropdown (Cascades directly from selected district)
     if selected_state != "Select State" and selected_district != "All Districts" and selected_state in GEO_HIERARCHY:
         if selected_district in GEO_HIERARCHY[selected_state]:
-            block_list = ["All Blocks / Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
+            block_list = ["All Sub-Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
         else:
-            block_list = ["All Blocks / Divisions"]
+            block_list = ["All Sub-Divisions"]
     else:
-        block_list = ["All Blocks / Divisions"]
+        block_list = ["All Sub-Divisions"]
         
-    curr_block_target = st.session_state.get("loc_block", "All Blocks / Divisions")
+    curr_block_target = st.session_state.get("loc_block", "All Sub-Divisions")
     block_idx = block_list.index(curr_block_target) if curr_block_target in block_list else 0
-    selected_block = st.selectbox("3. Block / Sub-Division", block_list, index=block_idx)
+    selected_block = st.selectbox("3. Sub-Division", block_list, index=block_idx)
     st.session_state["loc_block"] = selected_block
 
     fetch_btn = st.button("🗣️ Fetch Ongoing Projects (Enter ↵)", use_container_width=True)
@@ -1333,7 +1311,7 @@ with col_sec1:
             temp_df = temp_df[temp_df["State"].astype(str).str.lower() == active_st.lower()]
         if active_dist != "All Districts":
             temp_df = temp_df[temp_df["District"].astype(str).str.lower() == active_dist.lower()]
-        if active_blk != "All Blocks / Divisions":
+        if active_blk != "All Sub-Divisions":
             temp_df = temp_df[temp_df["Block"].astype(str).str.lower() == active_blk.lower()]
 
         matched_projects = [r for _, r in temp_df.iterrows()]
@@ -1391,7 +1369,26 @@ with col_sec1:
 rec = st.session_state.get('selected_record') or {}
 
 with col_sec2:
-    st.markdown("<div class='section-title'>⚡ SECTION 2: PREDICT PROJECT FUTURE OVERVIEW</div>", unsafe_allow_html=True)
+    # SETTINGS POPOVER PLACED DIRECTLY ABOVE SECTION 2 TITLE
+    set_col1, set_col2 = st.columns([8, 1.2])
+    with set_col1:
+        st.markdown("<div class='section-title'>⚡ SECTION 2: PREDICT PROJECT FUTURE OVERVIEW</div>", unsafe_allow_html=True)
+    with set_col2:
+        with st.popover("⚙️ Settings"):
+            st.markdown("#### 🎨 Display Mode")
+            theme_options = ["Dark Slate", "Clean Light"]
+            curr_theme_idx = 0 if st.session_state["app_theme_mode"] == "Dark Slate" else 1
+            new_theme = st.radio("Interface Theme", theme_options, index=curr_theme_idx)
+            
+            st.markdown("#### 🔤 Font Sizing")
+            font_options = ["Standard (Default)", "Large (High-Legibility)"]
+            curr_font_idx = 0 if st.session_state["app_font_scale"] == "Standard (Default)" else 1
+            new_font = st.radio("Typography Scale", font_options, index=curr_font_idx)
+            
+            if new_theme != st.session_state["app_theme_mode"] or new_font != st.session_state["app_font_scale"]:
+                st.session_state["app_theme_mode"] = new_theme
+                st.session_state["app_font_scale"] = new_font
+                st.rerun()
     
     s2_col1, s2_col2 = st.columns(2)
     with s2_col1:
