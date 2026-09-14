@@ -420,7 +420,7 @@ st.markdown(f"""
     }}
 
     /* ========================================================
-       1. SETTINGS COMPACT BOX FIXED AT TOP RIGHT CORNER
+       1. SETTINGS COMPACT RECTANGULAR BOX FIXED AT TOP RIGHT
        ======================================================== */
     div.stPopover:has(button[aria-label*="Settings"]) {{
         position: fixed !important;
@@ -437,12 +437,12 @@ st.markdown(f"""
         font-size: 12px !important;
         border: 1.5px solid {active_border} !important;
         border-radius: 6px !important;
-        padding: 5px 10px !important;
+        padding: 5px 12px !important;
         box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
     }}
 
     /* ========================================================
-       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT CORNER
+       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT
        ======================================================== */
     div.stPopover:not(:has(button[aria-label*="Settings"])) {{
         position: fixed !important;
