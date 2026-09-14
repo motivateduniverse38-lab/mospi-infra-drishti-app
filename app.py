@@ -66,7 +66,7 @@ plot_text_color = "#F8FAFC" if is_dark else "#0F172A"
 plot_grid_color = "#1E293B" if is_dark else "#E2E8F0"
 tab_text_color = "#FFFFFF" if is_dark else "#0F172A"
 notice_bg = "#030712" if is_dark else "#FFFFFF"
-notice_text = "#F8FAFC" if is_dark else "#F8FAFC"
+notice_text = "#F8FAFC" if is_dark else "#0F172A"
 notice_border = "#38BDF8" if is_dark else "#0284C7"
 
 font_base_size = "14px" if st.session_state["app_font_scale"] == "Standard (Default)" else "15.5px"
@@ -356,7 +356,7 @@ st.markdown(f"""
         font-weight: 600 !important;
         border: 1.5px solid {notice_border} !important;
         border-radius: 8px !important;
-        
+        line-height: 1.6 !important;
     }}
 
     .sidebar-note {{
@@ -368,7 +368,7 @@ st.markdown(f"""
         font-size: 12px;
         color: {active_text} !important;
         margin-top: 10px;
-        
+        line-height: 1.45;
     }}
     .sidebar-note b {{
         color: {active_accent} !important;
@@ -420,45 +420,48 @@ st.markdown(f"""
     }}
 
     /* ========================================================
-       1. SETTINGS POPOVER FIXED AT TOP-RIGHT CORNER
+       1. SETTINGS COMPACT BOX FIXED AT TOP RIGHT CORNER
        ======================================================== */
-    div.stPopover:has(button:contains("⚙️")) {{
+    div.stPopover:has(button[aria-label*="Settings"]) {{
         position: fixed !important;
         top: 16px !important;
-        right: 24px !important;
+        right: 20px !important;
         z-index: 99999 !important;
         width: auto !important;
         display: block !important;
     }}
-    /* Fallback selector for settings popover container */
-    div[data-testid="stHorizontalBlock"] > div:last-child div.stPopover {{
-        position: fixed !important;
-        top: 16px !important;
-        right: 24px !important;
-        z-index: 99999 !important;
+    div.stPopover:has(button[aria-label*="Settings"]) > button {{
+        background: {active_card_bg} !important;
+        color: {active_text} !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        border: 1.5px solid {active_border} !important;
+        border-radius: 6px !important;
+        padding: 5px 10px !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
     }}
 
     /* ========================================================
-       2. CHATBOT FLOATING CIRCULAR FAB AT BOTTOM-RIGHT CORNER
+       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT CORNER
        ======================================================== */
-    div.stPopover:has(button:contains("💬")) {{
+    div.stPopover:not(:has(button[aria-label*="Settings"])) {{
         position: fixed !important;
-        bottom: 26px !important;
-        right: 26px !important;
+        bottom: 24px !important;
+        right: 24px !important;
         z-index: 99999 !important;
         width: auto !important;
         display: block !important;
     }}
-    div.stPopover:has(button:contains("💬")) > button {{
+    div.stPopover:not(:has(button[aria-label*="Settings"])) > button {{
         background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
         font-size: 24px !important;
-        width: 56px !important;
-        height: 56px !important;
-        min-width: 56px !important;
-        max-width: 56px !important;
-        min-height: 56px !important;
-        max-height: 56px !important;
+        width: 54px !important;
+        height: 54px !important;
+        min-width: 54px !important;
+        max-width: 54px !important;
+        min-height: 54px !important;
+        max-height: 54px !important;
         border-radius: 50% !important;
         padding: 0px !important;
         margin: 0px !important;
@@ -470,9 +473,9 @@ st.markdown(f"""
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         cursor: pointer !important;
     }}
-    div.stPopover:has(button:contains("💬")) > button:hover {{
+    div.stPopover:not(:has(button[aria-label*="Settings"])) > button:hover {{
         transform: scale(1.1) !important;
-        box-shadow: 0 12px 32px rgba(56, 189, 248, 0.75) !important;
+        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.75) !important;
     }}
 
     div[data-testid="stPopoverBody"] {{
@@ -504,7 +507,7 @@ st.markdown(f"""
         margin-bottom: 12px;
         font-size: 12.5px;
         line-height: 1.55;
-        border: 1.5px solid {active_border};
+        border: 1px solid {active_border};
     }}
 
     .alert-dispatch-card {{
@@ -1168,7 +1171,7 @@ if "chat_history" not in st.session_state:
         {"role": "assistant", "content": "Hello! I am your **Infra AI Intelligence Partner**. You can ask me regarding national infrastructure status, MoSPI Flash Reports, EVM deviations, delay benchmarks, or project insights across 34 States/UTs."}
     ]
 
-# Top Header Layout with Settings Popover (At Top Right)
+# Top Header Layout with Settings Popover at Top Right Corner
 header_col1, header_col2, header_col3 = st.columns([1, 8, 1.2])
 
 with header_col2:
