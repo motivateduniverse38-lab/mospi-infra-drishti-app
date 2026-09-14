@@ -356,7 +356,7 @@ st.markdown(f"""
         font-weight: 600 !important;
         border: 1.5px solid {notice_border} !important;
         border-radius: 8px !important;
-        line-height: 1.6 !important;
+        
     }}
 
     .sidebar-note {{
@@ -368,7 +368,7 @@ st.markdown(f"""
         font-size: 12px;
         color: {active_text} !important;
         margin-top: 10px;
-        line-height: 1.45;
+        
     }}
     .sidebar-note b {{
         color: {active_accent} !important;
