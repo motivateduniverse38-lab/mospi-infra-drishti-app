@@ -430,7 +430,7 @@ st.markdown(f"""
         width: auto !important;
         display: block !important;
     }}
-    div.stPopover:has(button[aria-label*="Settings"]) > button {{
+    div.stPopover:has(top[aria-label*="Settings"]) > top {{
         background: {active_card_bg} !important;
         color: {active_text} !important;
         font-weight: 700 !important;
