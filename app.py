@@ -422,7 +422,7 @@ st.markdown(f"""
     /* ========================================================
        1. SETTINGS COMPACT RECTANGULAR BOX FIXED AT TOP RIGHT
        ======================================================== */
-    div.stPopover:has(button[aria-label*="Settings"]) {{
+    div.stPopover:has(top[aria-label*="Settings"]) {{
         position: fixed !important;
         top: 16px !important;
         right: 20px !important;
