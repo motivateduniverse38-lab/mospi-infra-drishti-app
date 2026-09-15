@@ -1541,7 +1541,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
     t_scurve, t_shap, t_bench, t_notice, t_whatif, t_dispatch = st.tabs([
         "📊 S-Curve EVM", 
         "🔍 SHAP Root-Cause", 
-        "📈 Peer Benchmarking",
+        "📈 Peer Benchmarking", 
         "📜 Directive Notice", 
         "🧪 'What-If' Decision Simulator",
         "📨 Send SMS / Email to Related Person"
@@ -1764,13 +1764,34 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
+        # Smart Board 1-Touch Email Presets & Default Initializer
+        if "dispatch_target_input" not in st.session_state:
+            st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
+
+        st.markdown("<label style='font-size: 13px; font-weight: 700;'>Touch-Friendly Quick Selection (Smart Board Mode):</label>", unsafe_allow_html=True)
+        col_touch1, col_touch2, col_touch3 = st.columns([1, 1, 1])
+        with col_touch1:
+            if st.button("📧 Preset 1 (Motivated)", use_container_width=True):
+                st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
+                st.rerun()
+        with col_touch2:
+            if st.button("📧 Preset 2 (Satyam)", use_container_width=True):
+                st.session_state["dispatch_target_input"] = "ksatyam75722@gmail.com"
+                st.rerun()
+        with col_touch3:
+            if st.button("🔄 Clear / Reset", use_container_width=True):
+                st.session_state["dispatch_target_input"] = ""
+                st.rerun()
+
         col_in_target, col_btn_target = st.columns([2.5, 1.2])
         with col_in_target:
             recipient_val = st.text_input(
                 "Enter Recipient Mobile Number OR Official Email Address:",
+                value=st.session_state.get("dispatch_target_input", "motivateduniverse38@gmail.com"),
                 placeholder="e.g. +919876543210  OR  engineer@piu.gov.in",
                 key="dispatch_tab_input"
             )
+            st.session_state["dispatch_target_input"] = recipient_val
         with col_btn_target:
             st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
             trigger_dispatch_btn = st.button("🚀 Send Dispatch (Enter ↵)", use_container_width=True)
