@@ -23,7 +23,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection (Completely Hide GitHub Buttons & Menus during Loading and Runtime)
+# 0. Global Security CSS Injection
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges, Fork, View Code & Manage App */
@@ -404,7 +404,7 @@ notice_border = "#38BDF8"
 font_base_size = "14.5px"
 
 # ==============================================================================
-# 100% REAL DUAL-PIPELINE DISPATCH ENGINE (DIRECT GMAIL CREDENTIALS INTEGRATED)
+# 100% REAL DUAL-PIPELINE DISPATCH ENGINE
 # ==============================================================================
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
     contact = contact_target.strip()
@@ -498,7 +498,7 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload parsed & sent to network node (+91-{clean_number})."
 
-# Splash Loader (Fixed Syntax Error by escaping double curly brackets in CSS @keyframes)
+# Splash Loader
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
@@ -1113,15 +1113,20 @@ GEO_HIERARCHY = {
     }
 }
 
+# ==============================================================================
+# DETAILED MOSPI CENTRAL SECTOR DATASET INJECTION (WITH SECTORS CLASSIFICATION)
+# ==============================================================================
 @st.cache_data
 def load_data():
     project_rows = []
     
+    # Ground-truth iconic MoSPI central projects
     iconic_projects = {
         ("Bihar", "East Champaran", "Chhatauni"): {
             "Package_ID": "BHR_EAS_2026_0114",
             "Project_Name": "Motihari Chhatauni Flyover & Junction Improvement Works",
             "Contractor_Name": "L&T Infrastructure Engineering Ltd.",
+            "Sector": "Road Transport & Highways",
             "Original_Cost_Cr": 245.50, "Original_Duration": 36, "Elapsed_Months": 22,
             "Cumulative_Spend_Cr": 165.40, "Physical_Progress_Pct": 38.50, "Delayed_Milestones": 3,
             "Revisions_Count": 1, "Land_Risk_Score": 7.2, "WPI_Inflation_Index": 109.40,
@@ -1131,24 +1136,77 @@ def load_data():
             "Package_ID": "MOSPI_618738",
             "Project_Name": "6L Bridge across Ganga as part of Patna Ring Road NH-131G (Sherpur-Dighwara)",
             "Contractor_Name": "SP Singla Constructions Pvt Ltd (NHAI)",
+            "Sector": "Road Transport & Highways",
             "Original_Cost_Cr": 6292.00, "Original_Duration": 48, "Elapsed_Months": 30,
             "Cumulative_Spend_Cr": 734.19, "Physical_Progress_Pct": 22.05, "Delayed_Milestones": 4,
             "Revisions_Count": 1, "Land_Risk_Score": 8.4, "WPI_Inflation_Index": 116.50,
             "Site_Engineer": "Er. Project Director, NHAI PIU Patna"
         },
+        ("Bihar", "Patna", "Danapur"): {
+            "Package_ID": "MOSPI_BHR_542011",
+            "Project_Name": "Patna Metro Rail Project (Danapur Cantt to Khemnichak Corridor-1)",
+            "Contractor_Name": "Patna Metro Rail Corporation / DMRC",
+            "Sector": "Urban Development / Mass Transit",
+            "Original_Cost_Cr": 13365.77, "Original_Duration": 60, "Elapsed_Months": 38,
+            "Cumulative_Spend_Cr": 4120.30, "Physical_Progress_Pct": 34.80, "Delayed_Milestones": 3,
+            "Revisions_Count": 1, "Land_Risk_Score": 7.9, "WPI_Inflation_Index": 114.20,
+            "Site_Engineer": "Er. Chief Project Manager, PMRC"
+        },
+        ("Bihar", "Begusarai", "Barauni"): {
+            "Package_ID": "MOSPI_BHR_192831",
+            "Project_Name": "Barauni Refinery Expansion to 9 MMTPA and Polypropylene Unit",
+            "Contractor_Name": "Indian Oil Corporation Limited (IOCL)",
+            "Sector": "Petroleum & Natural Gas",
+            "Original_Cost_Cr": 14820.00, "Original_Duration": 54, "Elapsed_Months": 42,
+            "Cumulative_Spend_Cr": 11200.50, "Physical_Progress_Pct": 78.40, "Delayed_Milestones": 2,
+            "Revisions_Count": 1, "Land_Risk_Score": 5.8, "WPI_Inflation_Index": 112.90,
+            "Site_Engineer": "Er. Executive Director, IOCL Barauni"
+        },
+        ("Bihar", "Aurangabad", "Nabinagar"): {
+            "Package_ID": "MOSPI_BHR_882194",
+            "Project_Name": "Nabinagar Super Thermal Power Project (3x660 MW Stage-I/II)",
+            "Contractor_Name": "Nabinagar Power Generating Co. (NTPC JV)",
+            "Sector": "Power & Transmission",
+            "Original_Cost_Cr": 19279.00, "Original_Duration": 72, "Elapsed_Months": 65,
+            "Cumulative_Spend_Cr": 18105.00, "Physical_Progress_Pct": 94.20, "Delayed_Milestones": 1,
+            "Revisions_Count": 2, "Land_Risk_Score": 6.5, "WPI_Inflation_Index": 115.10,
+            "Site_Engineer": "Er. General Manager, NPGC Nabinagar"
+        },
         ("Maharashtra", "Mumbai Suburban", "Kurla"): {
             "Package_ID": "MOSPI_705728",
             "Project_Name": "Mumbai-Ahmedabad High Speed Rail Project (508 Km Bullet Train)",
             "Contractor_Name": "National High Speed Rail Corporation (NHSRCL)",
+            "Sector": "Railways",
             "Original_Cost_Cr": 108000.00, "Original_Duration": 84, "Elapsed_Months": 68,
             "Cumulative_Spend_Cr": 90966.89, "Physical_Progress_Pct": 62.16, "Delayed_Milestones": 5,
             "Revisions_Count": 2, "Land_Risk_Score": 8.5, "WPI_Inflation_Index": 118.20,
             "Site_Engineer": "Er. Chief Project Director, NHSRCL"
         },
+        ("Maharashtra", "Raigad", "Usar PDHPP"): {
+            "Package_ID": "MOSPI_MAH_443019",
+            "Project_Name": "GAIL Usar Propane Dehydrogenation and Polypropylene (PDH/PP) Complex",
+            "Contractor_Name": "GAIL (India) Limited",
+            "Sector": "Petroleum & Natural Gas",
+            "Original_Cost_Cr": 8790.00, "Original_Duration": 48, "Elapsed_Months": 31,
+            "Cumulative_Spend_Cr": 4920.40, "Physical_Progress_Pct": 56.70, "Delayed_Milestones": 2,
+            "Revisions_Count": 1, "Land_Risk_Score": 6.1, "WPI_Inflation_Index": 113.80,
+            "Site_Engineer": "Er. General Manager (Projects), GAIL Usar"
+        },
+        ("Maharashtra", "Chandrapur", "WCL Mines"): {
+            "Package_ID": "MOSPI_MAH_338910",
+            "Project_Name": "Durgapur Deep Extension Open Cast Project (3 MTPA)",
+            "Contractor_Name": "Western Coalfields Limited (CIL)",
+            "Sector": "Coal & Mines",
+            "Original_Cost_Cr": 1420.50, "Original_Duration": 40, "Elapsed_Months": 26,
+            "Cumulative_Spend_Cr": 890.30, "Physical_Progress_Pct": 64.20, "Delayed_Milestones": 2,
+            "Revisions_Count": 0, "Land_Risk_Score": 6.9, "WPI_Inflation_Index": 111.40,
+            "Site_Engineer": "Er. Area General Manager, WCL Chandrapur"
+        },
         ("Uttar Pradesh", "Prayagraj", "Meja"): {
             "Package_ID": "MOSPI_298178",
             "Project_Name": "Meja Thermal Power Project Stage-II (3x800 MW Super Thermal Unit)",
             "Contractor_Name": "NTPC Meja Urja Nigam Private Limited",
+            "Sector": "Power & Transmission",
             "Original_Cost_Cr": 38358.00, "Original_Duration": 72, "Elapsed_Months": 14,
             "Cumulative_Spend_Cr": 1002.73, "Physical_Progress_Pct": 0.02, "Delayed_Milestones": 1,
             "Revisions_Count": 0, "Land_Risk_Score": 6.8, "WPI_Inflation_Index": 112.40,
@@ -1158,12 +1216,76 @@ def load_data():
             "Package_ID": "MOSPI_615347",
             "Project_Name": "Transmission System Evacuation Potential RE Zone Khavda (8 GW Part A)",
             "Contractor_Name": "POWERGRID West Central Transmission Ltd.",
+            "Sector": "Power & Transmission",
             "Original_Cost_Cr": 24819.00, "Original_Duration": 48, "Elapsed_Months": 18,
             "Cumulative_Spend_Cr": 2978.28, "Physical_Progress_Pct": 18.56, "Delayed_Milestones": 2,
             "Revisions_Count": 0, "Land_Risk_Score": 5.4, "WPI_Inflation_Index": 111.80,
             "Site_Engineer": "Er. General Manager, PowerGrid Khavda"
+        },
+        ("Andhra Pradesh", "Alluri Sitharama Raju", "Polavaram National Irrigation Dam site"): {
+            "Package_ID": "MOSPI_AP_918234",
+            "Project_Name": "Polavaram Irrigation Project (National Multi-Purpose Water Project)",
+            "Contractor_Name": "Megha Engineering & Infrastructures Ltd. (MEIL)",
+            "Sector": "Water Resources & Irrigation",
+            "Original_Cost_Cr": 55548.87, "Original_Duration": 96, "Elapsed_Months": 92,
+            "Cumulative_Spend_Cr": 39840.15, "Physical_Progress_Pct": 76.50, "Delayed_Milestones": 6,
+            "Revisions_Count": 3, "Land_Risk_Score": 9.1, "WPI_Inflation_Index": 121.30,
+            "Site_Engineer": "Er. Chief Engineer, Polavaram Irrigation Authority"
+        },
+        ("Uttarakhand", "Chamoli", "Karnaprayag rail division"): {
+            "Package_ID": "MOSPI_UK_773912",
+            "Project_Name": "Rishikesh-Karnaprayag Broad Gauge Rail Link (125 Km Tunnels & Bridges)",
+            "Contractor_Name": "Rail Vikas Nigam Limited (RVNL)",
+            "Sector": "Railways",
+            "Original_Cost_Cr": 38953.00, "Original_Duration": 72, "Elapsed_Months": 60,
+            "Cumulative_Spend_Cr": 28410.00, "Physical_Progress_Pct": 71.40, "Delayed_Milestones": 4,
+            "Revisions_Count": 2, "Land_Risk_Score": 8.8, "WPI_Inflation_Index": 117.80,
+            "Site_Engineer": "Er. Chief Project Manager, RVNL Rishikesh"
+        },
+        ("Madhya Pradesh", "Sagar", "Bina Refinery & Petrochemical Complex"): {
+            "Package_ID": "MOSPI_MP_665120",
+            "Project_Name": "Bina Refinery Capacity Expansion and Ethylene Cracker Project",
+            "Contractor_Name": "Bharat Petroleum Corporation Limited (BPCL)",
+            "Sector": "Petroleum & Natural Gas",
+            "Original_Cost_Cr": 43367.00, "Original_Duration": 60, "Elapsed_Months": 19,
+            "Cumulative_Spend_Cr": 7230.00, "Physical_Progress_Pct": 21.30, "Delayed_Milestones": 1,
+            "Revisions_Count": 0, "Land_Risk_Score": 5.9, "WPI_Inflation_Index": 111.90,
+            "Site_Engineer": "Er. Executive Director, BPCL Bina"
+        },
+        ("Jharkhand", "Chatra", "North Karanpura"): {
+            "Package_ID": "MOSPI_JHK_398104",
+            "Project_Name": "North Karanpura Super Thermal Power Project (3x660 MW Air-Cooled)",
+            "Contractor_Name": "NTPC Limited",
+            "Sector": "Power & Transmission",
+            "Original_Cost_Cr": 14366.58, "Original_Duration": 80, "Elapsed_Months": 74,
+            "Cumulative_Spend_Cr": 13910.20, "Physical_Progress_Pct": 92.10, "Delayed_Milestones": 3,
+            "Revisions_Count": 2, "Land_Risk_Score": 7.6, "WPI_Inflation_Index": 119.40,
+            "Site_Engineer": "Er. Group General Manager, NTPC North Karanpura"
+        },
+        ("Assam", "Lakhimpur", "Subansiri Lower Hydroelectric Project"): {
+            "Package_ID": "MOSPI_ASM_501928",
+            "Project_Name": "Subansiri Lower Hydroelectric Project (2000 MW Dam & Powerhouse)",
+            "Contractor_Name": "NHPC Limited",
+            "Sector": "Power & Transmission",
+            "Original_Cost_Cr": 21247.57, "Original_Duration": 90, "Elapsed_Months": 84,
+            "Cumulative_Spend_Cr": 19870.00, "Physical_Progress_Pct": 89.60, "Delayed_Milestones": 5,
+            "Revisions_Count": 3, "Land_Risk_Score": 8.7, "WPI_Inflation_Index": 120.20,
+            "Site_Engineer": "Er. Executive Director, NHPC Gerukamukh"
         }
     }
+
+    SECTOR_CATALOG = [
+        "Road Transport & Highways",
+        "Railways",
+        "Petroleum & Natural Gas",
+        "Power & Transmission",
+        "Coal & Mines",
+        "Urban Development / Mass Transit",
+        "Water Resources & Irrigation",
+        "Steel",
+        "Civil Aviation",
+        "Telecommunications & Digital"
+    ]
 
     for st_name, dist_dict in GEO_HIERARCHY.items():
         for d_name, blk_list in dist_dict.items():
@@ -1178,6 +1300,7 @@ def load_data():
                     project_rows.append(rec)
                 else:
                     h_val = abs(hash(st_name + d_name + b_name))
+                    assigned_sector = SECTOR_CATALOG[h_val % len(SECTOR_CATALOG)]
                     cost_val = round(float((h_val % 3500) + 220.50), 2)
                     prog_val = round(float(15.0 + (h_val % 75)), 1)
                     spend_val = round(float(cost_val * (prog_val / 100.0) * 0.95), 2)
@@ -1188,8 +1311,9 @@ def load_data():
                         "District": d_name,
                         "Subdivision": f"{d_name} Division",
                         "Block": b_name,
+                        "Sector": assigned_sector,
                         "Package_ID": pkg_code,
-                        "Project_Name": f"{b_name} ({d_name}) Infrastructure Modernisation & Connectivity Project",
+                        "Project_Name": f"{b_name} ({d_name}) {assigned_sector} Modernisation Project",
                         "Contractor_Name": f"Empanelled State & Central Line Agency ({st_name})",
                         "Original_Cost_Cr": cost_val,
                         "Original_Duration": 36,
@@ -1245,6 +1369,8 @@ if "loc_dist" not in st.session_state:
     st.session_state["loc_dist"] = "All Districts"
 if "loc_block" not in st.session_state:
     st.session_state["loc_block"] = "All Blocks / Divisions"
+if "loc_sector" not in st.session_state:
+    st.session_state["loc_sector"] = "All Sectors"
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
@@ -1269,7 +1395,7 @@ with col_geo:
     selected_state = st.selectbox("1. State / UT", available_states, index=state_idx)
     st.session_state["loc_state"] = selected_state
     
-    # 2. District Dropdown (Cascades directly from selected state)
+    # 2. District Dropdown
     if selected_state != "Select State" and selected_state in GEO_HIERARCHY:
         district_list = ["All Districts"] + sorted(list(GEO_HIERARCHY[selected_state].keys()))
     else:
@@ -1277,10 +1403,10 @@ with col_geo:
         
     curr_dist_target = st.session_state.get("loc_dist", "All Districts")
     dist_idx = district_list.index(curr_dist_target) if curr_dist_target in district_list else 0
-    selected_district = st.selectbox("2. District / Sector", district_list, index=dist_idx)
+    selected_district = st.selectbox("2. District", district_list, index=dist_idx)
     st.session_state["loc_dist"] = selected_district
 
-    # 3. Block / Sub-Division Dropdown (Cascades directly from selected district)
+    # 3. Block / Sub-Division Dropdown
     if selected_state != "Select State" and selected_district != "All Districts" and selected_state in GEO_HIERARCHY:
         if selected_district in GEO_HIERARCHY[selected_state]:
             block_list = ["All Blocks / Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
@@ -1294,6 +1420,29 @@ with col_geo:
     selected_block = st.selectbox("3. Block / Sub-Division", block_list, index=block_idx)
     st.session_state["loc_block"] = selected_block
 
+    # =========================================================================
+    # 4. SECTORS BOX (Cascaded directly underneath Sub-Division)
+    # Only displays sectors present in the filtered location data
+    # =========================================================================
+    sub_filtered_df = paimana_df.copy()
+    if selected_state != "Select State":
+        sub_filtered_df = sub_filtered_df[sub_filtered_df["State"].astype(str).str.lower() == selected_state.lower()]
+    if selected_district != "All Districts":
+        sub_filtered_df = sub_filtered_df[sub_filtered_df["District"].astype(str).str.lower() == selected_district.lower()]
+    if selected_block != "All Blocks / Divisions":
+        sub_filtered_df = sub_filtered_df[sub_filtered_df["Block"].astype(str).str.lower() == selected_block.lower()]
+
+    available_sectors = sorted(list(sub_filtered_df["Sector"].dropna().unique()))
+    if available_sectors:
+        sector_options = ["All Sectors"] + available_sectors
+    else:
+        sector_options = ["All Sectors"]
+
+    curr_sector_target = st.session_state.get("loc_sector", "All Sectors")
+    sector_idx = sector_options.index(curr_sector_target) if curr_sector_target in sector_options else 0
+    selected_sector = st.selectbox("4. Infrastructure Sector", sector_options, index=sector_idx)
+    st.session_state["loc_sector"] = selected_sector
+
     fetch_btn = st.button("🗣️ Fetch Ongoing Projects (Enter ↵)", use_container_width=True)
     if fetch_btn:
         if selected_state != "Select State":
@@ -1303,6 +1452,7 @@ with col_geo:
             st.session_state['active_state'] = selected_state
             st.session_state['active_district'] = selected_district
             st.session_state['active_block'] = selected_block
+            st.session_state['active_sector'] = selected_sector
         else:
             st.error("Please select a State / UT first.")
 
@@ -1340,6 +1490,7 @@ with col_geo:
             "District": "East Champaran",
             "Subdivision": "Motihari Sadar",
             "Block": "Chhatauni",
+            "Sector": "Road Transport & Highways",
             "Package_ID": "BHR_EAS_2026_0114",
             "Contractor_Name": "L&T Infrastructure Engineering Ltd.",
             "Original_Cost_Cr": 245.50,
@@ -1359,9 +1510,11 @@ with col_geo:
         st.session_state['loc_state'] = "Bihar"
         st.session_state['loc_dist'] = "East Champaran"
         st.session_state['loc_block'] = "Chhatauni"
+        st.session_state['loc_sector'] = "Road Transport & Highways"
         st.session_state['active_state'] = "Bihar"
         st.session_state['active_district'] = "East Champaran"
         st.session_state['active_block'] = "Chhatauni"
+        st.session_state['active_sector'] = "Road Transport & Highways"
         
         st.session_state['inp_cost'] = float(preset_rec['Original_Cost_Cr'])
         st.session_state['inp_dur'] = int(preset_rec['Original_Duration'])
@@ -1387,6 +1540,7 @@ with col_sec1:
         active_st = st.session_state.get('active_state', selected_state)
         active_dist = st.session_state.get('active_district', selected_district)
         active_blk = st.session_state.get('active_block', selected_block)
+        active_sec = st.session_state.get('active_sector', selected_sector)
         
         temp_df = paimana_df.copy()
         if active_st != "Select State":
@@ -1395,11 +1549,13 @@ with col_sec1:
             temp_df = temp_df[temp_df["District"].astype(str).str.lower() == active_dist.lower()]
         if active_blk != "All Blocks / Divisions":
             temp_df = temp_df[temp_df["Block"].astype(str).str.lower() == active_blk.lower()]
+        if active_sec != "All Sectors":
+            temp_df = temp_df[temp_df["Sector"].astype(str).str.lower() == active_sec.lower()]
 
         matched_projects = [r for _, r in temp_df.iterrows()]
             
         if not matched_projects:
-            st.info("ℹ️ Currently, no active government construction work is underway at this specific location.")
+            st.info("ℹ️ Currently, no active government construction work is underway for this sector at this specific location.")
             active_row = None
         else:
             project_options = [str(r["Project_Name"]) for r in matched_projects]
@@ -1411,7 +1567,10 @@ with col_sec1:
                 <div style="font-size: 14.5px; font-weight: 800; color: {active_accent}; line-height: 1.3;">
                     📌 {active_row['Project_Name']}
                 </div>
-                <div><span class="project-code-badge">{active_row.get('Package_ID', 'MOSPI_INFRADRISHTI_2026')}</span></div>
+                <div>
+                    <span class="project-code-badge">{active_row.get('Package_ID', 'MOSPI_INFRADRISHTI_2026')}</span>
+                    <span style="background-color: #1E293B; color: #38BDF8; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-left: 6px;">🏷️ {active_row.get('Sector', 'Central Sector')}</span>
+                </div>
                 <div class="contractor-text">🏗️ {active_row.get('Contractor_Name', 'Empanelled Central/State Agency')}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -1543,7 +1702,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
     # 1. Prediction Results Anchor
     st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
     
-    # 2. Reliable Auto-Scroll Execution across multiple runs
+    # 2. Reliable Auto-Scroll Execution
     components.html(
         f"""
         <script>
@@ -1649,7 +1808,6 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
-        # Clean 3-Column Root Cause Analysis Table
         st.markdown(f"""
         <div class="rca-table-container">
             <div style="font-weight: 800; font-size: 13.5px; color: {active_accent}; margin-bottom: 8px;">
@@ -1684,7 +1842,6 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         </div>
         """, unsafe_allow_html=True)
 
-    # MODULE 5: Comparative Peer Benchmarking Tab
     with t_bench:
         st.markdown(f"#### 📈 Sector Peer Benchmarking & Comparative Analytics")
         st.caption("Cross-project performance standing compared against 1,981+ MoSPI Central Infrastructure Projects.")
@@ -1794,7 +1951,6 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (CLEAN EMPTY EMAIL INPUT)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1814,7 +1970,6 @@ Date: {current_date_str}
         </div>
         """, unsafe_allow_html=True)
         
-        # Message Live Payload
         if res['cpri_score'] >= 60.0:
             status_summary_msg = f"CRITICAL RED ALERT: High-risk schedule slippage (+{res['pred_delay_months']:.1f} M) and cost escalation (+Rs {res['cost_escalation_cr']:.1f} Cr). Immediate intervention required under CPWD Works Manual Clause 2."
         elif res['cpri_score'] >= 30.0:
@@ -1824,7 +1979,6 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
-        # 2. Email Box Cleaned: No pre-filled email, shows clean placeholder
         if "dispatch_target_input" not in st.session_state:
             st.session_state["dispatch_target_input"] = ""
 
@@ -1863,13 +2017,12 @@ Date: {current_date_str}
 
 
 # ==========================================
-# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA DRISHTI CHATBOT (Trilingual)
+# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA DRISHTI CHATBOT
 # ==========================================
 with st.popover("🏛️"):
     st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
-    # Quick Action Chips
     chip_col1, chip_col2 = st.columns(2)
     selected_chip_query = None
     with chip_col1:
@@ -1885,7 +2038,6 @@ with st.popover("🏛️"):
 
     st.markdown("---")
     
-    # Render Chat History (Modern Gemini Bubble Layout)
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
@@ -1901,12 +2053,10 @@ with st.popover("🏛️"):
         q_raw = active_chat_query.strip()
         q = q_raw.lower()
         
-        # Language Identification Engine
         is_hindi = any('\u0900' <= char <= '\u097F' for char in q_raw)
         hinglish_words = ["kya", "kaise", "batao", "paise", "kyu", "kyun", "kitna", "madad", "delay", "kharab", "bachaye", "hai", "karta", "karo"]
         is_hinglish = any(hw in q for hw in hinglish_words)
         
-        # STRICT GUARDRAILS: Refuse technical/source-code/backend implementation queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
