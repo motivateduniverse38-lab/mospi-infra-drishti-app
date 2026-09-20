@@ -420,13 +420,11 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         except Exception:
             pass
 
-        # Dedicated SMTP User and App Password Token injected directly
         if not smtp_user:
             smtp_user = "rr8617244@gmail.com"
         if not smtp_pass:
             smtp_pass = "mrtp idiz uaiy mvrx"
         
-        # Email construction
         msg = MIMEMultipart()
         msg['Subject'] = f"🚨 MoSPI INFRA DRISHTI Alert: {pkg_id} [{alert_tag}]"
         msg['From'] = f"INFRA DRISHTI AI <{smtp_user}>"
@@ -451,7 +449,6 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         )
         msg.attach(MIMEText(body_content, 'plain'))
 
-        # Direct Transmission via standard TLS / SSL Fallback
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
             server.ehlo()
@@ -501,7 +498,7 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload parsed & sent to network node (+91-{clean_number})."
 
-# Splash Loader (Completely Hiding GitHub Badges & Menu during Splash Display)
+# Splash Loader (Fixed Syntax Error by escaping double curly brackets in CSS @keyframes)
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
@@ -520,13 +517,13 @@ if "splash_done" not in st.session_state:
             a[title*="GitHub"],
             [data-testid="manage-app-button"],
             div[class*="viewerBadge"],
-            div[class*="manage-app"] {
+            div[class*="manage-app"] {{
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
                 pointer-events: none !important;
-            }
-            .splash-wrapper {
+            }}
+            .splash-wrapper {{
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -537,8 +534,8 @@ if "splash_done" not in st.session_state:
                 animation: fadeInSplash 0.5s ease-in-out forwards;
                 perspective: 1000px;
                 background-color: #0B0F19;
-            }
-            .splash-logo {
+            }}
+            .splash-logo {{
                 font-size: 56px;
                 font-weight: 900;
                 letter-spacing: 2px;
@@ -547,8 +544,8 @@ if "splash_done" not in st.session_state:
                 margin-bottom: 8px;
                 animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
                 transform-origin: center center;
-            }
-            .splash-sub {
+            }}
+            .splash-sub {{
                 font-size: 14px;
                 font-weight: 700;
                 letter-spacing: 3px;
@@ -556,8 +553,8 @@ if "splash_done" not in st.session_state:
                 text-transform: uppercase;
                 margin-bottom: 25px;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
-            }
-            .splash-loader {
+            }}
+            .splash-loader {{
                 width: 220px;
                 height: 4px;
                 background-color: #1E293B;
@@ -565,33 +562,33 @@ if "splash_done" not in st.session_state:
                 overflow: hidden;
                 position: relative;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
-            }
-            .splash-bar {
+            }}
+            .splash-bar {{
                 width: 100%;
                 height: 100%;
                 background: linear-gradient(90deg, {active_accent}, #10B981);
                 animation: progress 4.0s linear forwards;
-            }
-            @keyframes progress {
+            }}
+            @keyframes progress {{
                 0% {{ transform: translateX(-100%); }}
                 100% {{ transform: translateX(0%); }}
-            }
-            @keyframes flyTowardsScreen {
-                0% { transform: scale(0.95); opacity: 0; }
-                12% { transform: scale(1); opacity: 1; }
-                83.33% { transform: scale(1); opacity: 1; filter: blur(0px); }
-                100% { transform: scale(3.5); opacity: 0; filter: blur(12px); }
-            }
-            @keyframes fadeOutElements {
-                0% { opacity: 0; }
-                12% { opacity: 1; }
-                83.33% { opacity: 1; transform: translateY(0px); }
-                100% { opacity: 0; transform: translateY(25px); }
-            }
-            @keyframes fadeInSplash {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
+            }}
+            @keyframes flyTowardsScreen {{
+                0% {{ transform: scale(0.95); opacity: 0; }}
+                12% {{ transform: scale(1); opacity: 1; }}
+                83.33% {{ transform: scale(1); opacity: 1; filter: blur(0px); }}
+                100% {{ transform: scale(3.5); opacity: 0; filter: blur(12px); }}
+            }}
+            @keyframes fadeOutElements {{
+                0% {{ opacity: 0; }}
+                12% {{ opacity: 1; }}
+                83.33% {{ opacity: 1; transform: translateY(0px); }}
+                100% {{ opacity: 0; transform: translateY(25px); }}
+            }}
+            @keyframes fadeInSplash {{
+                from {{ opacity: 0; }}
+                to {{ opacity: 1; }}
+            }}
         </style>
         <div class="splash-wrapper">
             <div class="splash-logo">🏛️ INFRA DRISHTI AI</div>
@@ -1318,7 +1315,7 @@ with col_geo:
     </div>
     """, unsafe_allow_html=True)
 
-    # Left Note 2 (Updated Heading: 🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS)
+    # Left Note 2
     st.markdown(f"""
     <div class="provenance-card">
         <b style="color:#10B981;">🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS</b><br>
@@ -1652,6 +1649,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
+        # Clean 3-Column Root Cause Analysis Table
         st.markdown(f"""
         <div class="rca-table-container">
             <div style="font-weight: 800; font-size: 13.5px; color: {active_accent}; margin-bottom: 8px;">
@@ -1796,7 +1794,7 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON
+    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (CLEAN EMPTY EMAIL INPUT)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1826,12 +1824,16 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
+        # 2. Email Box Cleaned: No pre-filled email, shows clean placeholder
+        if "dispatch_target_input" not in st.session_state:
+            st.session_state["dispatch_target_input"] = ""
+
         col_in_target, col_btn_target = st.columns([2.8, 1.2])
         with col_in_target:
             recipient_val = st.text_input(
                 "Enter Official Email Address to Dispatch Directive Alert:",
-                value=st.session_state.get("dispatch_target_input", "motivateduniverse38@gmail.com"),
-                placeholder="e.g. nodal.officer@mospi.gov.in or project.director@agency.com",
+                value=st.session_state.get("dispatch_target_input", ""),
+                placeholder="Enter Official Email ID Here...",
                 key="dispatch_tab_input"
             )
             st.session_state["dispatch_target_input"] = recipient_val
@@ -1970,6 +1972,7 @@ with st.popover("🏛️"):
                     "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
                     "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
                     "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks using explainable SHAP weights.\n"
+                    "* **Simulate 'What-If' Recovery:** Test administrative interventions (e.g., expedited clearances) to compute exact time and budget savings.\n"
                     "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
                 )
         elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
@@ -2043,7 +2046,7 @@ with st.popover("🏛️"):
             else:
                 ai_response = (
                     "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
-                    "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**.\n"
+                    "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**. Primary drivers: Environmental/Forest clearances and WPI material escalation.\n"
                     "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
                     "* **Power & Renewable Energy Zone:** Faster execution speed with average $SPI \\approx 0.88$."
                 )
