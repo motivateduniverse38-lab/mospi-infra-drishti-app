@@ -16,13 +16,13 @@ import threading
 from datetime import datetime
 
 st.set_page_config(
-    page_title="PAIMANA AI - Infrastructure Risk Engine",
+    page_title="INFRA DRISHTI AI - Infrastructure Risk Engine",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection to completely remove Streamlit GitHub toolbar & Menus
+# 0. Global Security CSS Injection & High-Contrast Readability Engine
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
@@ -40,36 +40,67 @@ st.markdown("""
     div[class*="stDecoration"] {display: none !important;}
     div[data-testid="stStatusWidget"] {display: none !important;}
     section[data-testid="stSidebar"] {display: none !important;}
+
+    /* FIX POINT 3: High-Contrast Dropdown & Label Visibility on Mobile / Desktop */
+    html, body, [class*="css"], .stApp {
+        font-family: 'Arial', sans-serif !important;
+    }
+    label, [data-testid="stWidgetLabel"] p {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+        font-size: 13.5px !important;
+        letter-spacing: 0.2px !important;
+    }
+    div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+    }
+    div[data-baseweb="select"] * {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+    }
+    ul[data-testid="stSelectboxVirtualList"], div[data-baseweb="menu"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #94A3B8 !important;
+    }
+    ul[data-testid="stSelectboxVirtualList"] li, div[data-baseweb="menu"] div {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+    }
+    ul[data-testid="stSelectboxVirtualList"] li:hover {
+        background-color: #E2E8F0 !important;
+        color: #0284C7 !important;
+    }
+    div[data-baseweb="input"] input {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+        background-color: #FFFFFF !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# 1. User Preference Settings State
-if "app_theme_mode" not in st.session_state:
-    st.session_state["app_theme_mode"] = "Dark Slate"
-if "app_font_scale" not in st.session_state:
-    st.session_state["app_font_scale"] = "Standard (Default)"
 if "scroll_trigger" not in st.session_state:
     st.session_state["scroll_trigger"] = 0
 
-is_dark = st.session_state["app_theme_mode"] == "Dark Slate"
+# Static Ultra-Clean Color Palette (Settings Removed)
+active_bg = "#F8FAFC"
+active_card_bg = "#FFFFFF"
+active_text = "#0F172A"
+active_subtext = "#475569"
+active_border = "#CBD5E1"
+active_accent = "#0284C7"
 
-# Robust Contrast Palette
-active_bg = "#0B0F19" if is_dark else "#F8FAFC"
-active_card_bg = "#111827" if is_dark else "#FFFFFF"
-active_text = "#FFFFFF" if is_dark else "#0F172A"
-active_subtext = "#94A3B8" if is_dark else "#475569"
-active_border = "#334155" if is_dark else "#CBD5E1"
-active_accent = "#38BDF8" if is_dark else "#0284C7"
-
-# Plot & Notice Contrast
-plot_text_color = "#F8FAFC" if is_dark else "#0F172A"
-plot_grid_color = "#1E293B" if is_dark else "#E2E8F0"
-tab_text_color = "#FFFFFF" if is_dark else "#0F172A"
-notice_bg = "#030712" if is_dark else "#FFFFFF"
-notice_text = "#F8FAFC" if is_dark else "#0F172A"
-notice_border = "#38BDF8" if is_dark else "#0284C7"
-
-font_base_size = "14px" if st.session_state["app_font_scale"] == "Standard (Default)" else "15.5px"
+plot_text_color = "#0F172A"
+plot_grid_color = "#E2E8F0"
+tab_text_color = "#0F172A"
+notice_bg = "#FFFFFF"
+notice_text = "#0F172A"
+notice_border = "#0284C7"
+font_base_size = "14.5px"
 
 # 100% REAL Dual-Pipeline Dispatch Engine (Live Email & SMS Transmission)
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
@@ -128,7 +159,7 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload encrypted & transmitted to `+91-{clean_number}`."
 
-# 2. 4-Second Loading Followed by Screen Fly-Through Zoom Out (Towards Laptop Screen)
+# 2. 4-Second Loading Followed by Screen Fly-Through Zoom Out
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
@@ -155,7 +186,7 @@ if "splash_done" not in st.session_state:
                 font-weight: 900;
                 letter-spacing: 2px;
                 color: {active_accent};
-                text-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+                text-shadow: 0 0 30px rgba(2, 132, 199, 0.6);
                 margin-bottom: 8px;
                 animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
                 transform-origin: center center;
@@ -164,7 +195,7 @@ if "splash_done" not in st.session_state:
                 font-size: 14px;
                 font-weight: 700;
                 letter-spacing: 3px;
-                color: #94A3B8;
+                color: #475569;
                 text-transform: uppercase;
                 margin-bottom: 25px;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
@@ -172,7 +203,7 @@ if "splash_done" not in st.session_state:
             .splash-loader {{
                 width: 220px;
                 height: 4px;
-                background-color: #1E293B;
+                background-color: #E2E8F0;
                 border-radius: 4px;
                 overflow: hidden;
                 position: relative;
@@ -206,7 +237,7 @@ if "splash_done" not in st.session_state:
             }}
         </style>
         <div class="splash-wrapper">
-            <div class="splash-logo">🏛️ PAIMANA AI</div>
+            <div class="splash-logo">🏛️ INFRA DRISHTI AI</div>
             <div class="splash-sub">MoSPI Infrastructure Monitoring & Predictive Risk Engine</div>
             <div class="splash-loader"><div class="splash-bar"></div></div>
             <p style="color: #64748B; font-size: 13px; margin-top: 14px; animation: fadeOutElements 4.8s ease-in-out forwards;">Ingesting Multi-Quarter Flash Reports & Computing EVM Risks...</p>
@@ -216,13 +247,13 @@ if "splash_done" not in st.session_state:
     st.session_state["splash_done"] = True
     splash_placeholder.empty()
 
-# 3. Dynamic Contrast-Enforced Theme CSS & Precise Popover Positioning
+# 3. Dynamic Styles (No Settings CSS)
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
     html, body, [class*="css"], .stApp {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-family: 'Arial', 'Inter', sans-serif !important;
         font-size: {font_base_size};
         background-color: {active_bg} !important;
         color: {active_text} !important;
@@ -232,20 +263,6 @@ st.markdown(f"""
         color: {active_text} !important;
     }}
 
-    label, [data-testid="stWidgetLabel"] p {{
-        color: {active_text} !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        letter-spacing: 0.2px !important;
-        margin-bottom: 2px !important;
-    }}
-
-    div[data-baseweb="input"] input, div[data-baseweb="select"] {{
-        color: {active_text} !important;
-        font-weight: 600 !important;
-        background-color: {active_card_bg} !important;
-        font-family: 'JetBrains Mono', monospace !important;
-    }}
     div[data-baseweb="input"] {{
         border: 1.5px solid {active_border} !important;
         border-radius: 8px !important;
@@ -254,19 +271,19 @@ st.markdown(f"""
 
     /* Global Buttons */
     .stButton > button {{
-        background-color: {'#1E293B' if is_dark else '#FFFFFF'} !important;
+        background-color: #FFFFFF !important;
         color: {active_text} !important;
         font-weight: 700 !important;
         font-size: 13px !important;
         border: 1.5px solid {active_accent} !important;
         border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
         padding: 8px 14px !important;
         transition: all 0.2s ease !important;
     }}
     .stButton > button:hover {{
         background-color: {active_accent} !important;
-        color: {'#0B0F19' if is_dark else '#FFFFFF'} !important;
+        color: #FFFFFF !important;
         border-color: {active_accent} !important;
     }}
 
@@ -311,17 +328,17 @@ st.markdown(f"""
     }}
 
     .project-card-white {{
-        background-color: {'#1E293B' if is_dark else '#FFFFFF'};
+        background-color: #FFFFFF;
         color: {active_text} !important;
         border: 1.5px solid {active_border};
         border-radius: 10px;
         padding: 14px;
         margin-bottom: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }}
     .project-code-badge {{
-        background-color: {'#064E3B' if is_dark else '#D1FAE5'};
-        color: {'#34D399' if is_dark else '#065F46'} !important;
+        background-color: #D1FAE5;
+        color: #065F46 !important;
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
         font-weight: 700;
@@ -331,7 +348,7 @@ st.markdown(f"""
         margin: 4px 0;
     }}
     .contractor-text {{
-        color: {'#34D399' if is_dark else '#059669'} !important;
+        color: #059669 !important;
         font-weight: 800;
         font-size: 13px;
         margin-bottom: 6px;
@@ -343,7 +360,7 @@ st.markdown(f"""
         margin-bottom: 5px;
     }}
     .metric-dot-green {{
-        color: {'#34D399' if is_dark else '#059669'} !important;
+        color: #059669 !important;
         font-weight: 700;
         font-family: 'JetBrains Mono', monospace;
     }}
@@ -404,7 +421,7 @@ st.markdown(f"""
         color: {active_text};
     }}
     .rca-table th {{
-        background-color: {'#1E293B' if is_dark else '#F1F5F9'};
+        background-color: #F1F5F9;
         color: {active_accent};
         padding: 10px;
         font-weight: 800;
@@ -419,32 +436,8 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* ========================================================
-       1. SETTINGS COMPACT RECTANGULAR BOX FIXED AT TOP RIGHT
-       ======================================================== */
-    div.stPopover:has(button[aria-label*="Settings"]) {{
-        position: fixed !important;
-        top: 16px !important;
-        right: 20px !important;
-        z-index: 99999 !important;
-        width: auto !important;
-        display: block !important;
-    }}
-    div.stPopover:has(button[aria-label*="Settings"]) > button {{
-        background: {active_card_bg} !important;
-        color: {active_text} !important;
-        font-weight: 700 !important;
-        font-size: 12px !important;
-        border: 1.5px solid {active_border} !important;
-        border-radius: 6px !important;
-        padding: 5px 12px !important;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
-    }}
-
-    /* ========================================================
-       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT
-       ======================================================== */
-    div.stPopover:not(:has(button[aria-label*="Settings"])) {{
+    /* FIX POINT 5: UNIQUE FLOATING INFRA DRISHTI CHATBOT CIRCULAR BADGE */
+    div.stPopover {{
         position: fixed !important;
         bottom: 24px !important;
         right: 24px !important;
@@ -452,62 +445,64 @@ st.markdown(f"""
         width: auto !important;
         display: block !important;
     }}
-    div.stPopover:not(:has(button[aria-label*="Settings"])) > button {{
-        background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
+    div.stPopover > button {{
+        background: linear-gradient(135deg, #0284C7, #0369A1) !important;
         color: #FFFFFF !important;
         font-size: 24px !important;
-        width: 54px !important;
-        height: 54px !important;
-        min-width: 54px !important;
-        max-width: 54px !important;
-        min-height: 54px !important;
-        max-height: 54px !important;
+        width: 58px !important;
+        height: 58px !important;
+        min-width: 58px !important;
+        max-width: 58px !important;
+        min-height: 58px !important;
+        max-height: 58px !important;
         border-radius: 50% !important;
         padding: 0px !important;
         margin: 0px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        border: 2px solid #FFFFFF55 !important;
-        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5) !important;
+        border: 2px solid #FFFFFF !important;
+        box-shadow: 0 8px 24px rgba(2, 132, 199, 0.45) !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         cursor: pointer !important;
     }}
-    div.stPopover:not(:has(button[aria-label*="Settings"])) > button:hover {{
+    div.stPopover > button:hover {{
         transform: scale(1.1) !important;
-        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.75) !important;
+        box-shadow: 0 12px 30px rgba(2, 132, 199, 0.7) !important;
     }}
 
     div[data-testid="stPopoverBody"] {{
-        background-color: {active_card_bg} !important;
-        color: {active_text} !important;
-        border: 1.5px solid {active_border} !important;
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        border: 1.5px solid #CBD5E1 !important;
         border-radius: 12px !important;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.4) !important;
-        width: 360px !important;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.2) !important;
+        width: 370px !important;
         max-width: 90vw !important;
     }}
     
     .gemini-bubble-user {{
-        background-color: {'#1E293B' if is_dark else '#E2E8F0'};
-        color: {active_text};
+        background-color: #E2E8F0;
+        color: #0F172A;
         padding: 8px 12px;
         border-radius: 12px 12px 2px 12px;
         margin-bottom: 8px;
         font-size: 12.5px;
         max-width: 85%;
         margin-left: auto;
+        font-weight: 600;
     }}
     .gemini-bubble-ai {{
-        background-color: {'#0B1528' if is_dark else '#F0F9FF'};
-        color: {active_text};
-        border-left: 3px solid {active_accent};
+        background-color: #F0F9FF;
+        color: #0F172A;
+        border-left: 3.5px solid #0284C7;
         padding: 10px 14px;
         border-radius: 12px 12px 12px 2px;
         margin-bottom: 12px;
         font-size: 12.5px;
         line-height: 1.55;
-        border: 1px solid {active_border};
+        border: 1px solid #BAE6FD;
+        font-weight: 500;
     }}
 
     .alert-dispatch-card {{
@@ -1032,7 +1027,7 @@ GEO_HIERARCHY = {
     }
 }
 
-# 5. Master Ingestion Engine generating verified projects for EVERY State, District & Block
+# 5. Master Ingestion Engine
 @st.cache_data
 def load_data():
     project_rows = []
@@ -1146,7 +1141,7 @@ def load_ml_models():
                 pass
     return t_model, c_model
 
-paimana_df = load_data()
+infradrishti_df = load_data()
 time_model, cost_model = load_ml_models()
 
 # State Initializations
@@ -1168,37 +1163,17 @@ if "loc_block" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        {"role": "assistant", "content": "Hello! I am your **Infra AI Intelligence Partner**. You can ask me regarding national infrastructure status, MoSPI Flash Reports, EVM deviations, delay benchmarks, or project insights across 34 States/UTs."}
+        {"role": "assistant", "content": "Namaste! Main **INFRA DRISHTI AI** Assistant hoon. Aap mujhse **Hindi**, **Hinglish**, ya **English** me national infrastructure status, MoSPI Flash Reports, EVM deviations, ya delay benchmarks ke baare me pooch sakte hain."}
     ]
 
-# Top Header Layout with Settings Popover at Top Right Corner
-header_col1, header_col2, header_col3 = st.columns([1, 8, 1.2])
-
-with header_col2:
-    st.markdown(f"<div class='brand-title'>🏛️ PAIMANA AI</div>", unsafe_allow_html=True)
-    st.markdown("<div class='brand-subtitle'>INFRASTRUCTURE ANALYSIS & PREDICTIVE COMPLIANCE ENGINE</div>", unsafe_allow_html=True)
-
-with header_col3:
-    with st.popover("⚙️ Settings"):
-        st.markdown("#### 🎨 Display Mode")
-        theme_options = ["Dark Slate", "Clean Light"]
-        curr_theme_idx = 0 if st.session_state["app_theme_mode"] == "Dark Slate" else 1
-        new_theme = st.radio("Interface Theme", theme_options, index=curr_theme_idx)
-        
-        st.markdown("#### 🔤 Font Sizing")
-        font_options = ["Standard (Default)", "Large (High-Legibility)"]
-        curr_font_idx = 0 if st.session_state["app_font_scale"] == "Standard (Default)" else 1
-        new_font = st.radio("Typography Scale", font_options, index=curr_font_idx)
-        
-        if new_theme != st.session_state["app_theme_mode"] or new_font != st.session_state["app_font_scale"]:
-            st.session_state["app_theme_mode"] = new_theme
-            st.session_state["app_font_scale"] = new_font
-            st.rerun()
+# Top Header Layout (Settings Button Completely Removed)
+st.markdown(f"<div class='brand-title'>🏛️ INFRA DRISHTI AI</div>", unsafe_allow_html=True)
+st.markdown("<div class='brand-subtitle'>INFRASTRUCTURE ANALYSIS & PREDICTIVE COMPLIANCE ENGINE | MoSPI CENTRAL</div>", unsafe_allow_html=True)
 
 # Responsive Main 3-Column Interface
 col_geo, col_sec1, col_sec2 = st.columns([0.85, 1.1, 1.05], gap="medium")
 
-# COLUMN 1: Dynamic Jurisdiction Selection Derived Directly from Ingested Real Data
+# COLUMN 1: Dynamic Jurisdiction Selection
 with col_geo:
     st.markdown("<div class='section-title'>📍 JURISDICTION SELECTION</div>", unsafe_allow_html=True)
     
@@ -1209,7 +1184,7 @@ with col_geo:
     selected_state = st.selectbox("1. State / UT", available_states, index=state_idx)
     st.session_state["loc_state"] = selected_state
     
-    # 2. District Dropdown (Cascades directly from selected state)
+    # 2. District Dropdown
     if selected_state != "Select State" and selected_state in GEO_HIERARCHY:
         district_list = ["All Districts"] + sorted(list(GEO_HIERARCHY[selected_state].keys()))
     else:
@@ -1220,7 +1195,7 @@ with col_geo:
     selected_district = st.selectbox("2. District / Sector", district_list, index=dist_idx)
     st.session_state["loc_dist"] = selected_district
 
-    # 3. Block / Sub-Division Dropdown (Cascades directly from selected district)
+    # 3. Block / Sub-Division Dropdown
     if selected_state != "Select State" and selected_district != "All Districts" and selected_state in GEO_HIERARCHY:
         if selected_district in GEO_HIERARCHY[selected_state]:
             block_list = ["All Blocks / Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
@@ -1248,14 +1223,12 @@ with col_geo:
 
     demo_btn = st.button("🚨 Load Motihari Chhatauni Demo Preset", use_container_width=True)
     
-    # Professional English Helper Text
     st.markdown("""
     <div class="sidebar-note">
         <b>💡 Quick Evaluation Mode:</b> If you prefer not to enter project metrics manually, click the <b>'Load Motihari Chhatauni Demo Preset'</b> button above to instantly evaluate a live infrastructure package and test the predictive risk workflow.
     </div>
     """, unsafe_allow_html=True)
 
-    # Professional English Data Provenance & Real vs AI Data Card
     st.markdown(f"""
     <div class="provenance-card">
         <b>🟢 100% REAL GOVERNMENT DATA (MoSPI Verified)</b><br>
@@ -1265,7 +1238,7 @@ with col_geo:
         • <b>Sanctioned Cost & Duration</b> (Original sanctioned budget & approved project schedule baseline)<br>
         • <b>Ground Metrics:</b> Elapsed Months, Actual Spend to Date, Physical Progress %, Delayed Milestones, and Approved Scope Revisions.<br><br>
         <b>🤖 AI-GENERATED / PREDICTIVE DATA (System Computed)</b><br>
-        Outputs computed in real-time by the PAIMANA predictive risk engine:<br>
+        Outputs computed in real-time by the INFRA DRISHTI predictive risk engine:<br>
         • <b>Geospatial Land Risk Score (1–10):</b> Synthesized from regional terrain constraints and statutory Right-of-Way (RoW) acquisition complexity.<br>
         • <b>Section 2 Predictive Analytics:</b> Forecasted Cost Escalation (+₹ Cr / %), Schedule Delay (+Months), CPRI Composite Risk Score, Root-Cause (SHAP) Weights, and Contractual Liquidated Damages Notices.
     </div>
@@ -1328,7 +1301,7 @@ with col_sec1:
         active_dist = st.session_state.get('active_district', selected_district)
         active_blk = st.session_state.get('active_block', selected_block)
         
-        temp_df = paimana_df.copy()
+        temp_df = infradrishti_df.copy()
         if active_st != "Select State":
             temp_df = temp_df[temp_df["State"].astype(str).str.lower() == active_st.lower()]
         if active_dist != "All Districts":
@@ -1351,7 +1324,7 @@ with col_sec1:
                 <div style="font-size: 14.5px; font-weight: 800; color: {active_accent}; line-height: 1.3;">
                     📌 {active_row['Project_Name']}
                 </div>
-                <div><span class="project-code-badge">{active_row.get('Package_ID', 'MOSPI_PAIMANA_2026')}</span></div>
+                <div><span class="project-code-badge">{active_row.get('Package_ID', 'MOSPI_INFRADRISHTI_2026')}</span></div>
                 <div class="contractor-text">🏗️ {active_row.get('Contractor_Name', 'Empanelled Central/State Agency')}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -1480,10 +1453,8 @@ with col_sec2:
 if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] is not None:
     res = st.session_state['cached_predictions']
     
-    # 1. Prediction Results Anchor
     st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
     
-    # 2. Reliable Auto-Scroll Execution across multiple runs
     components.html(
         f"""
         <script>
@@ -1553,10 +1524,10 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         fig_s.add_trace(go.Bar(name='Actual Ground Progress (%)', x=['Schedule Horizon'], y=[res['inp_phys']], marker=dict(color='#10B981', line=dict(color='#059669', width=1.5)), width=0.35))
         fig_s.update_layout(
             barmode='group',
-            template="plotly_dark" if is_dark else "plotly_white",
+            template="plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Inter"),
+            font=dict(color=plot_text_color, family="Arial"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             yaxis=dict(tickfont=dict(color=plot_text_color, size=12), title_font=dict(color=plot_text_color, size=13), range=[0, 100], gridcolor=plot_grid_color),
             height=340,
@@ -1578,18 +1549,17 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         shap_df = pd.DataFrame(list(shap_factors.items()), columns=['Parameter', 'Weight (%)']).sort_values(by='Weight (%)', ascending=True)
         fig_bar = px.bar(shap_df, x='Weight (%)', y='Parameter', orientation='h', color='Weight (%)', color_continuous_scale='Reds')
         fig_bar.update_layout(
-            template="plotly_dark" if is_dark else "plotly_white",
+            template="plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Inter"),
+            font=dict(color=plot_text_color, family="Arial"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), title_font=dict(color=plot_text_color, size=13), gridcolor=plot_grid_color),
-            yaxis=dict(tickfont=dict(color=plot_text_color, size=12, family="Inter"), title_font=dict(color=plot_text_color, size=13)),
+            yaxis=dict(tickfont=dict(color=plot_text_color, size=12, family="Arial"), title_font=dict(color=plot_text_color, size=13)),
             height=300,
             margin=dict(l=20, r=20, t=20, b=20)
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
-        # Clean 3-Column Root Cause Analysis Table (in English)
         st.markdown(f"""
         <div class="rca-table-container">
             <div style="font-weight: 800; font-size: 13.5px; color: {active_accent}; margin-bottom: 8px;">
@@ -1624,7 +1594,6 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         </div>
         """, unsafe_allow_html=True)
 
-    # MODULE 5: Comparative Peer Benchmarking Tab
     with t_bench:
         st.markdown(f"#### 📈 Sector Peer Benchmarking & Comparative Analytics")
         st.caption("Cross-project performance standing compared against 1,981+ MoSPI Central Infrastructure Projects.")
@@ -1653,10 +1622,10 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
         fig_bench.update_layout(
             barmode='group',
-            template="plotly_dark" if is_dark else "plotly_white",
+            template="plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Inter"),
+            font=dict(color=plot_text_color, family="Arial"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             yaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             height=320,
@@ -1734,7 +1703,6 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (Repeated Dispatches Allowed)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1754,7 +1722,6 @@ Date: {current_date_str}
         </div>
         """, unsafe_allow_html=True)
         
-        # Message Live Payload
         if res['cpri_score'] >= 60.0:
             status_summary_msg = f"CRITICAL RED ALERT: High-risk schedule slippage (+{res['pred_delay_months']:.1f} M) and cost escalation (+Rs {res['cost_escalation_cr']:.1f} Cr). Immediate intervention required under CPWD Works Manual Clause 2."
         elif res['cpri_score'] >= 30.0:
@@ -1764,7 +1731,6 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
-        # Smart Board 1-Touch Email Presets & Default Initializer
         if "dispatch_target_input" not in st.session_state:
             st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
 
@@ -1816,12 +1782,11 @@ Date: {current_date_str}
                 else:
                     st.error(status_info)
 
-
-# ==========================================
-# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Compact Circular FAB)
-# ==========================================
-with st.popover("💬"):
-    st.markdown("### 🏛️ Infra AI Assistant")
+# ==============================================================================
+# 6. PERSISTENT FLOATING INFRA DRISHTI CHATBOT (FIX POINT 4 & 5: TRILINGUAL & UNIQUE BADGE)
+# ==============================================================================
+with st.popover("🏛️"):
+    st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
     # Quick Action Chips
@@ -1829,33 +1794,39 @@ with st.popover("💬"):
     selected_chip_query = None
     with chip_col1:
         if st.button("🚨 Top Overruns", use_container_width=True):
-            selected_chip_query = "What are the top infrastructure projects with highest cost overruns?"
+            selected_chip_query = "Top delayed central projects kaun se hain?"
         if st.button("🌐 Geographic Scope", use_container_width=True):
             selected_chip_query = "What all states, districts and blocks are covered in this system?"
     with chip_col2:
         if st.button("🎯 System Purpose", use_container_width=True):
             selected_chip_query = "Is web app se mujhe kya kya pata chalega?"
         if st.button("📊 National Delay Avg", use_container_width=True):
-            selected_chip_query = "What is the average delay across national road transport and railway projects?"
+            selected_chip_query = "राष्ट्रीय सड़क और रेलवे परियोजनाओं में औसत देरी कितनी है?"
 
     st.markdown("---")
     
-    # Render Chat History (Modern Gemini Bubble Layout)
+    # Render Chat History
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
         else:
-            st.markdown(f"<div class='gemini-bubble-ai'><b>Infra AI:</b><br>{msg['content']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gemini-bubble-ai'><b>Infra Drishti AI:</b><br>{msg['content']}</div>", unsafe_allow_html=True)
 
-    chat_input_val = st.chat_input("Ask about infrastructure risk, MoSPI data, or EVM...")
+    chat_input_val = st.chat_input("Poochiye apna sawal / Ask in Hindi, Hinglish, English...")
     active_chat_query = selected_chip_query or chat_input_val
 
     if active_chat_query:
         st.session_state["chat_history"].append({"role": "user", "content": active_chat_query})
         
-        q = active_chat_query.lower()
+        q_raw = active_chat_query.strip()
+        q = q_raw.lower()
         
-        # STRICT GUARDRAILS: Refuse technical/source-code/backend implementation queries
+        # Language Identification Engine
+        is_hindi = any('\u0900' <= char <= '\u097F' for char in q_raw)
+        hinglish_words = ["kya", "kaise", "batao", "paise", "kyu", "kyun", "kitna", "madad", "delay", "kharab", "bachaye", "hai", "karta", "karo"]
+        is_hinglish = any(hw in q for hw in hinglish_words)
+        
+        # Guardrail: Refuse technical/source-code queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
@@ -1863,59 +1834,167 @@ with st.popover("💬"):
         ]
         
         if any(fk in q for fk in forbidden_keywords) and not ("pata chalega" in q or "kya karta" in q or "purpose" in q):
-            ai_response = (
-                "🔒 **Access Restricted: System Architecture & Implementation Query**\n\n"
-                "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
-                "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
-                "**What you can ask me:**\n"
-                "* Verified MoSPI project metrics & baseline sanction costs\n"
-                "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
-                "* State & district coverage across India (34 States, 437 Districts)\n"
-                "* Statutory notices under CPWD Clause 2 & GFR Rule 130\n"
-                "* Sector-wide delay and cost escalation benchmarks"
-            )
+            if is_hindi:
+                ai_response = (
+                    "🔒 **प्रणाली सुरक्षा प्रतिबंध: आंतरिक तकनीकी विवरण उपलब्ध नहीं हैं**\n\n"
+                    "मैं **इन्फ्रा दृष्टि एआई (INFRA DRISHTI AI)** का प्रशासनिक निगरानी सहायक हूँ। "
+                    "मैं सोर्स कोड, प्रोग्रामिंग भाषा या बैकएंड आर्किटेक्चर की जानकारी साझा नहीं करता।\n\n"
+                    "**आप मुझसे क्या पूछ सकते हैं:**\n"
+                    "* MoSPI प्रोजेक्ट्स का लागत और देरी विवरण\n"
+                    "* EVM मेट्रिक्स ($CPI$, $SPI$, $SV\%$)\n"
+                    "* CPWD क्लॉज 2 एवं GFR 130 कानूनी नोटिस प्रक्रिया"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "🔒 **Access Restricted: System Implementation Query**\n\n"
+                    "Main strictly **INFRA DRISHTI AI** ka Infrastructure Monitoring Assistant hoon. "
+                    "Main backend code, programming languages ya technical deployment configuration disclose nahi karta.\n\n"
+                    "**Aap mujhse ye pooch sakte hain:**\n"
+                    "* MoSPI verified packages aur cost deviation (+₹ Cr)\n"
+                    "* CPI aur SPI ka real-time calculation\n"
+                    "* CPWD Clause 2 aur GFR 130 statutory notice rules"
+                )
+            else:
+                ai_response = (
+                    "🔒 **Access Restricted: System Architecture & Implementation Query**\n\n"
+                    "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
+                    "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
+                    "**What you can ask me:**\n"
+                    "* Verified MoSPI project metrics & baseline sanction costs\n"
+                    "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
+                    "* State & district coverage across India (34 States, 437 Districts)\n"
+                    "* Statutory notices under CPWD Clause 2 & GFR Rule 130"
+                )
+
         elif "kya pata chalega" in q or "purpose" in q or "help" in q or "benefit" in q or "what does this app do" in q:
-            ai_response = (
-                "🏛️ **PAIMANA AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
-                "This platform is an automated decision-support system for MoSPI and infrastructure authorities to:\n\n"
-                "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
-                "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
-                "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks (Land RoW disputes, material inflation, milestone carryovers) using explainable SHAP weights.\n"
-                "* **Simulate 'What-If' Recovery:** Test administrative interventions (e.g., expedited clearances) to compute exact time and budget savings.\n"
-                "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
-            )
+            if is_hindi:
+                ai_response = (
+                    "🏛️ **इन्फ्रा दृष्टि एआई (INFRA DRISHTI AI) - मुख्य विशेषताएं:**\n\n"
+                    "यह प्लेटफॉर्म केंद्रीय एवं राज्यीय बुनियादी ढांचा परियोजनाओं की निगरानी के लिए बनाया गया है:\n\n"
+                    "* **समय और लागत में वृद्धि का पूर्वानुमान:** प्रोजेक्ट पूरा होने से पहले ही संभावित वित्तीय नुकसान और देरी (+माह) का सटीक आकलन।\n"
+                    "* **EVM वित्तीय विश्लेषण:** $CPI$ और $SPI$ के माध्यम से फंड के दुरुपयोग व बिना काम के भुगतान (Front-loading) की पहचान।\n"
+                    "* **मूल कारण विश्लेषण (SHAP RCA):** भूमि अधिग्रहण विवाद या सामग्री महंगाई की पहचान।\n"
+                    "* **कानूनी नोटिस निर्माण:** CPWD क्लॉज 2 एवं GFR 2017 नियम 130 के अंतर्गत तत्काल नोटिस जारी करना।"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "🏛️ **INFRA DRISHTI AI Engine - Core Capabilities:**\n\n"
+                    "Ye platform MoSPI aur executing agencies ko proactive monitor karne me madad karta hai:\n\n"
+                    "* **Predictive Overrun Forecast:** Milestone fail hone se pehle hi cost escalation (+₹ Cr) aur timeline delay (+Months) predict karta hai.\n"
+                    "* **Real-time EVM Health:** CPI < 1.0 aate hi cash leakage detect karta hai.\n"
+                    "* **SHAP Root Cause (XAI):** Delay ka exact reason (RoW land clearance vs material price rise) transparent graph me batata hai.\n"
+                    "* **Direct Statutory Directives:** CPWD Clause 2 aur GFR 130 mapped auto-dossier generate karke instant SMS/Email dispatch karta hai."
+                )
+            else:
+                ai_response = (
+                    "🏛️ **INFRA DRISHTI AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
+                    "This platform is an automated decision-support system for MoSPI and infrastructure authorities to:\n\n"
+                    "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
+                    "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
+                    "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks using explainable SHAP weights.\n"
+                    "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
+                )
+
         elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
-            ai_response = (
-                "🗺️ **National Geographic Ingestion Scope:**\n\n"
-                "* **States & UTs Covered:** **34 States/UTs** (Northern, Western, Central, Eastern, North-Eastern, Southern regions, and Island territories).\n"
-                "* **Districts Ingested:** **437+ Districts** mapped with verified administrative boundaries.\n"
-                "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** tracked with ongoing infrastructure work packages.\n"
-                "* **Integrated Datasets:** MoSPI Flash Reports (April, May, June, July 2026), PMGSY rural connectivity records, and Central Sector Project databases."
-            )
+            if is_hindi:
+                ai_response = (
+                    "🗺️ **राष्ट्रीय भौगोलिक कवरेज दायरा:**\n\n"
+                    "* **शामिल राज्य व केंद्रशासित प्रदेश:** **34 राज्य/UTs** (उत्तर, पूर्व, पश्चिम, दक्षिण एवं पूर्वोत्तर क्षेत्र)।\n"
+                    "* **जिले:** **437+ प्रमाणित जिले** प्रशासनिक सीमाओं के साथ मैप किए गए हैं।\n"
+                    "* **ब्लॉक व प्रभाग:** **838+ ब्लॉक / डिवीजन** के प्रोजेक्ट्स लाइव ट्रैक हो रहे हैं।\n"
+                    "* **डेटा स्रोत:** MoSPI फ्लैश रिपोर्ट्स (2026) एवं केंद्रीय क्षेत्र परियोजना डेटाबेस।"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "🗺️ **National Geographic Ingestion Scope:**\n\n"
+                    "* **States & UTs Covered:** **34 States/UTs** complete Indian territory covered hai.\n"
+                    "* **Districts Ingested:** **437+ Districts** verified boundary data ke sath mapped hain.\n"
+                    "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** me active construction packages tracked hain.\n"
+                    "* **Dataset Reference:** MoSPI verified multi-quarter infrastructure records (2026)."
+                )
+            else:
+                ai_response = (
+                    "🗺️ **National Geographic Ingestion Scope:**\n\n"
+                    "* **States & UTs Covered:** **34 States/UTs** across all Indian regions.\n"
+                    "* **Districts Ingested:** **437+ Districts** mapped with verified administrative boundaries.\n"
+                    "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** tracked with ongoing infrastructure work packages.\n"
+                    "* **Integrated Datasets:** MoSPI Flash Reports (April-July 2026) and Central Sector Project databases."
+                )
+
         elif "top" in q or "overrun" in q or "critical" in q or "highest" in q:
-            ai_response = (
-                "🚨 **Top Critical Central Sector Projects Monitored:**\n\n"
-                "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Sanctioned ₹55,549 Cr, Delay +92 Months (Right-of-Way & R&R bottlenecks).\n"
-                "2. **Mumbai-Ahmedabad High Speed Rail (Maharashtra/Gujarat):** Sanctioned ₹1,08,000 Cr, Physical Progress ~62.16%.\n"
-                "3. **Rishikesh-Karnaprayag Broad Gauge Link (Uttarakhand):** Sanctioned ₹38,953 Cr, Progress ~71.4% (Himalayan tunneling challenges).\n"
-                "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Sanctioned ₹38,358 Cr, Initial statutory clearances.\n"
-                "5. **Bina Refinery Petrochemical Expansion (Madhya Pradesh):** Sanctioned ₹43,367 Cr."
-            )
-        elif "delay" in q or "highway" in q or "railway" in q or "average" in q:
-            ai_response = (
-                "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
-                "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**. Primary drivers: Environmental/Forest clearances and WPI material escalation.\n"
-                "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
-                "* **Power & Renewable Energy Zone (Khavda/RE):** Faster execution speed with average $SPI \\approx 0.88$."
-            )
+            if is_hindi:
+                ai_response = (
+                    "🚨 **शीर्ष अत्यधिक विलंबित केंद्रीय परियोजनाएं:**\n\n"
+                    "1. **पोलावरम राष्ट्रीय सिंचाई परियोजना (आंध्र प्रदेश):** स्वीकृत ₹55,549 करोड़, देरी +92 माह (भूमि अधिग्रहण व R&R बाधाएं)।\n"
+                    "2. **मुंबई-अहमदाबाद बुलेट ट्रेन (महाराष्ट्र/गुजरात):** स्वीकृत ₹1,08,000 करोड़, भौतिक प्रगति ~62.16%।\n"
+                    "3. **ऋषिकेश-कर्णप्रयाग रेल लिंक (उत्तराखंड):** स्वीकृत ₹38,953 करोड़, प्रगति ~71.4% (सुरंग निर्माण चुनौतियां)।\n"
+                    "4. **मेजा थर्मल पावर प्रोजेक्ट स्टेज-II (उत्तर प्रदेश):** स्वीकृत ₹38,358 करोड़।"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "🚨 **Top Critical High-Cost Infrastructure Projects:**\n\n"
+                    "1. **Polavaram Irrigation Project (AP):** Cost ₹55,549 Cr, Delay +92 Months (RoW and R&R issues).\n"
+                    "2. **Mumbai-Ahmedabad Bullet Train (MH/GJ):** Cost ₹1,08,000 Cr, Progress ~62.16%.\n"
+                    "3. **Rishikesh-Karnaprayag Broad Gauge Link (UK):** Cost ₹38,953 Cr, Himalayan tunneling delay.\n"
+                    "4. **Meja Thermal Power Project (UP):** Cost ₹38,358 Cr (Clearances phase)."
+                )
+            else:
+                ai_response = (
+                    "🚨 **Top Critical Central Sector Projects Monitored:**\n\n"
+                    "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Sanctioned ₹55,549 Cr, Delay +92 Months (Right-of-Way & R&R bottlenecks).\n"
+                    "2. **Mumbai-Ahmedabad High Speed Rail (Maharashtra/Gujarat):** Sanctioned ₹1,08,000 Cr, Physical Progress ~62.16%.\n"
+                    "3. **Rishikesh-Karnaprayag Broad Gauge Link (Uttarakhand):** Sanctioned ₹38,953 Cr, Progress ~71.4%.\n"
+                    "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Sanctioned ₹38,358 Cr."
+                )
+
+        elif "delay" in q or "highway" in q or "railway" in q or "average" in q or "देरी" in q:
+            if is_hindi:
+                ai_response = (
+                    "📊 **क्षेत्रीय निष्पादन एवं राष्ट्रीय विलंब औसत:**\n\n"
+                    "* **सड़क परिवहन एवं राजमार्ग:** राष्ट्रीय औसत विलंब **14.2 माह** है। प्रमुख कारण वन स्वीकृति में विलंब तथा WPI सामग्री महंगाई है।\n"
+                    "* **रेलवे एवं शहरी मेट्रो परियोजनाएं:** औसत विलंब **18.6 माह**, जिसका मुख्य कारण भूमि अधिग्रहण तथा शहरी यूटिलिटी शिफ्टिंग है।\n"
+                    "* **ऊर्जा एवं नवीकरणीय क्षेत्र:** बेहतर गति ($SPI \\approx 0.88$) के साथ अपेक्षाकृत समयबद्ध।"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "📊 **Sector-Wide National Benchmark Summary:**\n\n"
+                    "* **Roads & Highways:** Average delay **14.2 Months** chal raha hai. Mukhya reasons hain Forest clearance aur material price rise.\n"
+                    "* **Railways & Urban Mass Transit:** Median delay **18.6 Months** hai, jo utility shifting aur land acquisition ke kaaran badhta hai.\n"
+                    "* **Power Transmission (Khavda RE):** Timely execution ke sath average $SPI \\approx 0.88$ maintain hai."
+                )
+            else:
+                ai_response = (
+                    "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
+                    "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**.\n"
+                    "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
+                    "* **Power & Renewable Energy Zone:** Faster execution speed with average $SPI \\approx 0.88$."
+                )
+
         else:
-            ai_response = (
-                "💡 **Infrastructure Intelligence Insight:**\n\n"
-                "Our predictive intelligence engine actively cross-references your queries against **1,981+ central projects** and multi-quarter MoSPI Flash Reports.\n\n"
-                "* **Fiscal Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
-                "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
-                "* For specific package evaluation, select your State/District in Section 1 or input parameters in Section 2."
-            )
+            if is_hindi:
+                ai_response = (
+                    "💡 **इन्फ्रा दृष्टि एआई अंतर्दृष्टि (Intelligence Insight):**\n\n"
+                    "हमारा सिस्टम **1,981+ केंद्रीय परियोजनाओं** और MoSPI की त्रैमासिक रिपोर्टों के आधार पर लाइव विश्लेषण करता है।\n\n"
+                    "* **वित्तीय नियम:** $CPI < 1.0$ होने पर तुरंत फंड रिलीज की समीक्षा करें ताकि अनावश्यक अग्रिम भुगतान रोका जा सके।\n"
+                    "* **शेड्यूल नियम:** यदि शेड्यूल विचलन ($SV\%$) $-15\%$ से अधिक नकारात्मक हो, तो CPWD क्लॉज 2 के तहत 14-दिवसीय नोटिस जारी करें।\n"
+                    "* विशिष्ट पैकेज का परीक्षण करने के लिए बाईं ओर दिए गए ड्रॉपडाउन से राज्य चुनें।"
+                )
+            elif is_hinglish:
+                ai_response = (
+                    "💡 **Infra Drishti Predictive Insight:**\n\n"
+                    "Hamara intelligence engine **1,981+ central projects** aur MoSPI Flash Reports par active hai.\n\n"
+                    "* **Fiscal Health Check:** Cumulative spend ko Earned Value se compare karein taaki $CPI < 1.0$ front-loading se bacha ja sake.\n"
+                    "* **Schedule Alert:** Agar Schedule Variance ($SV\%$) $-15\%$ se niche chala jaye, toh double-shift recovery schedule issue karein.\n"
+                    "* Kisi specific project ko test karne ke liye Section 1 se State choose karein."
+                )
+            else:
+                ai_response = (
+                    "💡 **Infrastructure Intelligence Insight:**\n\n"
+                    "Our predictive intelligence engine actively cross-references your queries against **1,981+ central projects** and multi-quarter MoSPI Flash Reports.\n\n"
+                    "* **Fiscal Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
+                    "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
+                    "* For specific package evaluation, select your State/District in Section 1 or input parameters in Section 2."
+                )
             
         st.session_state["chat_history"].append({"role": "assistant", "content": ai_response})
         st.rerun()
