@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection & High-Contrast Readability Engine
+# 0. Global Security CSS Injection & High-Contrast Readability Engine (Fixed Dropdown Visibility)
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
@@ -41,40 +41,60 @@ st.markdown("""
     div[data-testid="stStatusWidget"] {display: none !important;}
     section[data-testid="stSidebar"] {display: none !important;}
 
-    /* FIX POINT 3: High-Contrast Dropdown & Label Visibility on Mobile / Desktop */
+    /* GLOBAL FONT */
     html, body, [class*="css"], .stApp {
         font-family: 'Arial', sans-serif !important;
     }
+
+    /* LABELS VISIBILITY */
     label, [data-testid="stWidgetLabel"] p {
         color: #0F172A !important;
         font-weight: 700 !important;
-        font-size: 13.5px !important;
+        font-size: 14px !important;
         letter-spacing: 0.2px !important;
     }
-    div[data-baseweb="select"] {
+
+    /* FIX: SELECTBOX INPUT BOX (Closed State) */
+    div[data-baseweb="select"] > div {
         background-color: #FFFFFF !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 8px !important;
+        border: 1.5px solid #0284C7 !important;
+        border-radius: 6px !important;
     }
     div[data-baseweb="select"] * {
-        color: #0F172A !important;
+        color: #000000 !important;
         font-weight: 700 !important;
         font-size: 14px !important;
     }
-    ul[data-testid="stSelectboxVirtualList"], div[data-baseweb="menu"] {
+
+    /* FIX: DROPDOWN MENU LIST (Open State - State/District/Block Options) */
+    div[data-baseweb="popover"], 
+    div[data-baseweb="popover"] > div,
+    ul[data-testid="stSelectboxVirtualList"], 
+    div[data-baseweb="menu"] {
         background-color: #FFFFFF !important;
-        border: 1.5px solid #94A3B8 !important;
+        background: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
     }
-    ul[data-testid="stSelectboxVirtualList"] li, div[data-baseweb="menu"] div {
-        color: #0F172A !important;
+
+    /* Dropdown text high-contrast crystal clear black */
+    ul[data-testid="stSelectboxVirtualList"] li, 
+    div[data-baseweb="menu"] div,
+    div[data-baseweb="menu"] li,
+    div[data-baseweb="popover"] span,
+    div[data-baseweb="popover"] p {
+        color: #000000 !important;
         background-color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: 14px !important;
     }
-    ul[data-testid="stSelectboxVirtualList"] li:hover {
-        background-color: #E2E8F0 !important;
+
+    /* Hover effect */
+    ul[data-testid="stSelectboxVirtualList"] li:hover,
+    div[data-baseweb="menu"] div:hover {
+        background-color: #E0F2FE !important;
         color: #0284C7 !important;
     }
+
     div[data-baseweb="input"] input {
         color: #0F172A !important;
         font-weight: 700 !important;
@@ -86,7 +106,7 @@ st.markdown("""
 if "scroll_trigger" not in st.session_state:
     st.session_state["scroll_trigger"] = 0
 
-# Static Ultra-Clean Color Palette (Settings Removed)
+# Static Ultra-Clean Color Palette
 active_bg = "#F8FAFC"
 active_card_bg = "#FFFFFF"
 active_text = "#0F172A"
@@ -247,7 +267,7 @@ if "splash_done" not in st.session_state:
     st.session_state["splash_done"] = True
     splash_placeholder.empty()
 
-# 3. Dynamic Styles (No Settings CSS)
+# 3. Dynamic Styles
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
@@ -436,7 +456,7 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* FIX POINT 5: UNIQUE FLOATING INFRA DRISHTI CHATBOT CIRCULAR BADGE */
+    /* FLOATING INFRA DRISHTI CHATBOT CIRCULAR BADGE */
     div.stPopover {{
         position: fixed !important;
         bottom: 24px !important;
@@ -1783,7 +1803,7 @@ Date: {current_date_str}
                     st.error(status_info)
 
 # ==============================================================================
-# 6. PERSISTENT FLOATING INFRA DRISHTI CHATBOT (FIX POINT 4 & 5: TRILINGUAL & UNIQUE BADGE)
+# 6. PERSISTENT FLOATING INFRA DRISHTI CHATBOT
 # ==============================================================================
 with st.popover("🏛️"):
     st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
