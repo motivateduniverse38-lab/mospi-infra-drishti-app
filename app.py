@@ -23,24 +23,38 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection, Dark Background & Black Dropdown / White Text Engine
+# 0. Global Security CSS Injection (Completely Hide GitHub Buttons & Menus during Loading and Runtime)
 st.markdown("""
 <style>
-    /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
-    #MainMenu {visibility: hidden !important; display: none !important;}
-    header {visibility: hidden !important; display: none !important;}
-    footer {visibility: hidden !important; display: none !important;}
-    [data-testid="stHeader"] {display: none !important; visibility: hidden !important;}
-    [data-testid="stToolbar"] {display: none !important; visibility: hidden !important;}
-    .stAppDeployButton {display: none !important; visibility: hidden !important;}
-    button[title="View source on GitHub"] {display: none !important; visibility: hidden !important;}
-    a[href*="github.com"] {display: none !important; visibility: hidden !important;}
-    [data-testid="manage-app-button"] {display: none !important; visibility: hidden !important;}
-    div[class*="viewerBadge"] {display: none !important; visibility: hidden !important;}
-    div[class*="manage-app"] {display: none !important; visibility: hidden !important;}
-    div[class*="stDecoration"] {display: none !important;}
-    div[data-testid="stStatusWidget"] {display: none !important;}
-    section[data-testid="stSidebar"] {display: none !important;}
+    /* Completely hide Streamlit Header, Toolbar, GitHub Badges, Fork, View Code & Manage App */
+    #MainMenu, 
+    header, 
+    footer,
+    [data-testid="stHeader"], 
+    [data-testid="stToolbar"], 
+    [data-testid="stToolbarActions"],
+    .stAppDeployButton,
+    .viewerBadge_container__r5tak,
+    div[class*="viewerBadge"],
+    div[class*="manage-app"],
+    [data-testid="manage-app-button"],
+    button[title="View source on GitHub"], 
+    button[title*="GitHub"],
+    a[href*="github.com"],
+    a[title*="GitHub"],
+    div[class*="stDecoration"],
+    div[data-testid="stStatusWidget"],
+    section[data-testid="stSidebar"],
+    div[data-testid="stToolbar"] button,
+    div[data-testid="stToolbar"] a {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        height: 0px !important;
+        width: 0px !important;
+        overflow: hidden !important;
+    }
 
     /* 1. GLOBAL BLACK THEME & ALL TEXT WHITE */
     html, body, [class*="css"], .stApp, [data-testid="stAppViewContainer"] {
@@ -487,18 +501,32 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload parsed & sent to network node (+91-{clean_number})."
 
-# Splash Loader
+# Splash Loader (Completely Hiding GitHub Badges & Menu during Splash Display)
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
         st.markdown(f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-            header, [data-testid="stHeader"], [data-testid="stToolbar"], button[title="View source on GitHub"], a[href*="github.com"] {{
+            header, 
+            footer,
+            [data-testid="stHeader"], 
+            [data-testid="stToolbar"], 
+            [data-testid="stToolbarActions"],
+            .stAppDeployButton,
+            button[title="View source on GitHub"], 
+            button[title*="GitHub"],
+            a[href*="github.com"],
+            a[title*="GitHub"],
+            [data-testid="manage-app-button"],
+            div[class*="viewerBadge"],
+            div[class*="manage-app"] {
                 display: none !important;
                 visibility: hidden !important;
-            }}
-            .splash-wrapper {{
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+            .splash-wrapper {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -509,8 +537,8 @@ if "splash_done" not in st.session_state:
                 animation: fadeInSplash 0.5s ease-in-out forwards;
                 perspective: 1000px;
                 background-color: #0B0F19;
-            }}
-            .splash-logo {{
+            }
+            .splash-logo {
                 font-size: 56px;
                 font-weight: 900;
                 letter-spacing: 2px;
@@ -519,8 +547,8 @@ if "splash_done" not in st.session_state:
                 margin-bottom: 8px;
                 animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
                 transform-origin: center center;
-            }}
-            .splash-sub {{
+            }
+            .splash-sub {
                 font-size: 14px;
                 font-weight: 700;
                 letter-spacing: 3px;
@@ -528,8 +556,8 @@ if "splash_done" not in st.session_state:
                 text-transform: uppercase;
                 margin-bottom: 25px;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
-            }}
-            .splash-loader {{
+            }
+            .splash-loader {
                 width: 220px;
                 height: 4px;
                 background-color: #1E293B;
@@ -537,33 +565,33 @@ if "splash_done" not in st.session_state:
                 overflow: hidden;
                 position: relative;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
-            }}
-            .splash-bar {{
+            }
+            .splash-bar {
                 width: 100%;
                 height: 100%;
                 background: linear-gradient(90deg, {active_accent}, #10B981);
                 animation: progress 4.0s linear forwards;
-            }}
-            @keyframes progress {{
-                0% {{ transform: translateX(-100%); }}
-                100% {{ transform: translateX(0%); }}
-            }}
-            @keyframes flyTowardsScreen {{
-                0% {{ transform: scale(0.95); opacity: 0; }}
-                12% {{ transform: scale(1); opacity: 1; }}
-                83.33% {{ transform: scale(1); opacity: 1; filter: blur(0px); }}
-                100% {{ transform: scale(3.5); opacity: 0; filter: blur(12px); }}
-            }}
-            @keyframes fadeOutElements {{
-                0% {{ opacity: 0; }}
-                12% {{ opacity: 1; }}
-                83.33% {{ opacity: 1; transform: translateY(0px); }}
-                100% {{ opacity: 0; transform: translateY(25px); }}
-            }}
-            @keyframes fadeInSplash {{
-                from {{ opacity: 0; }}
-                to {{ opacity: 1; }}
-            }}
+            }
+            @keyframes progress {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(0%); }
+            }
+            @keyframes flyTowardsScreen {
+                0% { transform: scale(0.95); opacity: 0; }
+                12% { transform: scale(1); opacity: 1; }
+                83.33% { transform: scale(1); opacity: 1; filter: blur(0px); }
+                100% { transform: scale(3.5); opacity: 0; filter: blur(12px); }
+            }
+            @keyframes fadeOutElements {
+                0% { opacity: 0; }
+                12% { opacity: 1; }
+                83.33% { opacity: 1; transform: translateY(0px); }
+                100% { opacity: 0; transform: translateY(25px); }
+            }
+            @keyframes fadeInSplash {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
         </style>
         <div class="splash-wrapper">
             <div class="splash-logo">🏛️ INFRA DRISHTI AI</div>
@@ -1290,7 +1318,7 @@ with col_geo:
     </div>
     """, unsafe_allow_html=True)
 
-    # Left Note 2
+    # Left Note 2 (Updated Heading: 🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS)
     st.markdown(f"""
     <div class="provenance-card">
         <b style="color:#10B981;">🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS</b><br>
@@ -1768,7 +1796,7 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (PRESETS REMOVED, PROFESSIONAL LABEL)
+    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1942,7 +1970,6 @@ with st.popover("🏛️"):
                     "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
                     "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
                     "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks using explainable SHAP weights.\n"
-                    "* **Simulate 'What-If' Recovery:** Test administrative interventions to compute exact time and budget savings.\n"
                     "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
                 )
         elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
