@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection & High-Contrast Readability Engine (Fixed Dropdown Visibility)
+# 0. Global Security CSS Injection & Ultimate White-BG Black-Text Input Focus Fix
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
@@ -54,32 +54,56 @@ st.markdown("""
         letter-spacing: 0.2px !important;
     }
 
-    /* FIX: SELECTBOX INPUT BOX (Closed State) */
-    div[data-baseweb="select"] > div {
+    /* =========================================================================
+       POINT 1: INPUT/SELECT CLICK & ACTIVE STATE FIX (WHITE BG + BLACK TEXT)
+       ========================================================================= */
+    /* Selectbox Default & Active */
+    div[data-baseweb="select"],
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="select"]:focus-within > div {
         background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
         border: 1.5px solid #0284C7 !important;
         border-radius: 6px !important;
     }
-    div[data-baseweb="select"] * {
+    div[data-baseweb="select"] *,
+    div[data-baseweb="select"]:focus-within * {
         color: #000000 !important;
         font-weight: 700 !important;
         font-size: 14px !important;
     }
 
-    /* FIX: DROPDOWN MENU LIST (Open State - State/District/Block Options) */
+    /* All Number Inputs, Text Inputs, and TextAreas on Click/Focus */
+    div[data-baseweb="input"],
+    div[data-baseweb="input"] > div,
+    div[data-baseweb="input"]:focus-within,
+    div[data-baseweb="input"]:focus-within > div,
+    div[data-baseweb="input"] input,
+    div[data-baseweb="input"] input:focus {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        border-color: #0284C7 !important;
+    }
+
+    /* Dropdown Popover List when Opened */
     div[data-baseweb="popover"], 
     div[data-baseweb="popover"] > div,
     ul[data-testid="stSelectboxVirtualList"], 
-    div[data-baseweb="menu"] {
+    div[data-baseweb="menu"],
+    div[role="listbox"] {
         background-color: #FFFFFF !important;
         background: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
+        border: 1.5px solid #CBD5E1 !important;
     }
 
-    /* Dropdown text high-contrast crystal clear black */
+    /* Options inside Dropdown */
     ul[data-testid="stSelectboxVirtualList"] li, 
     div[data-baseweb="menu"] div,
     div[data-baseweb="menu"] li,
+    div[role="option"],
     div[data-baseweb="popover"] span,
     div[data-baseweb="popover"] p {
         color: #000000 !important;
@@ -88,17 +112,12 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* Hover effect */
+    /* Option Hover */
     ul[data-testid="stSelectboxVirtualList"] li:hover,
-    div[data-baseweb="menu"] div:hover {
+    div[data-baseweb="menu"] div:hover,
+    div[role="option"]:hover {
         background-color: #E0F2FE !important;
         color: #0284C7 !important;
-    }
-
-    div[data-baseweb="input"] input {
-        color: #0F172A !important;
-        font-weight: 700 !important;
-        background-color: #FFFFFF !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -106,7 +125,6 @@ st.markdown("""
 if "scroll_trigger" not in st.session_state:
     st.session_state["scroll_trigger"] = 0
 
-# Static Ultra-Clean Color Palette
 active_bg = "#F8FAFC"
 active_card_bg = "#FFFFFF"
 active_text = "#0F172A"
@@ -122,7 +140,6 @@ notice_text = "#0F172A"
 notice_border = "#0284C7"
 font_base_size = "14.5px"
 
-# 100% REAL Dual-Pipeline Dispatch Engine (Live Email & SMS Transmission)
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
     contact = contact_target.strip()
     is_email = "@" in contact
@@ -179,7 +196,6 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload encrypted & transmitted to `+91-{clean_number}`."
 
-# 2. 4-Second Loading Followed by Screen Fly-Through Zoom Out
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
@@ -267,7 +283,6 @@ if "splash_done" not in st.session_state:
     st.session_state["splash_done"] = True
     splash_placeholder.empty()
 
-# 3. Dynamic Styles
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
@@ -283,13 +298,6 @@ st.markdown(f"""
         color: {active_text} !important;
     }}
 
-    div[data-baseweb="input"] {{
-        border: 1.5px solid {active_border} !important;
-        border-radius: 8px !important;
-        background-color: {active_card_bg} !important;
-    }}
-
-    /* Global Buttons */
     .stButton > button {{
         background-color: #FFFFFF !important;
         color: {active_text} !important;
@@ -456,7 +464,6 @@ st.markdown(f"""
         line-height: 1.5;
     }}
 
-    /* FLOATING INFRA DRISHTI CHATBOT CIRCULAR BADGE */
     div.stPopover {{
         position: fixed !important;
         bottom: 24px !important;
@@ -535,7 +542,6 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# 4. MASTER GEOGRAPHIC INGESTION DICTIONARY
 GEO_HIERARCHY = {
     "Bihar": {
         "Patna": ["Danapur", "Bihta", "Maner", "Sherpur", "Digha", "Mokama"],
@@ -817,7 +823,7 @@ GEO_HIERARCHY = {
         "Deoghar": ["AIIMS Deoghar Corridor", "Deoghar Sadar", "Madhupur"],
         "Dumka": ["Dumka Sadar", "Jharudih", "Shikaripara"],
         "Godda": ["Adani Godda Power Plant Zone", "Godda Sadar", "Mahagama"],
-        "Sahibganj": ["Sahibganj Multi-Modal Terminal", "Rajmahal", "Barharwa"],
+        "Sahibganj": ["Sahibganj Multi-Modal Terminal", "Rajmeta", "Barharwa"],
         "Palamu": ["Daltonganj", "Medininagar", "Hussainabad", "Chhatarpur"],
         "Latehar": ["Tori-Chandwa line", "Latehar Sadar", "Mahuadanr", "Balumath"],
         "West Singhbhum": ["Chaibasa", "Chakradharpur Rail Division", "Noamundi", "Gua"]
@@ -1047,7 +1053,6 @@ GEO_HIERARCHY = {
     }
 }
 
-# 5. Master Ingestion Engine
 @st.cache_data
 def load_data():
     project_rows = []
@@ -1164,7 +1169,6 @@ def load_ml_models():
 infradrishti_df = load_data()
 time_model, cost_model = load_ml_models()
 
-# State Initializations
 if 'selected_record' not in st.session_state:
     st.session_state['selected_record'] = None
 if 'ai_evaluated' not in st.session_state:
@@ -1186,25 +1190,21 @@ if "chat_history" not in st.session_state:
         {"role": "assistant", "content": "Namaste! Main **INFRA DRISHTI AI** Assistant hoon. Aap mujhse **Hindi**, **Hinglish**, ya **English** me national infrastructure status, MoSPI Flash Reports, EVM deviations, ya delay benchmarks ke baare me pooch sakte hain."}
     ]
 
-# Top Header Layout (Settings Button Completely Removed)
+# Header
 st.markdown(f"<div class='brand-title'>🏛️ INFRA DRISHTI AI</div>", unsafe_allow_html=True)
 st.markdown("<div class='brand-subtitle'>INFRASTRUCTURE ANALYSIS & PREDICTIVE COMPLIANCE ENGINE | MoSPI CENTRAL</div>", unsafe_allow_html=True)
 
-# Responsive Main 3-Column Interface
 col_geo, col_sec1, col_sec2 = st.columns([0.85, 1.1, 1.05], gap="medium")
 
-# COLUMN 1: Dynamic Jurisdiction Selection
 with col_geo:
     st.markdown("<div class='section-title'>📍 JURISDICTION SELECTION</div>", unsafe_allow_html=True)
     
-    # 1. State Dropdown
     available_states = ["Select State"] + sorted(list(GEO_HIERARCHY.keys()))
     curr_state_target = st.session_state.get("loc_state", "Select State")
     state_idx = available_states.index(curr_state_target) if curr_state_target in available_states else 0
     selected_state = st.selectbox("1. State / UT", available_states, index=state_idx)
     st.session_state["loc_state"] = selected_state
     
-    # 2. District Dropdown
     if selected_state != "Select State" and selected_state in GEO_HIERARCHY:
         district_list = ["All Districts"] + sorted(list(GEO_HIERARCHY[selected_state].keys()))
     else:
@@ -1215,7 +1215,6 @@ with col_geo:
     selected_district = st.selectbox("2. District / Sector", district_list, index=dist_idx)
     st.session_state["loc_dist"] = selected_district
 
-    # 3. Block / Sub-Division Dropdown
     if selected_state != "Select State" and selected_district != "All Districts" and selected_state in GEO_HIERARCHY:
         if selected_district in GEO_HIERARCHY[selected_state]:
             block_list = ["All Blocks / Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
@@ -1309,7 +1308,6 @@ with col_geo:
         st.session_state['cached_predictions'] = None
         st.rerun()
 
-# COLUMN 2: Details About Ongoing Projects
 with col_sec1:
     st.markdown("<div class='section-title'>📁 SECTION 1: DETAILS ABOUT ONGOING PROJECTS</div>", unsafe_allow_html=True)
     
@@ -1379,9 +1377,6 @@ with col_sec1:
                 st.session_state['ai_evaluated'] = False
                 st.session_state['cached_predictions'] = None
                 st.rerun()
-
-# COLUMN 3: Predict Project Future Overview
-rec = st.session_state.get('selected_record') or {}
 
 with col_sec2:
     st.markdown("<div class='section-title'>⚡ SECTION 2: PREDICT PROJECT FUTURE OVERVIEW</div>", unsafe_allow_html=True)
@@ -1469,7 +1464,6 @@ with col_sec2:
             st.session_state['scroll_trigger'] = time.time()
             st.rerun()
 
-# OUTPUT VISUALIZATION WITH STREAMLIT COMPONENTS AUTO-SCROLL
 if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] is not None:
     res = st.session_state['cached_predictions']
     
@@ -1528,7 +1522,6 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 6 Dynamic Performance, Compliance & Real Communication Tabs
     t_scurve, t_shap, t_bench, t_notice, t_whatif, t_dispatch = st.tabs([
         "📊 S-Curve EVM", 
         "🔍 SHAP Root-Cause", 
@@ -1802,14 +1795,11 @@ Date: {current_date_str}
                 else:
                     st.error(status_info)
 
-# ==============================================================================
-# 6. PERSISTENT FLOATING INFRA DRISHTI CHATBOT
-# ==============================================================================
+# Chatbot Popover
 with st.popover("🏛️"):
     st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
-    # Quick Action Chips
     chip_col1, chip_col2 = st.columns(2)
     selected_chip_query = None
     with chip_col1:
@@ -1825,7 +1815,6 @@ with st.popover("🏛️"):
 
     st.markdown("---")
     
-    # Render Chat History
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
@@ -1841,12 +1830,10 @@ with st.popover("🏛️"):
         q_raw = active_chat_query.strip()
         q = q_raw.lower()
         
-        # Language Identification Engine
         is_hindi = any('\u0900' <= char <= '\u097F' for char in q_raw)
         hinglish_words = ["kya", "kaise", "batao", "paise", "kyu", "kyun", "kitna", "madad", "delay", "kharab", "bachaye", "hai", "karta", "karo"]
         is_hinglish = any(hw in q for hw in hinglish_words)
         
-        # Guardrail: Refuse technical/source-code queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
