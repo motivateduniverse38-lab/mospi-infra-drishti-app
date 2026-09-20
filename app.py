@@ -80,7 +80,7 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
-    /* 2. JURISDICTION DROPDOWN OPEN HO TOH BG BLACK AND TEXT WHITE (FIX 1) */
+    /* 2. JURISDICTION DROPDOWN OPEN HO TOH BG BLACK AND TEXT WHITE */
     div[data-baseweb="select"] > div {
         background-color: #0B0F19 !important;
         background: #0B0F19 !important;
@@ -292,6 +292,7 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
+    /* FLOATING INFRA DRISHTI CHATBOT CIRCULAR BADGE */
     div.stPopover {
         position: fixed !important;
         bottom: 24px !important;
@@ -389,7 +390,7 @@ notice_border = "#38BDF8"
 font_base_size = "14.5px"
 
 # ==============================================================================
-# 100% REAL DUAL-PIPELINE DISPATCH ENGINE (FIX 2: REAL EMAIL DISPATCH)
+# 100% REAL DUAL-PIPELINE DISPATCH ENGINE (DIRECT GMAIL CREDENTIALS INTEGRATED)
 # ==============================================================================
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
     contact = contact_target.strip()
@@ -404,10 +405,12 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
                 smtp_pass = st.secrets.get("SMTP_PASS", None)
         except Exception:
             pass
+
+        # Dedicated SMTP User and App Password Token injected directly
         if not smtp_user:
-            smtp_user = os.getenv("SMTP_USER", "motivateduniverse38@gmail.com")
+            smtp_user = "rr8617244@gmail.com"
         if not smtp_pass:
-            smtp_pass = os.getenv("SMTP_PASS", None)
+            smtp_pass = "mrtp idiz uaiy mvrx"
         
         # Email construction
         msg = MIMEMultipart()
@@ -434,29 +437,25 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         )
         msg.attach(MIMEText(body_content, 'plain'))
 
-        # Direct SMTP Transmission with robust TLS fallback
-        if smtp_user and smtp_pass:
+        # Direct Transmission via standard TLS / SSL Fallback
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, [contact], msg.as_string())
+            server.quit()
+            return True, f"✅ Live Official Email successfully delivered to inbox ({contact})."
+        except Exception as e:
             try:
-                server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
-                server.ehlo()
-                server.starttls()
-                server.ehlo()
-                server.login(smtp_user, smtp_pass)
-                server.sendmail(smtp_user, [contact], msg.as_string())
-                server.quit()
+                server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15)
+                server_ssl.login(smtp_user, smtp_pass)
+                server_ssl.sendmail(smtp_user, [contact], msg.as_string())
+                server_ssl.quit()
                 return True, f"✅ Live Official Email successfully delivered to inbox ({contact})."
-            except Exception as e:
-                # SSL port 465 fallback
-                try:
-                    server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15)
-                    server_ssl.login(smtp_user, smtp_pass)
-                    server_ssl.sendmail(smtp_user, [contact], msg.as_string())
-                    server_ssl.quit()
-                    return True, f"✅ Live Official Email successfully delivered to inbox ({contact})."
-                except Exception as ex_ssl:
-                    return False, f"Email delivery failed: {str(ex_ssl)}"
-        else:
-            return False, "SMTP Configuration Missing: Please set SMTP_USER and SMTP_PASS in Streamlit Cloud Secrets (App Settings -> Secrets)."
+            except Exception as ex_ssl:
+                return False, f"Email delivery failed: {str(ex_ssl)}"
     else:
         sms_api_key = None
         try:
@@ -1291,7 +1290,7 @@ with col_geo:
     </div>
     """, unsafe_allow_html=True)
 
-    # Left Note 2 (Updated Heading: 🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS)
+    # Left Note 2
     st.markdown(f"""
     <div class="provenance-card">
         <b style="color:#10B981;">🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS</b><br>
@@ -1761,7 +1760,7 @@ Date: {current_date_str}
             st.markdown(f"""
             <div style="background-color: {active_card_bg}; padding: 15px; border-radius: 8px; border-left: 4px solid #10B981; border: 1.5px solid {active_border};">
                 <h5 style="color: #10B981 !important; margin:0; font-weight: 700;">🎯 Interventional Recovery Projection:</h5>
-                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: {active_text} !important;">
+                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: #FFFFFF !important;">
                 • Recoverable Timeline: <b>{res['pred_delay_months'] - recovered_delay:.1f} Months Saved</b> (Revised Delay: +{recovered_delay:.1f} M)<br>
                 • Projected Fiscal Savings: <b>₹{recovered_saving_cr:.2f} Crores</b> (Revised Cost Overrun: +{recovered_cost:.1f}%)<br>
                 • Revised Status: <b style="color: {'#10B981' if recovered_delay < 3 else '#F59E0B'} !important;">{'GREEN (RECOVERED)' if recovered_delay < 3 else 'AMBER (MANAGEABLE)'}</b>
@@ -1769,7 +1768,7 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
-    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON
+    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (PRESETS REMOVED, PROFESSIONAL LABEL)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1779,16 +1778,17 @@ Date: {current_date_str}
         
         st.markdown(f"""
         <div class="alert-dispatch-card">
-            <div style="font-size: 13.5px; font-weight: 700; color: {active_text}; margin-bottom: 6px;">
+            <div style="font-size: 13.5px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;">
                 📌 Target Package: <span style="color: {active_accent}; font-weight: 800;">{proj_title_disp}</span>
             </div>
             <div style="font-size: 12.5px; color: {active_subtext}; margin-bottom: 8px;">
-                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: {active_text};">{pkg_code_disp}</span> | 
+                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #FFFFFF;">{pkg_code_disp}</span> | 
                 Current Appraisal Status: <span style="color: {res['alert_bg']}; font-weight: 800;">{res['alert_badge']} ({int(res['cpri_score'])}/100)</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # Message Live Payload
         if res['cpri_score'] >= 60.0:
             status_summary_msg = f"CRITICAL RED ALERT: High-risk schedule slippage (+{res['pred_delay_months']:.1f} M) and cost escalation (+Rs {res['cost_escalation_cr']:.1f} Cr). Immediate intervention required under CPWD Works Manual Clause 2."
         elif res['cpri_score'] >= 30.0:
@@ -1798,30 +1798,12 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
-        if "dispatch_target_input" not in st.session_state:
-            st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
-
-        st.markdown("<label style='font-size: 13px; font-weight: 700;'>Touch-Friendly Quick Selection (Smart Board Mode):</label>", unsafe_allow_html=True)
-        col_touch1, col_touch2, col_touch3 = st.columns([1, 1, 1])
-        with col_touch1:
-            if st.button("📧 Preset 1 (Motivated)", use_container_width=True):
-                st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
-                st.rerun()
-        with col_touch2:
-            if st.button("📧 Preset 2 (Satyam)", use_container_width=True):
-                st.session_state["dispatch_target_input"] = "ksatyam75722@gmail.com"
-                st.rerun()
-        with col_touch3:
-            if st.button("🔄 Clear / Reset", use_container_width=True):
-                st.session_state["dispatch_target_input"] = ""
-                st.rerun()
-
-        col_in_target, col_btn_target = st.columns([2.5, 1.2])
+        col_in_target, col_btn_target = st.columns([2.8, 1.2])
         with col_in_target:
             recipient_val = st.text_input(
-                "Enter Recipient Mobile Number OR Official Email Address:",
+                "Enter Official Email Address to Dispatch Directive Alert:",
                 value=st.session_state.get("dispatch_target_input", "motivateduniverse38@gmail.com"),
-                placeholder="e.g. +919876543210  OR  engineer@piu.gov.in",
+                placeholder="e.g. nodal.officer@mospi.gov.in or project.director@agency.com",
                 key="dispatch_tab_input"
             )
             st.session_state["dispatch_target_input"] = recipient_val
@@ -1831,9 +1813,9 @@ Date: {current_date_str}
 
         if trigger_dispatch_btn:
             if not recipient_val or len(recipient_val.strip()) < 5:
-                st.warning("⚠️ Please provide a valid 10-digit mobile number or official email address.")
+                st.warning("⚠️ Please provide a valid official email address to proceed.")
             else:
-                with st.spinner("⏳ Connecting to gateway & transmitting live payload... (1.5s)"):
+                with st.spinner("⏳ Connecting to secure mail server & transmitting official directive... (1.5s)"):
                     time.sleep(1.5)
                 success_status, status_info = dispatch_realtime_alert(
                     recipient_val,
@@ -1849,13 +1831,15 @@ Date: {current_date_str}
                 else:
                     st.error(status_info)
 
-# ==============================================================================
+
+# ==========================================
 # 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA DRISHTI CHATBOT (Trilingual)
-# ==============================================================================
+# ==========================================
 with st.popover("🏛️"):
     st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
+    # Quick Action Chips
     chip_col1, chip_col2 = st.columns(2)
     selected_chip_query = None
     with chip_col1:
@@ -1871,6 +1855,7 @@ with st.popover("🏛️"):
 
     st.markdown("---")
     
+    # Render Chat History (Modern Gemini Bubble Layout)
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
@@ -1886,10 +1871,12 @@ with st.popover("🏛️"):
         q_raw = active_chat_query.strip()
         q = q_raw.lower()
         
+        # Language Identification Engine
         is_hindi = any('\u0900' <= char <= '\u097F' for char in q_raw)
         hinglish_words = ["kya", "kaise", "batao", "paise", "kyu", "kyun", "kitna", "madad", "delay", "kharab", "bachaye", "hai", "karta", "karo"]
         is_hinglish = any(hw in q for hw in hinglish_words)
         
+        # STRICT GUARDRAILS: Refuse technical/source-code/backend implementation queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
@@ -1955,7 +1942,7 @@ with st.popover("🏛️"):
                     "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
                     "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
                     "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks using explainable SHAP weights.\n"
-                    "* **Simulate 'What-If' Recovery:** Test administrative interventions (e.g., expedited clearances) to compute exact time and budget savings.\n"
+                    "* **Simulate 'What-If' Recovery:** Test administrative interventions to compute exact time and budget savings.\n"
                     "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
                 )
         elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
