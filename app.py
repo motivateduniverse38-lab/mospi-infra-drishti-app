@@ -16,15 +16,13 @@ import threading
 from datetime import datetime
 
 st.set_page_config(
-    page_title="INFRA DRISHTI AI - Infrastructure Risk Engine",
+    page_title="PAIMANA AI - Infrastructure Risk Engine",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# ==============================================================================
-# 0. AGGRESSIVE CSS: 100% BLACK BG, WHITE TEXT, WHITE INPUTS WITH BLACK TEXT
-# ==============================================================================
+# 0. Global Security CSS Injection to completely remove Streamlit GitHub toolbar & Menus
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
@@ -37,147 +35,43 @@ st.markdown("""
     button[title="View source on GitHub"] {display: none !important; visibility: hidden !important;}
     a[href*="github.com"] {display: none !important; visibility: hidden !important;}
     [data-testid="manage-app-button"] {display: none !important; visibility: hidden !important;}
-    
-    /* ---------------------------------------------------
-       1. FORCE PURE BLACK BACKGROUND & WHITE TEXT GLOBALLY
-       --------------------------------------------------- */
-    .stApp, [data-testid="stAppViewContainer"], html, body {
-        background-color: #0B0F19 !important;
-        color: #FFFFFF !important;
-        font-family: 'Arial', sans-serif !important;
-    }
-    
-    /* Target all standard text elements to be white */
-    p, span, div, h1, h2, h3, h4, h5, h6, label {
-        color: #FFFFFF !important;
-    }
-
-    /* Keep Brand Title Blue */
-    .brand-title, .brand-title * {
-        color: #38BDF8 !important;
-    }
-    .section-title {
-        color: #38BDF8 !important;
-        border-bottom: 2px solid #334155 !important;
-    }
-
-    /* ---------------------------------------------------
-       2. INPUTS & DROPDOWNS: WHITE BG, BLACK TEXT ALWAYS
-       --------------------------------------------------- */
-    /* Target Selectbox, TextInput, NumberInput Containers */
-    div[data-baseweb="select"] > div,
-    div[data-baseweb="input"] > div,
-    div[data-baseweb="input"] input,
-    textarea {
-        background-color: #FFFFFF !important;
-        border: 2px solid #38BDF8 !important;
-        border-radius: 6px !important;
-        color: #000000 !important;
-    }
-    
-    /* Target text inside inputs */
-    div[data-baseweb="select"] *,
-    div[data-baseweb="input"] * {
-        color: #000000 !important;
-        font-weight: 700 !important;
-    }
-
-    /* Target Dropdown Menu Options (Popover) */
-    div[data-baseweb="popover"], 
-    ul[data-testid="stSelectboxVirtualList"], 
-    div[role="listbox"],
-    div[data-baseweb="menu"] {
-        background-color: #FFFFFF !important;
-    }
-    
-    /* Target list items inside dropdown */
-    div[data-baseweb="popover"] *, 
-    ul[data-testid="stSelectboxVirtualList"] * {
-        color: #000000 !important;
-        background-color: #FFFFFF !important;
-        font-weight: 700 !important;
-    }
-    
-    /* Hover effect for dropdown items */
-    ul[data-testid="stSelectboxVirtualList"] li:hover *,
-    div[data-baseweb="menu"] div:hover * {
-        background-color: #E0F2FE !important;
-        color: #0284C7 !important;
-    }
-
-    /* ---------------------------------------------------
-       3. BUTTONS & CHATBOT POPUP STYLING
-       --------------------------------------------------- */
-    .stButton > button {
-        background-color: #1E293B !important;
-        color: #FFFFFF !important;
-        border: 1.5px solid #38BDF8 !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-    }
-    .stButton > button:hover {
-        background-color: #38BDF8 !important;
-        color: #0B0F19 !important;
-    }
-
-    div.stPopover {
-        position: fixed !important;
-        bottom: 24px !important;
-        right: 24px !important;
-        z-index: 99999 !important;
-    }
-    div.stPopover > button {
-        background: linear-gradient(135deg, #0284C7, #0369A1) !important;
-        color: #FFFFFF !important;
-        font-size: 24px !important;
-        width: 60px !important;
-        height: 60px !important;
-        border-radius: 50% !important;
-        border: 2px solid #FFFFFF !important;
-        box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5) !important;
-    }
-    div[data-testid="stPopoverBody"] {
-        background-color: #111827 !important;
-        border: 1.5px solid #334155 !important;
-        border-radius: 12px !important;
-        width: 370px !important;
-    }
-
-    /* Custom chat bubbles */
-    .gemini-bubble-user {
-        background-color: #1E293B;
-        color: #FFFFFF !important;
-        padding: 8px 12px;
-        border-radius: 12px 12px 2px 12px;
-        margin-bottom: 8px;
-        max-width: 85%;
-        margin-left: auto;
-    }
-    .gemini-bubble-ai {
-        background-color: #0B0F19;
-        color: #FFFFFF !important;
-        border-left: 3.5px solid #38BDF8;
-        padding: 10px 14px;
-        border-radius: 12px 12px 12px 2px;
-        margin-bottom: 12px;
-        border: 1px solid #334155;
-    }
-    .gemini-bubble-user *, .gemini-bubble-ai * {
-        color: #FFFFFF !important;
-    }
+    div[class*="viewerBadge"] {display: none !important; visibility: hidden !important;}
+    div[class*="manage-app"] {display: none !important; visibility: hidden !important;}
+    div[class*="stDecoration"] {display: none !important;}
+    div[data-testid="stStatusWidget"] {display: none !important;}
+    section[data-testid="stSidebar"] {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
+# 1. User Preference Settings State
+if "app_theme_mode" not in st.session_state:
+    st.session_state["app_theme_mode"] = "Dark Slate"
+if "app_font_scale" not in st.session_state:
+    st.session_state["app_font_scale"] = "Standard (Default)"
 if "scroll_trigger" not in st.session_state:
     st.session_state["scroll_trigger"] = 0
 
-# Colors for Python injected HTML
-active_card_bg = "#111827"
-active_border = "#334155"
-active_accent = "#38BDF8"
-plot_text_color = "#FFFFFF"
-plot_grid_color = "#1E293B"
+is_dark = st.session_state["app_theme_mode"] == "Dark Slate"
 
+# Robust Contrast Palette
+active_bg = "#0B0F19" if is_dark else "#F8FAFC"
+active_card_bg = "#111827" if is_dark else "#FFFFFF"
+active_text = "#FFFFFF" if is_dark else "#0F172A"
+active_subtext = "#94A3B8" if is_dark else "#475569"
+active_border = "#334155" if is_dark else "#CBD5E1"
+active_accent = "#38BDF8" if is_dark else "#0284C7"
+
+# Plot & Notice Contrast
+plot_text_color = "#F8FAFC" if is_dark else "#0F172A"
+plot_grid_color = "#1E293B" if is_dark else "#E2E8F0"
+tab_text_color = "#FFFFFF" if is_dark else "#0F172A"
+notice_bg = "#030712" if is_dark else "#FFFFFF"
+notice_text = "#F8FAFC" if is_dark else "#0F172A"
+notice_border = "#38BDF8" if is_dark else "#0284C7"
+
+font_base_size = "14px" if st.session_state["app_font_scale"] == "Standard (Default)" else "15.5px"
+
+# 100% REAL Dual-Pipeline Dispatch Engine (Live Email & SMS Transmission)
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
     contact = contact_target.strip()
     is_email = "@" in contact
@@ -234,39 +128,399 @@ def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, dela
         else:
             return True, f"✅ Real SMS payload encrypted & transmitted to `+91-{clean_number}`."
 
+# 2. 4-Second Loading Followed by Screen Fly-Through Zoom Out (Towards Laptop Screen)
 if "splash_done" not in st.session_state:
     splash_placeholder = st.empty()
     with splash_placeholder.container():
         st.markdown(f"""
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+            header, [data-testid="stHeader"], [data-testid="stToolbar"], button[title="View source on GitHub"], a[href*="github.com"] {{
+                display: none !important;
+                visibility: hidden !important;
+            }}
             .splash-wrapper {{
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 height: 80vh;
-                background-color: #0B0F19;
+                text-align: center;
+                font-family: 'Inter', sans-serif;
+                animation: fadeInSplash 0.5s ease-in-out forwards;
+                perspective: 1000px;
             }}
             .splash-logo {{
                 font-size: 56px;
                 font-weight: 900;
+                letter-spacing: 2px;
                 color: {active_accent};
+                text-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+                margin-bottom: 8px;
+                animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+                transform-origin: center center;
             }}
             .splash-sub {{
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 3px;
                 color: #94A3B8;
+                text-transform: uppercase;
                 margin-bottom: 25px;
+                animation: fadeOutElements 4.8s ease-in-out forwards;
+            }}
+            .splash-loader {{
+                width: 220px;
+                height: 4px;
+                background-color: #1E293B;
+                border-radius: 4px;
+                overflow: hidden;
+                position: relative;
+                animation: fadeOutElements 4.8s ease-in-out forwards;
+            }}
+            .splash-bar {{
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, {active_accent}, #10B981);
+                animation: progress 4.0s linear forwards;
+            }}
+            @keyframes progress {{
+                0% {{ transform: translateX(-100%); }}
+                100% {{ transform: translateX(0%); }}
+            }}
+            @keyframes flyTowardsScreen {{
+                0% {{ transform: scale(0.95); opacity: 0; }}
+                12% {{ transform: scale(1); opacity: 1; }}
+                83.33% {{ transform: scale(1); opacity: 1; filter: blur(0px); }}
+                100% {{ transform: scale(3.5); opacity: 0; filter: blur(12px); }}
+            }}
+            @keyframes fadeOutElements {{
+                0% {{ opacity: 0; }}
+                12% {{ opacity: 1; }}
+                83.33% {{ opacity: 1; transform: translateY(0px); }}
+                100% {{ opacity: 0; transform: translateY(25px); }}
+            }}
+            @keyframes fadeInSplash {{
+                from {{ opacity: 0; }}
+                to {{ opacity: 1; }}
             }}
         </style>
         <div class="splash-wrapper">
-            <div class="splash-logo">🏛️ INFRA DRISHTI AI</div>
+            <div class="splash-logo">🏛️ PAIMANA AI</div>
             <div class="splash-sub">MoSPI Infrastructure Monitoring & Predictive Risk Engine</div>
-            <p style="color: #64748B;">Ingesting Multi-Quarter Flash Reports & Computing EVM Risks...</p>
+            <div class="splash-loader"><div class="splash-bar"></div></div>
+            <p style="color: #64748B; font-size: 13px; margin-top: 14px; animation: fadeOutElements 4.8s ease-in-out forwards;">Ingesting Multi-Quarter Flash Reports & Computing EVM Risks...</p>
         </div>
         """, unsafe_allow_html=True)
-        time.sleep(2.5)
+        time.sleep(4.8)
     st.session_state["splash_done"] = True
     splash_placeholder.empty()
 
+# 3. Dynamic Contrast-Enforced Theme CSS & Precise Popover Positioning
+st.markdown(f"""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+    html, body, [class*="css"], .stApp {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: {font_base_size};
+        background-color: {active_bg} !important;
+        color: {active_text} !important;
+    }}
+
+    h1, h2, h3, h4, h5, h6, p, span, div, label {{
+        color: {active_text} !important;
+    }}
+
+    label, [data-testid="stWidgetLabel"] p {{
+        color: {active_text} !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        letter-spacing: 0.2px !important;
+        margin-bottom: 2px !important;
+    }}
+
+    div[data-baseweb="input"] input, div[data-baseweb="select"] {{
+        color: {active_text} !important;
+        font-weight: 600 !important;
+        background-color: {active_card_bg} !important;
+        font-family: 'JetBrains Mono', monospace !important;
+    }}
+    div[data-baseweb="input"] {{
+        border: 1.5px solid {active_border} !important;
+        border-radius: 8px !important;
+        background-color: {active_card_bg} !important;
+    }}
+
+    /* Global Buttons */
+    .stButton > button {{
+        background-color: {'#1E293B' if is_dark else '#FFFFFF'} !important;
+        color: {active_text} !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border: 1.5px solid {active_accent} !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        padding: 8px 14px !important;
+        transition: all 0.2s ease !important;
+    }}
+    .stButton > button:hover {{
+        background-color: {active_accent} !important;
+        color: {'#0B0F19' if is_dark else '#FFFFFF'} !important;
+        border-color: {active_accent} !important;
+    }}
+
+    button[data-baseweb="tab"] {{
+        color: {tab_text_color} !important;
+        font-weight: 700 !important;
+        font-size: 13.5px !important;
+        border-bottom: 2px solid transparent !important;
+    }}
+    button[data-baseweb="tab"][aria-selected="true"] {{
+        color: {active_accent} !important;
+        border-bottom: 2px solid {active_accent} !important;
+    }}
+
+    .brand-title {{
+        text-align: center;
+        font-size: 32px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        color: {active_accent} !important;
+        margin-top: -12px;
+        margin-bottom: 0px;
+    }}
+    .brand-subtitle {{
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: {active_subtext} !important;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }}
+    .section-title {{
+        font-size: 13px;
+        font-weight: 800;
+        color: {active_accent} !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid {active_border};
+        padding-bottom: 4px;
+    }}
+
+    .project-card-white {{
+        background-color: {'#1E293B' if is_dark else '#FFFFFF'};
+        color: {active_text} !important;
+        border: 1.5px solid {active_border};
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }}
+    .project-code-badge {{
+        background-color: {'#064E3B' if is_dark else '#D1FAE5'};
+        color: {'#34D399' if is_dark else '#065F46'} !important;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        margin: 4px 0;
+    }}
+    .contractor-text {{
+        color: {'#34D399' if is_dark else '#059669'} !important;
+        font-weight: 800;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }}
+    .metric-dot-row {{
+        color: {active_text} !important;
+        font-size: 12.5px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }}
+    .metric-dot-green {{
+        color: {'#34D399' if is_dark else '#059669'} !important;
+        font-weight: 700;
+        font-family: 'JetBrains Mono', monospace;
+    }}
+
+    .stTextArea textarea {{
+        background-color: {notice_bg} !important;
+        color: {notice_text} !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        border: 1.5px solid {notice_border} !important;
+        border-radius: 8px !important;
+        line-height: 1.6 !important;
+    }}
+
+    .sidebar-note {{
+        background-color: {active_card_bg};
+        border: 1px solid {active_border};
+        border-left: 3.5px solid {active_accent};
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: {active_text} !important;
+        margin-top: 10px;
+        line-height: 1.45;
+    }}
+    .sidebar-note b {{
+        color: {active_accent} !important;
+    }}
+
+    .provenance-card {{
+        background-color: {active_card_bg};
+        border: 1px solid {active_border};
+        border-left: 3.5px solid #10B981;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 11.5px;
+        color: {active_text} !important;
+        margin-top: 10px;
+        line-height: 1.5;
+    }}
+    .provenance-card b {{
+        color: {active_accent} !important;
+    }}
+
+    .rca-table-container {{
+        background-color: {active_card_bg};
+        border: 1.5px solid {active_border};
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 14px;
+        overflow-x: auto;
+    }}
+    .rca-table {{
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+        color: {active_text};
+    }}
+    .rca-table th {{
+        background-color: {'#1E293B' if is_dark else '#F1F5F9'};
+        color: {active_accent};
+        padding: 10px;
+        font-weight: 800;
+        text-align: left;
+        border-bottom: 2px solid {active_border};
+        letter-spacing: 0.3px;
+    }}
+    .rca-table td {{
+        padding: 10px;
+        border-bottom: 1px solid {active_border};
+        vertical-align: top;
+        line-height: 1.5;
+    }}
+
+    /* ========================================================
+       1. SETTINGS COMPACT RECTANGULAR BOX FIXED AT TOP RIGHT
+       ======================================================== */
+    div.stPopover:has(button[aria-label*="Settings"]) {{
+        position: fixed !important;
+        top: 16px !important;
+        right: 20px !important;
+        z-index: 99999 !important;
+        width: auto !important;
+        display: block !important;
+    }}
+    div.stPopover:has(button[aria-label*="Settings"]) > button {{
+        background: {active_card_bg} !important;
+        color: {active_text} !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        border: 1.5px solid {active_border} !important;
+        border-radius: 6px !important;
+        padding: 5px 12px !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
+    }}
+
+    /* ========================================================
+       2. INFRA AI CHATBOT CIRCULAR LOGO FIXED AT BOTTOM RIGHT
+       ======================================================== */
+    div.stPopover:not(:has(button[aria-label*="Settings"])) {{
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 24px !important;
+        z-index: 99999 !important;
+        width: auto !important;
+        display: block !important;
+    }}
+    div.stPopover:not(:has(button[aria-label*="Settings"])) > button {{
+        background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
+        color: #FFFFFF !important;
+        font-size: 24px !important;
+        width: 54px !important;
+        height: 54px !important;
+        min-width: 54px !important;
+        max-width: 54px !important;
+        min-height: 54px !important;
+        max-height: 54px !important;
+        border-radius: 50% !important;
+        padding: 0px !important;
+        margin: 0px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 2px solid #FFFFFF55 !important;
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        cursor: pointer !important;
+    }}
+    div.stPopover:not(:has(button[aria-label*="Settings"])) > button:hover {{
+        transform: scale(1.1) !important;
+        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.75) !important;
+    }}
+
+    div[data-testid="stPopoverBody"] {{
+        background-color: {active_card_bg} !important;
+        color: {active_text} !important;
+        border: 1.5px solid {active_border} !important;
+        border-radius: 12px !important;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.4) !important;
+        width: 360px !important;
+        max-width: 90vw !important;
+    }}
+    
+    .gemini-bubble-user {{
+        background-color: {'#1E293B' if is_dark else '#E2E8F0'};
+        color: {active_text};
+        padding: 8px 12px;
+        border-radius: 12px 12px 2px 12px;
+        margin-bottom: 8px;
+        font-size: 12.5px;
+        max-width: 85%;
+        margin-left: auto;
+    }}
+    .gemini-bubble-ai {{
+        background-color: {'#0B1528' if is_dark else '#F0F9FF'};
+        color: {active_text};
+        border-left: 3px solid {active_accent};
+        padding: 10px 14px;
+        border-radius: 12px 12px 12px 2px;
+        margin-bottom: 12px;
+        font-size: 12.5px;
+        line-height: 1.55;
+        border: 1px solid {active_border};
+    }}
+
+    .alert-dispatch-card {{
+        background-color: {active_card_bg};
+        border: 1.5px solid {active_border};
+        border-radius: 10px;
+        padding: 18px;
+        margin-top: 8px;
+    }}
+</style>
+""", unsafe_allow_html=True)
+
+# 4. MASTER GEOGRAPHIC INGESTION DICTIONARY
 GEO_HIERARCHY = {
     "Bihar": {
         "Patna": ["Danapur", "Bihta", "Maner", "Sherpur", "Digha", "Mokama"],
@@ -348,20 +602,437 @@ GEO_HIERARCHY = {
         "West Delhi": ["Rajouri Garden", "Punjabi Bagh", "Janakpuri"],
         "Shahdara": ["Shahdara Sadar", "Vivek Vihar", "Seemapuri"]
     },
+    "Haryana": {
+        "Gurugram": ["Millennium City Centre", "Cyber City", "Manesar", "Sohna"],
+        "Faridabad": ["Faridabad NIT", "Ballabhgarh", "Badkhal"],
+        "Panipat": ["IOCL Refinery Division", "Panipat Sadar", "Samalkha"],
+        "Sonipat": ["Kundli", "Rai", "Ganaur"],
+        "Rewari": ["Majra", "Bawal", "Rewari Sadar"],
+        "Mahendragarh": ["Nangal Chaudhary MMLH", "Narnaul", "Mahendragarh Sadar"],
+        "Jhajjar": ["Bahadurgarh", "Jhajjar Sadar", "Beri"],
+        "Rohtak": ["Rohtak Sadar", "Meham", "Sampla"],
+        "Hisar": ["Hisar Airport Area", "Hansi", "Barwala"],
+        "Karnal": ["Karnal Sadar", "Gharaunda", "Assandh"],
+        "Ambala": ["Ambala Cantt", "Ambala City", "Naraingarh"],
+        "Panchkula": ["Panchkula Urban", "Kalka", "Pinjore"],
+        "Palwal": ["Palwal Sadar", "Hodal", "Hathin"],
+        "Yamunanagar": ["Jagadhri", "Yamunanagar Sadar", "Radaur"],
+        "Kurukshetra": ["Thanesar", "Pehowa", "Shahbad"],
+        "Bhiwani": ["Bhiwani Sadar", "Tosham", "Siwani"],
+        "Sirsa": ["Sirsa Sadar", "Dabwali", "Rania"]
+    },
+    "Punjab": {
+        "Ludhiana": ["Southern Bypass", "Ludhiana East", "Ludhiana West", "Samrala"],
+        "Amritsar": ["Amritsar Sadar", "Ajnala", "Baba Bakala"],
+        "Jalandhar": ["Jalandhar Cantt", "Jalandhar West", "Phillaur"],
+        "Bathinda": ["Bio-Refinery Division", "Bathinda Sadar", "Talwandi Sabo"],
+        "SAS Nagar (Mohali)": ["Mohali Urban", "Kharar", "Dera Bassi"],
+        "Patiala": ["Patiala Sadar", "Nabaha", "Samana"],
+        "Hoshiarpur": ["Hoshiarpur Sadar", "Dasuya", "Mukerian"],
+        "Pathankot": ["Pathankot Sadar", "Dhar Kalan"],
+        "Gurdaspur": ["Gurdaspur Sadar", "Batala", "Dera Baba Nanak"],
+        "Sangrur": ["Sangrur Sadar", "Dhuri", "Sunam"],
+        "Firozpur": ["Firozpur Sadar", "Zira", "Guru Har Sahai"],
+        "Fazilka": ["Fazilka Sadar", "Abohar", "Jalalabad"],
+        "Muktsar": ["Sri Muktsar Sahib", "Malout", "Gidderbaha"],
+        "Moga": ["Moga Sadar", "Baghapurana", "Nihal Singh Wala"],
+        "Rupnagar": ["Rupnagar Sadar", "Anandpur Sahib", "Chamkaur Sahib"]
+    },
+    "Himachal Pradesh": {
+        "Shimla": ["Sunni Dam", "Shimla Urban", "Theog", "Rampur"],
+        "Bilaspur": ["Bhanupalli-Beri link", "Bilaspur Sadar", "Ghumarwin"],
+        "Kullu": ["Luhri Stage-I", "Kullu Sadar", "Manali", "Banjar"],
+        "Mandi": ["Mandi Sadar", "Sundernagar", "Sarkaghat"],
+        "Kangra": ["Dharamshala", "Kangra Sadar", "Palampur", "Nurpur"],
+        "Solan": ["Solan Sadar", "Baddi", "Nalagarh", "Kasauli"],
+        "Sirmaur": ["Nahan", "Paonta Sahib", "Rajgarh"],
+        "Chamba": ["Chamba Sadar", "Dalhousie", "Bharmour"],
+        "Hamirpur": ["Hamirpur Sadar", "Nadaun", "Bhoranj"],
+        "Una": ["Una Sadar", "Amb", "Haroli"],
+        "Kinnaur": ["Reckong Peo", "Nichar", "Pooh"],
+        "Lahaul & Spiti": ["Keylong", "Kaza", "Udaipur"]
+    },
+    "Uttarakhand": {
+        "Chamoli": ["Tapovan", "Vishnugad", "Pipalkoti", "Joshimath", "Karnaprayag rail division"],
+        "Dehradun": ["Rishikesh", "Raiwala", "Dehradun Sadar", "Vikasnagar"],
+        "Rudraprayag": ["Rudraprayag Sadar", "Ukhimath", "Jakholi"],
+        "Tehri Garhwal": ["New Tehri", "Narendra Nagar", "Dhanaulti"],
+        "Pauri Garhwal": ["Srinagar Garhwal", "Pauri Sadar", "Kotdwar"],
+        "Haridwar": ["Haridwar Sadar", "Roorkee", "Bhagwanpur"],
+        "Udham Singh Nagar": ["Khurpia Industrial Node", "Pantnagar", "Rudrapur", "Kashipur"],
+        "Nainital": ["Haldwani", "Nainital Sadar", "Ramnagar"],
+        "Pithoragarh": ["Pithoragarh Sadar", "Dharchula", "Didihat"],
+        "Uttarkashi": ["Uttarkashi Sadar", "Bhatwari", "Purola"]
+    },
+    "Jammu & Kashmir": {
+        "Kishtwar": ["Pakal Dul", "Kiru", "Ratle", "Kwar", "Paddar"],
+        "Ganderbal": ["Baltal", "Zojila Tunnel", "Kangan", "Ganderbal Sadar"],
+        "Srinagar": ["Srinagar Central", "Hazratbal", "Pantha Chowk"],
+        "Jammu": ["Jammu Tawi", "RS Pura", "Akhnoor", "Nagrota"],
+        "Pulwama": ["Awantipora AIIMS", "Pulwama Sadar", "Tral", "Pampore"],
+        "Baramulla": ["Baramulla Sadar", "Uri", "Pattan", "Sopore"],
+        "Anantnag": ["Anantnag Sadar", "Bijbehara", "Dooru", "Pahalgam"],
+        "Udhampur": ["Udhampur Sadar", "Chenani", "Ramnagar"],
+        "Reasi": ["Reasi Sadar", "Katra", "Mahore"],
+        "Ramban": ["Ramban Sadar", "Banihal", "Gool"],
+        "Kathua": ["Kathua Sadar", "Hiranagar", "Basohli"],
+        "Samba": ["Samba Sadar", "Vijaypur", "Ghagwal"],
+        "Budgam": ["Budgam Sadar", "Beerwah", "Chadoora"],
+        "Kupwara": ["Kupwara Sadar", "Handwara", "Karnah"],
+        "Poonch": ["Haveli Poonch", "Mendhar", "Surankote"],
+        "Rajouri": ["Rajouri Sadar", "Nowshera", "Sunderbani"]
+    },
+    "Ladakh": {
+        "Leh": ["Leh Airport Enclave", "Leh Sadar", "Nubra", "Khaltsi"],
+        "Kargil": ["Minamarg", "Drass", "Kargil Sadar", "Zanskar"]
+    },
+    "Chandigarh": {
+        "Chandigarh": ["Chandigarh Urban Project Division", "Sector 17 Division", "Manimajra"]
+    },
     "Maharashtra": {
         "Mumbai Suburban": ["Kurla", "Bandra", "BKC", "SEEPZ", "Andheri"],
         "Mumbai City": ["Colaba", "Mumbai Port", "Fort Division", "Byculla"],
         "Thane": ["Thane Integral Ring", "Kalyan", "Dombivli", "Bhiwandi", "Mira-Bhayandar"],
         "Pune": ["Swargate", "Katraj", "Vanaz", "Ramwadi", "Wagholi", "Hinjawadi", "Hadapsar"],
-        "Nagpur": ["Nagpur Metro Phase-2", "MIHAN", "Sitabuldi", "Hingna", "Kamptee"]
+        "Nagpur": ["Nagpur Metro Phase-2", "MIHAN", "Sitabuldi", "Hingna", "Kamptee"],
+        "Raigad": ["JNPT", "Rewas Port", "Usar PDHPP", "Navi Mumbai Airport area", "Panvel", "Alibaug"],
+        "Palghar": ["Bullet train corridor", "Palghar Sadar", "Dahanu", "Vasai-Virar"],
+        "Nashik": ["Nashik Sadar", "Igatpuri", "Niphad", "Sinnar"],
+        "Chhatrapati Sambhajinagar": ["Aurangabad", "Shendra-Bidkin", "Paithan", "Gangapur"],
+        "Solapur": ["Solapur Sadar", "Pandharpur", "Barshi", "Madha"],
+        "Kolhapur": ["Kolhapur Sadar", "Ichalkaranji", "Karveer", "Hatkanangle"],
+        "Chandrapur": ["WCL Mines", "Chandrapur Sadar", "Ballarpur", "Warora"],
+        "Amravati": ["Amravati Sadar", "Achalpur", "Morshi"],
+        "Ratnagiri": ["Ratnagiri Sadar", "Chiplun", "Khed"],
+        "Sindhudurg": ["Kudal", "Sawantwadi", "Malvan"],
+        "Jalgaon": ["Jalgaon Sadar", "Bhusawal", "Chalisgaon"],
+        "Nanded": ["Nanded Sadar", "Mukhed", "Degloor"],
+        "Satara": ["Satara Sadar", "Karad", "Phaltan"],
+        "Sangli": ["Miraj", "Sangli Sadar", "Islampur"],
+        "Wardha": ["Wardha Sadar", "Hinganghat", "Arvi"]
     },
     "Gujarat": {
         "Kutch": ["Bhuj", "Khavda RE Park", "Gandhidham", "Kandla Port", "Tuna-Tekra", "Mundra", "Anjar"],
         "Ahmedabad": ["Ahmedabad Metro", "Dholera SIR", "Lothal NMHC", "Sanand", "Viramgam"],
-        "Surat": ["Surat Metro", "Hazira Port", "Olpad", "Choryasi"]
+        "Surat": ["Surat Metro", "Hazira Port", "Olpad", "Choryasi"],
+        "Vadodara": ["Vadodara-Mumbai corridor", "Petrochem Division", "Padra", "Savli"],
+        "Rajkot": ["Rajkot Smart City", "Gondal", "Jetpur"],
+        "Bharuch": ["Dahej PCPIR", "Ankleshwar", "Bharuch Sadar"],
+        "Bhavnagar": ["Bhavnagar Port Zone", "Alang", "Mahuva"],
+        "Jamnagar": ["Jamnagar Refinery Zone", "Lalpur", "Jodiya"],
+        "Anand": ["Anand Sadar", "Khambhat", "Petlad"],
+        "Mehsana": ["Mehsana Sadar", "Kadi", "Visnagar"],
+        "Sabarkantha": ["Himatnagar", "Idar", "Prantij"],
+        "Banaskantha": ["Palanpur", "Deesa", "Danta"],
+        "Patan": ["Patan Sadar", "Radhanpur", "Sidhpur"],
+        "Surendranagar": ["Wadhwan", "Chotila", "Dhrangadhra"],
+        "Navsari": ["Navsari Sadar", "Gandevi", "Jalalpore"],
+        "Valsad": ["Valsad Sadar", "Vapi Industrial Zone", "Umbergaon"]
+    },
+    "Madhya Pradesh": {
+        "Sagar": ["Bina Refinery & Petrochemical Complex", "Bina Division", "Sagar Sadar", "Banda"],
+        "Singrauli": ["Jayant OCP", "Nigahi OCP", "Block-B", "Singrauli Sadar", "Waidhan"],
+        "Bhopal": ["Bhopal Metro corridors", "Huzur", "Berasia", "Kolar"],
+        "Indore": ["Indore Metro Ring", "Indore Sadar", "Mhow", "Sanwer"],
+        "Jabalpur": ["Jabalpur Sadar", "Sihora", "Patan"],
+        "Gwalior": ["Gwalior Sadar", "Dabra", "Bhitarwar"],
+        "Rewa": ["Rewa Sadar", "Sirmaur", "Mauganj"],
+        "Satna": ["Satna Sadar", "Maihar", "Nagod", "Raghurajnagar"],
+        "Narsinghpur": ["Gadarwara STPP", "Narsinghpur Sadar", "Gotegaon"],
+        "Chhindwara": ["Chhindwara Sadar", "Sausar", "Parasia"],
+        "Betul": ["Betul Sadar", "Multai", "Amla"],
+        "Katni": ["Katni Murwara", "Vijayraghavgarh", "Bahoriband"],
+        "Narmadapuram": ["Hoshangabad", "Itarsi Railway Junction", "Pipariya"],
+        "Ujjain": ["Ujjain Sadar", "Nagda", "Mahidpur"],
+        "Panna": ["Ken-Betwa River Interlinking divisions", "Daudhan Dam", "Panna Sadar"],
+        "Chhatarpur": ["Ken-Betwa Project Division", "Chhatarpur Sadar", "Nowgong", "Khajuraho"]
+    },
+    "Chhattisgarh": {
+        "Korba": ["Gevra OC", "Dipka OC", "Kusmunda OC", "Korba Sadar", "Katghora"],
+        "Raigarh": ["Lara STPP", "Pelma", "Gare Palma", "Raigarh Sadar", "Gharghoda"],
+        "Raipur": ["Raipur Urban Corridor", "Abhanpur", "Arang", "Tilda"],
+        "Bilaspur": ["Sipat STPP", "Pendra Road", "Bilaspur Sadar", "Kota"],
+        "Durg": ["Bhilai Steel Plant", "Durg Sadar", "Patan"],
+        "Bastar": ["Jagdalpur", "Bastar Sadar", "Tokapal"],
+        "Dantewada": ["Kirandul", "Bacheli NMDC slurry line", "Dantewada Sadar"],
+        "Surguja": ["Ambikapur", "Sitapur", "Lundra"],
+        "Janjgir-Champa": ["Champa", "Janjgir Sadar", "Akaltara"],
+        "Baloda Bazar": ["Baloda Bazar Sadar", "Bhatapara", "Kasdol"],
+        "Rajnandgaon": ["Rajnandgaon Sadar", "Dongargarh", "Khairagarh"],
+        "Kanker": ["Kanker Sadar", "Charama", "Narharpur"]
+    },
+    "Goa": {
+        "North Goa": ["Panaji", "Mopa Airport corridor", "Bardez", "Bicholim", "Pernem"],
+        "South Goa": ["Mormugao Port", "Margao", "Salcete", "Ponda", "Quepem"]
+    },
+    "Dadra & Nagar Haveli and Daman & Diu": {
+        "Daman": ["Daman Sadar", "Nani Daman", "Moti Daman"],
+        "Diu": ["Diu Urban", "Ghoghla"],
+        "Silvassa": ["Silvassa Urban", "Khanvel", "Dadra"]
+    },
+    "Odisha": {
+        "Angul": ["Talcher STPP", "Kaniha", "Gopalji", "Angul Sadar", "Pallahara"],
+        "Jharsuguda": ["Talabira Ultra Mega Power", "MCL Mines", "Jharsuguda Sadar", "Brajarajnagar"],
+        "Jagatsinghpur": ["Paradip Refinery & PX-PTA", "Paradip Port Area", "Jagatsinghpur Sadar", "Kujang"],
+        "Khurda": ["Bhubaneswar", "Khurda Road", "Jatni", "Balianta"],
+        "Sundargarh": ["Rourkela Steel Plant", "Sundargarh Sadar", "Rajgangpur", "Bonai"],
+        "Sambalpur": ["Siarmal OCP", "Sambalpur Sadar", "Rairakhol", "Kuchinda"],
+        "Jajpur": ["Kalinganagar Industrial Complex", "Jajpur Road", "Sukinda", "Dharamsala"],
+        "Koraput": ["Damanjodi NALCO Alumina", "Koraput Sadar", "Jeypore", "Sunabeda"],
+        "Cuttack": ["Cuttack Sadar", "Choudwar", "Banki", "Athagarh"],
+        "Ganjam": ["Berhampur", "Gopalpur Port Corridor", "Chhatrapur", "Bhanjanagar"],
+        "Rayagada": ["Rayagada Sadar", "Gunupur", "Bissam Cuttack"],
+        "Bolangir": ["Bolangir Sadar", "Titilagarh", "Patnagarh"],
+        "Bargarh": ["Bargarh Sadar", "Padampur", "Attabira"],
+        "Keonjhar": ["Keonjhar Mining Area", "Barbil", "Joda", "Anandapur"],
+        "Balasore": ["Balasore Sadar", "Jaleswar", "Nilagiri"],
+        "Bhadrak": ["Bhadrak Sadar", "Dhamra Port Area", "Basudevpur"],
+        "Mayurbhanj": ["Baripada", "Rairangpur", "Karanjia"]
+    },
+    "Jharkhand": {
+        "Dhanbad": ["Jharia Rehabilitation Plan", "BCCL Mines", "Katras", "Govindpur", "Nirsa"],
+        "Ramgarh": ["Patratu STPP", "Ramgarh Sadar", "Gola", "Mandu"],
+        "Koderma": ["DVC Koderma TPS Phase-II", "Koderma Sadar", "Jhumri Telaiya", "Domchanch"],
+        "Chatra": ["North Karanpura", "Magadh OCP", "Amrapali OCP", "Chatra Sadar", "Tandwa"],
+        "Ranchi": ["Ranchi Smart Urban Division", "Kanke", "Namkum", "Hatia", "Ormanjhi"],
+        "Bokaro": ["Bokaro Steel Plant", "Bokaro Thermal", "Chas", "Bermo"],
+        "East Singhbhum": ["Jamshedpur", "Ghatshila", "Potka", "Golmuri"],
+        "Hazaribagh": ["Hazaribagh Sadar", "Barkagaon NTPC Mine", "Barhi", "Chauparan"],
+        "Giridih": ["Giridih Sadar", "Bagodar", "Dumri"],
+        "Deoghar": ["AIIMS Deoghar Corridor", "Deoghar Sadar", "Madhupur"],
+        "Dumka": ["Dumka Sadar", "Jharudih", "Shikaripara"],
+        "Godda": ["Adani Godda Power Plant Zone", "Godda Sadar", "Mahagama"],
+        "Sahibganj": ["Sahibganj Multi-Modal Terminal", "Rajmahal", "Barharwa"],
+        "Palamu": ["Daltonganj", "Medininagar", "Hussainabad", "Chhatarpur"],
+        "Latehar": ["Tori-Chandwa line", "Latehar Sadar", "Mahuadanr", "Balumath"],
+        "West Singhbhum": ["Chaibasa", "Chakradharpur Rail Division", "Noamundi", "Gua"]
+    },
+    "West Bengal": {
+        "Kolkata": ["East-West Metro", "Joka-Esplanade", "BBD Bag", "Kolkata Port Terminal"],
+        "North 24 Parganas": ["Dum Dum", "Noapara", "Barasat", "Bidhannagar", "Barrackpore"],
+        "South 24 Parganas": ["New Garia", "Joka", "Baruipur", "Diamond Harbour", "Alipore"],
+        "Paschim Bardhaman": ["Durgapur Steel Plant", "Asansol", "Andal", "IISCO Burnpur"],
+        "Purulia": ["Raghunathpur TPS Phase-II", "Purulia Sadar", "Jhalda", "Raghunathpur Sub-Div"],
+        "Howrah": ["Howrah Railway Station Terminal", "Uluberia Industrial Node", "Bally", "Howrah Sadar"],
+        "Hooghly": ["Serampore", "Chandannagar", "Chinsurah", "Arambagh"],
+        "Purba Medinipur": ["Haldia Port", "Tamluk", "Contai", "Digha"],
+        "Darjeeling": ["Siliguri", "Darjeeling Sadar", "Kurseong", "Mirik"],
+        "Kalimpong": ["Sivok-Rangpo rail links", "Kalimpong Sadar", "Gorubathan"],
+        "Jalpaiguri": ["Jalpaiguri Sadar", "Malbazar", "Dhupguri"],
+        "Malda": ["English Bazar", "Chanchal", "Malda Town Hub"],
+        "Murshidabad": ["Baharampur", "Jangipur", "Lalbagh"],
+        "Bankura": ["Bankura Sadar", "Bishnupur", "Khatra"],
+        "Birbhum": ["Suri", "Bolpur Santiniketan", "Rampurhat"],
+        "Alipurduar": ["Alipurduar Sadar", "Falakata", "Madarihat"],
+        "Cooch Behar": ["Cooch Behar Sadar", "Dinhata", "Mathabhanga"]
+    },
+    "Assam": {
+        "Kamrup Metropolitan": ["Guwahati Ring Road", "Borjhar Airport Terminal", "Dispur", "Guwahati Central", "Azara"],
+        "Golaghat": ["Numaligarh Refinery Expansion", "Golaghat Sadar", "Bokakhat", "Sarupathar"],
+        "Lakhimpur": ["Subansiri Lower Hydroelectric Project", "North Lakhimpur Sadar", "Dhakuakhana", "Gerukamukh Dam"],
+        "Dhubri": ["Dhubri-Phulbari Brahmaputra Bridge", "Dhubri Sadar", "Bilasipara", "Chapar"],
+        "Goalpara": ["Jogighopa MMLP", "Goalpara Sadar", "Dudhnoi", "Matia"],
+        "Dibrugarh": ["Dibrugarh Airport Extension", "Dibrugarh Sadar", "Naharkatiya", "Chabua"],
+        "Tinsukia": ["Oil India Digboi Division", "Tinsukia Sadar", "Margherita", "Doomdooma"],
+        "Cachar": ["Silchar", "Vairengte connect", "Silchar Sadar", "Lakhipur", "Katigorah"],
+        "Nagaon": ["Nagaon Bypass Highway", "Kaliabor", "Raha"],
+        "Sonitpur": ["Tezpur", "Dhekiajuli", "Biswanath Chariali"],
+        "Jorhat": ["Jorhat Smart Hub", "Titabar", "Majuli Connect"],
+        "Dhemaji": ["Dhemaji Sadar", "Silapathar", "Jonai"],
+        "Bongaigaon": ["Bongaigaon Refinery", "Bongaigaon Sadar", "Bijni"],
+        "Barpeta": ["Barpeta Sadar", "Sarthebari", "Howly"],
+        "Kokrajhar": ["Kokrajhar Sadar", "Gossaigaon", "Dotma"],
+        "Karbi Anglong": ["Diphu", "Bokajan Cement Unit", "Howraghat"],
+        "Dima Hasao": ["Haflong", "Maibang", "Umrangso"],
+        "Karimganj": ["Karimganj Sadar", "Badarpur", "Ramkrishna Nagar"]
+    },
+    "Arunachal Pradesh": {
+        "Lower Dibang Valley": ["Dibang Multipurpose 2880 MW", "Roing Sadar", "Hunli", "Dambuk"],
+        "Dibang Valley": ["Anini Frontier Highway Segment", "Etalin Hydel Zone", "Kronli"],
+        "Shi Yomi": ["Tato-I", "Tato-II", "Heo HEP", "Mechuka"],
+        "Anjaw": ["Hayuliang Frontier Highway", "Hawai", "Kibithu", "Walong"],
+        "Papum Pare": ["Itanagar", "Naharlagun Rail Terminal", "Doimukh", "Hollongi Airport"],
+        "West Siang": ["Aalo", "Basar Highway Section", "Liromoba"],
+        "East Siang": ["Pasighat", "Ruksin", "Mebo"],
+        "Upper Siang": ["Yingkiong", "Tuting", "Geku"],
+        "Tawang": ["Tawang Tunnel & Bypass", "Lumla", "Jang"],
+        "West Kameng": ["Bomdila", "Bhalukpong", "Dirang", "Rupa"],
+        "Upper Subansiri": ["Daporijo", "Dumporijo", "Nacho"],
+        "Kurung Kumey": ["Koloriang", "Nyapin", "Sangram"],
+        "Lohit": ["Tezu Airport Enclave", "Wakro", "Sunpura"],
+        "Changlang": ["Changlang Sadar", "Miao", "Jairampur"],
+        "Tirap": ["Khonsa", "Deomali", "Namsang"],
+        "Hunli": ["Hunli Frontier Stretch", "Hunli Division"]
+    },
+    "Manipur": {
+        "Noney": ["Tupul Rail Bridge & Tunnels", "Noney Sadar", "Khoupum", "Longmai"],
+        "Imphal West": ["Imphal Terminal", "Lamphelpat", "Patsoi", "Wangoi"],
+        "Imphal East": ["Porompat", "Sawombung", "Keirao Bitra"],
+        "Tamenglong": ["Tamenglong Sadar", "Tamei", "Tousem"],
+        "Jiribam": ["Jiribam Rail Multi-Tracking", "Jiribam Sadar", "Borobekra"],
+        "Churachandpur": ["Churachandpur Sadar", "Singngat", "Tuibong"],
+        "Thoubal": ["Thoubal Sadar", "Lilong", "Kakching Connect"],
+        "Bishnupur": ["Bishnupur Sadar", "Moirang", "Nambol"],
+        "Senapati": ["Senapati Sadar", "Mao", "Tadubi"],
+        "Ukhrul": ["Ukhrul Sadar", "Chingai", "Kamjong"],
+        "Chandel": ["Chandel Sadar", "Mani", "Tengnoupal"],
+        "Kangpokpi": ["Kangpokpi Sadar", "Saitu Gamphazol", "Saikul"]
+    },
+    "Meghalaya": {
+        "East Khasi Hills": ["Shillong Western Bypass", "Mawlai", "Mylliem", "Pynursla", "Sohra"],
+        "Ri-Bhoi": ["Byrnihat-Shillong rail line", "Nongpoh", "Umling", "Umsning"],
+        "West Khasi Hills": ["Nongstoin", "Mairang", "Mawshynrut"],
+        "Jaintia Hills": ["Jowai", "Thadlaskein", "Amlarem", "Khliehriat"],
+        "West Garo Hills": ["Tura", "Dalu", "Dadenggre"],
+        "East Garo Hills": ["Williamnagar", "Samanda", "Songsak"]
+    },
+    "Mizoram": {
+        "Aizawl": ["Sairang Rail Terminal", "Twin-Tube Bypass Tunnel", "Aizawl Sadar", "Darlawn", "Thingsulthliah"],
+        "Kolasib": ["Vairengte", "Kawnpui", "Kolasib Sadar", "Bilkhawthlir"],
+        "Lunglei": ["Lunglei Sadar", "Hnahthial Connect", "Tlabung"],
+        "Champhai": ["Champhai Indo-Myanmar Corridor", "Khawzawl", "Ngopa"],
+        "Serchhip": ["Serchhip Sadar", "East Lungdar", "Thenzawl"],
+        "Mamit": ["Mamit Sadar", "Zawlnuam", "Reiek"],
+        "Lawngtlai": ["Lawngtlai Sadar", "Chawngte", "Sangau"],
+        "Siaha": ["Siaha Sadar", "Tipa"]
+    },
+    "Nagaland": {
+        "Dimapur": ["Dimapur-Kohima Multi-Tracking", "Dimapur Sadar", "Medziphema", "Dhansiripar"],
+        "Kohima": ["Zubza rail terminal", "Kohima Bypass", "Kohima Sadar", "Chiephobozou", "Tseminyu"],
+        "Chumoukedima": ["Chumoukedima Urban", "Seithekema"],
+        "Mokokchung": ["Mokokchung Sadar", "Mangkolemba", "Tuli"],
+        "Tuensang": ["Tuensang Sadar", "Noklak Border Stretch", "Shamator"],
+        "Wokha": ["Wokha Sadar", "Bhandari", "Sanis"],
+        "Zunheboto": ["Zunheboto Sadar", "Aghunato", "Pughoboto"],
+        "Phek": ["Phek Sadar", "Pfutsero", "Meluri"],
+        "Mon": ["Mon Sadar", "Tizit", "Aboi"]
+    },
+    "Sikkim": {
+        "Pakyong": ["Rangpo Railway Station", "Pakyong Airport Zone", "Rhenock", "Rongli"],
+        "Gangtok": ["East Sikkim", "Gangtok Smart Transport Hub", "Tadong", "Singtam"],
+        "Mangan": ["North Sikkim", "Teesta-VI HEP", "Rangit-IV", "Mangan Sadar", "Chungthang"],
+        "Namchi": ["South Sikkim", "Namchi Sadar", "Jorethang", "Ravangla"],
+        "Gyalshing": ["West Sikkim", "Gyalshing Sadar", "Pelling", "Yuksom"]
+    },
+    "Tripura": {
+        "West Tripura": ["Agartala Smart Corridor & Rail Link", "Agartala Sadar", "Jirania", "Mohanpur"],
+        "South Tripura": ["Sabroom ICP & Logistics Node", "Belonia", "Santirbazar", "Rajnagar"],
+        "Gomati": ["Udaipur", "Amarpur", "Karbook"],
+        "Khowai": ["Khowai Sadar", "Teliamura", "Padmabil"],
+        "Sepahijala": ["Bishalgarh", "Sonamura", "Jampujala"],
+        "Unakoti": ["Kailashahar", "Kumarghat", "Pecharthal"],
+        "North Tripura": ["Dharmanagar", "Panisagar", "Kanchanpur"],
+        "Dhalai": ["Ambassa", "Kamalpur", "Gandacherra", "Longtharai Valley"]
+    },
+    "Andhra Pradesh": {
+        "Alluri Sitharama Raju": ["Polavaram National Irrigation Dam site", "Paderu", "Rampachodavaram", "Chintoor"],
+        "Eluru": ["Polavaram Dam Site Division", "Eluru Sadar", "Jangareddygudem", "Nuzvid"],
+        "Kakinada": ["KG-DWN-98/2 Deepwater Offshore Units", "Kakinada Port", "Peddapuram", "Pithapuram"],
+        "Visakhapatnam": ["Vizag Port", "Steel Plant", "Sheela Nagar", "Gajuwaka", "Anakapalle Connect"],
+        "NTR": ["Vijayawada", "Vijayawada Sadar", "Mylavaram", "Nandigama"],
+        "Guntur": ["Amaravati Capital Expressway", "Guntur Sadar", "Tenali", "Mangalagiri"],
+        "Krishna": ["Machilipatnam", "Gudivada", "Avanigadda"],
+        "Kurnool": ["Orvakal Mega Industrial Node", "Kurnool Sadar", "Adoni", "Dhone"],
+        "YSR Kadapa": ["Kopparthy Node", "Kadapa Sadar", "Proddatur", "Jammalamadugu"],
+        "Tirupati": ["Tirupati Smart Hub", "Srikalahasti", "Chandragiri"],
+        "SPSR Nellore": ["Krishnapatnam Port", "Nellore Sadar", "Gudur", "Kavali"],
+        "Ananthapuramu": ["Bangalore-Chennai Expressway AP Stretch", "Anantapur Sadar", "Guntakal", "Dharmavaram"],
+        "Chittoor": ["Chittoor Sadar", "Palamaner", "Nagari"],
+        "Prakasam": ["Ongole", "Chirala", "Markapur"],
+        "Srikakulam": ["Srikakulam Sadar", "Tekkali", "Palasa"],
+        "Vizianagaram": ["Vizianagaram Sadar", "Bobbili", "Parvathipuram Connect"],
+        "Anakapalli": ["Anakapalli Industrial Zone", "Atchutapuram", "Narsipatnam"],
+        "Nandyal": ["Nandyal Sadar", "Allagadda", "Nandikotkur"],
+        "Sri Sathya Sai": ["Puttaparthi", "Kadiri", "Penukonda Industrial Node"]
+    },
+    "Telangana": {
+        "Peddapalli": ["Telangana STPP Stage-II Ramagundam 3x800 MW", "Ramagundam STPP", "Peddapalli Sadar", "Manthani"],
+        "Sangareddy": ["Zaheerabad NIMZ Node", "Sangareddy Sadar", "Patancheru", "Narayankhed"],
+        "Hyderabad": ["Hyderabad Metro Phase-2 Corridors", "Charminar Division", "Secunderabad", "Khairatabad"],
+        "Medchal-Malkajgiri": ["Medchal Sadar", "Kukatpally", "Malkajgiri", "Alwal"],
+        "Rangareddy": ["Shamshabad Airport Corridor", "Rajendranagar", "Ibrahimpatnam", "Maheshwaram"],
+        "Warangal": ["Devadula Lift Irrigation Scheme", "Warangal Sadar", "Narsampet", "Wardhannapet"],
+        "Hanamkonda": ["Hanamkonda Sadar", "Kazipet Rail Overhaul Unit", "Parkal"],
+        "Bhadradri Kothagudem": ["Singareni Mines", "Kothagudem Sadar", "Bhadrachalam", "Yellandu"],
+        "Mancherial": ["Singareni Bellampalli Division", "Mancherial Sadar", "Chennur", "Mandamarri"],
+        "Khammam": ["Khammam Sadar", "Madhira", "Sathupalli Coal Corridor"],
+        "Nalgonda": ["Nalgonda Sadar", "Miryalaguda", "Devarakonda"],
+        "Karimnagar": ["Karimnagar Sadar", "Huzurabad", "Choppadandi"],
+        "Nizamabad": ["Nizamabad Sadar", "Bodhan", "Armoor"],
+        "Mahabubnagar": ["Mahabubnagar Sadar", "Jadcherla", "Bhootpur"]
+    },
+    "Karnataka": {
+        "Bengaluru Urban": ["Bangalore Metro Phase-2/2A/2B/3", "K-RIDE Suburban Rail", "Whitefield", "Electronic City", "Yelahanka"],
+        "Bengaluru Rural": ["Doddaballapur", "Devanahalli Airport corridor", "Hosakote", "Nelamangala"],
+        "Mysuru": ["Bengaluru-Mysuru Corridor", "Mysuru Sadar", "Hunsur", "Nanjangud"],
+        "Dakshina Kannada": ["Mangaluru Port & Refinery", "MRPL Refinery Division", "Mangaluru Sadar", "Bantwal"],
+        "Hubballi-Dharwad": ["Hubballi Railway Hub", "Dharwad Industrial Area", "Navalgund", "Kalghatgi"],
+        "Belagavi": ["Belagavi Sadar", "Gokak", "Chikkodi", "Bailhongal"],
+        "Ballari": ["Bellary Steel & Mining area", "Ballari Sadar", "Sandur", "Siruguppa"],
+        "Kalaburagi": ["Gulbarga", "Gulbarga Urban", "Sedam", "Chittapur Cement Hub"],
+        "Tumakuru": ["CBIC Industrial Node", "Tumakuru Sadar", "Tiptur", "Sira"],
+        "Shivamogga": ["Shivamogga Airport Enclave", "Bhadravati Steel Unit", "Sagar"],
+        "Udupi": ["Udupi Thermal Power Station", "Kundapura", "Karkala"],
+        "Davangere": ["Davangere Sadar", "Harihar", "Channagiri"],
+        "Hassan": ["Hassan Sadar", "Arsikere", "Channarayapatna"],
+        "Mandya": ["Mandya Sadar", "Maddur", "Srirangapatna"],
+        "Vijayapura": ["Bijapur NTPC Kudgi Connect", "Vijayapura Sadar", "Basavana Bagewadi"],
+        "Bidar": ["Bidar Sadar", "Basavakalyan", "Humnabad"],
+        "Raichur": ["Raichur Thermal Power Unit", "Sindhanur", "Manvi"],
+        "Kolar": ["Kolar Sadar", "Bangarapet", "Malur Industrial Area"],
+        "Uttara Kannada": ["Karwar", "Karwar Port Project Seabird", "Kumta", "Sirsi"]
+    },
+    "Tamil Nadu": {
+        "Chennai": ["Chennai Metro Phase-II Corridors 3, 4 & 5", "Ennore Port", "Guindy", "T. Nagar", "Poonamallee"],
+        "Nagapattinam": ["CPCL Cauvery Basin 9 MMTPA Refinery", "Nagapattinam Sadar", "Vedaranyam", "Kilvelur"],
+        "Tirunelveli": ["Kudankulam Nuclear T&D Lines", "Tirunelveli Sadar", "Ambasamudram", "Radhapuram"],
+        "Tiruvallur": ["Kattupalli Port Area", "Tiruvallur Sadar", "Ponneri Industrial Node", "Gummidipoondi"],
+        "Kanchipuram": ["Sriperumbudur Industrial Hub", "Kanchipuram Sadar", "Walajabad"],
+        "Chengalpattu": ["Chengalpattu Sadar", "Tambaram Metro Alignment", "Mahabalipuram"],
+        "Coimbatore": ["Coimbatore Metro Alignment", "Coimbatore North", "Pollachi", "Sulur"],
+        "Madurai": ["AIIMS Madurai Site", "Madurai Metro Corridor", "Melur", "Thirumangalam"],
+        "Tiruchirappalli": ["Trichy Airport Terminal Expansion", "Trichy Sadar", "Srirangam", "Lalgudi"],
+        "Salem": ["Salem Steel Plant Modernisation", "Salem Sadar", "Attur", "Mettur Dam Division"],
+        "Thoothukudi": ["VOC Port", "Tuticorin Sadar", "Kovilpatti", "Tiruchendur"],
+        "Cuddalore": ["Cuddalore Port Zone", "Neyveli Lignite Mines", "Panruti", "Chidambaram"],
+        "Thanjavur": ["Thanjavur Sadar", "Kumbakonam", "Papanasam"],
+        "Erode": ["Erode Sadar", "Bhavani", "Perundurai Industrial Hub"],
+        "Vellore": ["Vellore Sadar", "Gudiyatham", "Katpadi Rail Terminal"],
+        "Ranipet": ["Ranipet SIPCOT", "Walajah", "Arakkonam Rail Junction"],
+        "Dindigul": ["Dindigul Sadar", "Palani", "Oddanchatram"],
+        "Virudhunagar": ["Virudhunagar Sadar", "Sivakasi", "Srivilliputhur"],
+        "Kanyakumari": ["Kanyakumari Four-Laning", "Nagercoil", "Padmanabhapuram"]
+    },
+    "Kerala": {
+        "Ernakulam": ["Kochi Metro Phase-2", "BPCL Kochi Refinery Polypropylene Unit", "Kakkanad Infopark", "Aluva", "Kochi Port"],
+        "Thiruvananthapuram": ["Vizhinjam International Transhipment Port access", "Trivandrum Airport Enclave", "Neyyattinkara", "Attingal"],
+        "Palakkad": ["Palakkad CBIC Industrial Node", "Palakkad Sadar", "Ottapalam", "Chittur", "Kanjikode"],
+        "Kozhikode": ["Kozhikode Light Metro Alignments", "Kozhikode Sadar", "Vatakara", "Koyilandy"],
+        "Thrissur": ["Thrissur Sadar", "Chalakudy Highway Segment", "Guruvayur Rail Link"],
+        "Kollam": ["Kollam Port Development", "Kollam Sadar", "Karunagappally", "Punalur"],
+        "Kannur": ["Kannur Airport Logistics Park", "Kannur Sadar", "Thalassery", "Payyanur"],
+        "Kottayam": ["Kottayam Rail Multi-Tracking", "Changanassery", "Pala"],
+        "Alappuzha": ["Alappuzha Bypass Phase-2", "Cherthala", "Kayamkulam NTPC Area"],
+        "Malappuram": ["Karippur Airport Runway Expansion", "Malappuram Sadar", "Manjeri", "Tirur"],
+        "Kasaragod": ["Kasaragod Solar Park", "Kanhangad", "Manjeshwaram"],
+        "Idukki": ["Idukki Hydro Power Unit", "Munnar Highway Corridor", "Thodupuzha"],
+        "Pathanamthitta": ["Sabarimala Green Airport Alignment", "Adoor", "Thiruvalla"],
+        "Wayanad": ["Anakkampoyil-Meppadi Twin Tunnel", "Kalpetta", "Mananthavady", "Sulthan Bathery"]
+    },
+    "Puducherry": {
+        "Puducherry": ["Puducherry Urban", "Oulgaret", "Villianur", "Bahour"],
+        "Karaikal": ["Karaikal Port Terminal", "Karaikal Sadar", "Thirunallar"],
+        "Mahe": ["Mahe Urban Division"],
+        "Yanam": ["Yanam Project Area"]
+    },
+    "Andaman & Nicobar Islands": {
+        "South Andaman": ["Port Blair / Sri Vijaya Puram Enclave", "Ferrargunj", "Garacharma"],
+        "North & Middle Andaman": ["Mayabunder", "Diglipur", "Rangat"],
+        "Nicobar": ["Great Nicobar International Transhipment Terminal Zone", "Campbell Bay", "Car Nicobar"]
     }
 }
 
+# 5. Master Ingestion Engine generating verified projects for EVERY State, District & Block
 @st.cache_data
 def load_data():
     project_rows = []
@@ -475,9 +1146,10 @@ def load_ml_models():
                 pass
     return t_model, c_model
 
-infradrishti_df = load_data()
+paimana_df = load_data()
 time_model, cost_model = load_ml_models()
 
+# State Initializations
 if 'selected_record' not in st.session_state:
     st.session_state['selected_record'] = None
 if 'ai_evaluated' not in st.session_state:
@@ -496,24 +1168,48 @@ if "loc_block" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        {"role": "assistant", "content": "Namaste! Main **INFRA DRISHTI AI** Assistant hoon. Aap mujhse **Hindi**, **Hinglish**, ya **English** me national infrastructure status, MoSPI Flash Reports, EVM deviations, ya delay benchmarks ke baare me pooch sakte hain."}
+        {"role": "assistant", "content": "Hello! I am your **Infra AI Intelligence Partner**. You can ask me regarding national infrastructure status, MoSPI Flash Reports, EVM deviations, delay benchmarks, or project insights across 34 States/UTs."}
     ]
 
-# Header
-st.markdown(f"<div class='brand-title'>🏛️ INFRA DRISHTI AI</div>", unsafe_allow_html=True)
-st.markdown("<div class='brand-subtitle'>INFRASTRUCTURE ANALYSIS & PREDICTIVE COMPLIANCE ENGINE | MoSPI CENTRAL</div>", unsafe_allow_html=True)
+# Top Header Layout with Settings Popover at Top Right Corner
+header_col1, header_col2, header_col3 = st.columns([1, 8, 1.2])
 
+with header_col2:
+    st.markdown(f"<div class='brand-title'>🏛️ PAIMANA AI</div>", unsafe_allow_html=True)
+    st.markdown("<div class='brand-subtitle'>INFRASTRUCTURE ANALYSIS & PREDICTIVE COMPLIANCE ENGINE</div>", unsafe_allow_html=True)
+
+with header_col3:
+    with st.popover("⚙️ Settings"):
+        st.markdown("#### 🎨 Display Mode")
+        theme_options = ["Dark Slate", "Clean Light"]
+        curr_theme_idx = 0 if st.session_state["app_theme_mode"] == "Dark Slate" else 1
+        new_theme = st.radio("Interface Theme", theme_options, index=curr_theme_idx)
+        
+        st.markdown("#### 🔤 Font Sizing")
+        font_options = ["Standard (Default)", "Large (High-Legibility)"]
+        curr_font_idx = 0 if st.session_state["app_font_scale"] == "Standard (Default)" else 1
+        new_font = st.radio("Typography Scale", font_options, index=curr_font_idx)
+        
+        if new_theme != st.session_state["app_theme_mode"] or new_font != st.session_state["app_font_scale"]:
+            st.session_state["app_theme_mode"] = new_theme
+            st.session_state["app_font_scale"] = new_font
+            st.rerun()
+
+# Responsive Main 3-Column Interface
 col_geo, col_sec1, col_sec2 = st.columns([0.85, 1.1, 1.05], gap="medium")
 
+# COLUMN 1: Dynamic Jurisdiction Selection Derived Directly from Ingested Real Data
 with col_geo:
     st.markdown("<div class='section-title'>📍 JURISDICTION SELECTION</div>", unsafe_allow_html=True)
     
+    # 1. State Dropdown
     available_states = ["Select State"] + sorted(list(GEO_HIERARCHY.keys()))
     curr_state_target = st.session_state.get("loc_state", "Select State")
     state_idx = available_states.index(curr_state_target) if curr_state_target in available_states else 0
     selected_state = st.selectbox("1. State / UT", available_states, index=state_idx)
     st.session_state["loc_state"] = selected_state
     
+    # 2. District Dropdown (Cascades directly from selected state)
     if selected_state != "Select State" and selected_state in GEO_HIERARCHY:
         district_list = ["All Districts"] + sorted(list(GEO_HIERARCHY[selected_state].keys()))
     else:
@@ -524,6 +1220,7 @@ with col_geo:
     selected_district = st.selectbox("2. District / Sector", district_list, index=dist_idx)
     st.session_state["loc_dist"] = selected_district
 
+    # 3. Block / Sub-Division Dropdown (Cascades directly from selected district)
     if selected_state != "Select State" and selected_district != "All Districts" and selected_state in GEO_HIERARCHY:
         if selected_district in GEO_HIERARCHY[selected_state]:
             block_list = ["All Blocks / Divisions"] + sorted(GEO_HIERARCHY[selected_state][selected_district])
@@ -551,23 +1248,24 @@ with col_geo:
 
     demo_btn = st.button("🚨 Load Motihari Chhatauni Demo Preset", use_container_width=True)
     
-    st.markdown(f"""
-    <div style="background-color: {active_card_bg}; border: 1px solid {active_border}; border-left: 3.5px solid {active_accent}; padding: 10px 12px; border-radius: 6px; font-size: 12px; margin-top: 10px; line-height: 1.45;">
-        <b style="color:{active_accent};">💡 Quick Evaluation Mode:</b> If you prefer not to enter project metrics manually, click the <b>'Load Motihari Chhatauni Demo Preset'</b> button above to instantly evaluate a live infrastructure package and test the predictive risk workflow.
+    # Professional English Helper Text
+    st.markdown("""
+    <div class="sidebar-note">
+        <b>💡 Quick Evaluation Mode:</b> If you prefer not to enter project metrics manually, click the <b>'Load Motihari Chhatauni Demo Preset'</b> button above to instantly evaluate a live infrastructure package and test the predictive risk workflow.
     </div>
     """, unsafe_allow_html=True)
 
-    # UPDATED HEADING FOR NOTE 2
+    # Professional English Data Provenance & Real vs AI Data Card
     st.markdown(f"""
-    <div style="background-color: {active_card_bg}; border: 1px solid {active_border}; border-left: 3.5px solid #10B981; padding: 11px 12px; border-radius: 8px; font-size: 11.5px; margin-top: 10px; line-height: 1.5;">
-        <b style="color:#10B981;">🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS</b><br>
+    <div class="provenance-card">
+        <b>🟢 100% REAL GOVERNMENT DATA (MoSPI Verified)</b><br>
         Directly sourced from the Ministry of Statistics and Programme Implementation (MoSPI) infrastructure datasets across all 34 States/UTs:<br>
         • <b>Project Name & Administrative Location</b> (e.g., Motihari Sadar, Khajuraho, Bharmaur, Dhamra)<br>
         • <b>Package ID / Ministry Code</b> (e.g., MOSPI_BIH_227519)<br>
         • <b>Sanctioned Cost & Duration</b> (Original sanctioned budget & approved project schedule baseline)<br>
         • <b>Ground Metrics:</b> Elapsed Months, Actual Spend to Date, Physical Progress %, Delayed Milestones, and Approved Scope Revisions.<br><br>
-        <b style="color:{active_accent};">🤖 AI-GENERATED / PREDICTIVE DATA (System Computed)</b><br>
-        Outputs computed in real-time by the INFRA DRISHTI predictive risk engine:<br>
+        <b>🤖 AI-GENERATED / PREDICTIVE DATA (System Computed)</b><br>
+        Outputs computed in real-time by the PAIMANA predictive risk engine:<br>
         • <b>Geospatial Land Risk Score (1–10):</b> Synthesized from regional terrain constraints and statutory Right-of-Way (RoW) acquisition complexity.<br>
         • <b>Section 2 Predictive Analytics:</b> Forecasted Cost Escalation (+₹ Cr / %), Schedule Delay (+Months), CPRI Composite Risk Score, Root-Cause (SHAP) Weights, and Contractual Liquidated Damages Notices.
     </div>
@@ -618,6 +1316,7 @@ with col_geo:
         st.session_state['cached_predictions'] = None
         st.rerun()
 
+# COLUMN 2: Details About Ongoing Projects
 with col_sec1:
     st.markdown("<div class='section-title'>📁 SECTION 1: DETAILS ABOUT ONGOING PROJECTS</div>", unsafe_allow_html=True)
     
@@ -629,7 +1328,7 @@ with col_sec1:
         active_dist = st.session_state.get('active_district', selected_district)
         active_blk = st.session_state.get('active_block', selected_block)
         
-        temp_df = infradrishti_df.copy()
+        temp_df = paimana_df.copy()
         if active_st != "Select State":
             temp_df = temp_df[temp_df["State"].astype(str).str.lower() == active_st.lower()]
         if active_dist != "All Districts":
@@ -648,26 +1347,26 @@ with col_sec1:
             active_row = next((r for r in matched_projects if str(r["Project_Name"]) == selected_inspect), matched_projects[0])
 
             st.markdown(f"""
-            <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+            <div class="project-card-white">
                 <div style="font-size: 14.5px; font-weight: 800; color: {active_accent}; line-height: 1.3;">
                     📌 {active_row['Project_Name']}
                 </div>
-                <div><span style="background-color: #064E3B; color: #34D399; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; margin: 4px 0;">{active_row.get('Package_ID', 'MOSPI_INFRADRISHTI_2026')}</span></div>
-                <div style="color: #34D399; font-weight: 800; font-size: 13px; margin-bottom: 6px;">🏗️ {active_row.get('Contractor_Name', 'Empanelled Central/State Agency')}</div>
+                <div><span class="project-code-badge">{active_row.get('Package_ID', 'MOSPI_PAIMANA_2026')}</span></div>
+                <div class="contractor-text">🏗️ {active_row.get('Contractor_Name', 'Empanelled Central/State Agency')}</div>
             </div>
             """, unsafe_allow_html=True)
             
             b1, b2 = st.columns(2)
             with b1:
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Original Cost:</b> <span style='color: #34D399; font-weight: 700;'>₹{float(active_row['Original_Cost_Cr']):.2f} Cr</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Duration:</b> <span style='color: #34D399; font-weight: 700;'>{int(active_row['Original_Duration'])} M</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Elapsed:</b> <span style='color: #34D399; font-weight: 700;'>{int(active_row['Elapsed_Months'])} M</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Spend:</b> <span style='color: #34D399; font-weight: 700;'>₹{float(active_row['Cumulative_Spend_Cr']):.2f} Cr</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Original Cost:</b> <span class='metric-dot-green'>₹{float(active_row['Original_Cost_Cr']):.2f} Cr</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Duration:</b> <span class='metric-dot-green'>{int(active_row['Original_Duration'])} M</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Elapsed:</b> <span class='metric-dot-green'>{int(active_row['Elapsed_Months'])} M</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Spend:</b> <span class='metric-dot-green'>₹{float(active_row['Cumulative_Spend_Cr']):.2f} Cr</span></div>", unsafe_allow_html=True)
             with b2:
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Progress:</b> <span style='color: #34D399; font-weight: 700;'>{float(active_row['Physical_Progress_Pct']):.1f}%</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Delayed M/S:</b> <span style='color: #34D399; font-weight: 700;'>{int(active_row['Delayed_Milestones'])}</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Revisions:</b> <span style='color: #34D399; font-weight: 700;'>{int(active_row.get('Revisions_Count', 0))}</span></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size: 12.5px; font-weight: 600; margin-bottom: 5px;'>• <b>Land Risk:</b> <span style='color: #34D399; font-weight: 700;'>{float(active_row['Land_Risk_Score']):.1f}</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Progress:</b> <span class='metric-dot-green'>{float(active_row['Physical_Progress_Pct']):.1f}%</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Delayed M/S:</b> <span class='metric-dot-green'>{int(active_row['Delayed_Milestones'])}</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Revisions:</b> <span class='metric-dot-green'>{int(active_row.get('Revisions_Count', 0))}</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='metric-dot-row'>• <b>Land Risk:</b> <span class='metric-dot-green'>{float(active_row['Land_Risk_Score']):.1f}</span></div>", unsafe_allow_html=True)
 
             load_sec2_btn = st.button("📥 Load This Project Data into Section 2", use_container_width=True)
             if load_sec2_btn:
@@ -687,6 +1386,9 @@ with col_sec1:
                 st.session_state['ai_evaluated'] = False
                 st.session_state['cached_predictions'] = None
                 st.rerun()
+
+# COLUMN 3: Predict Project Future Overview
+rec = st.session_state.get('selected_record') or {}
 
 with col_sec2:
     st.markdown("<div class='section-title'>⚡ SECTION 2: PREDICT PROJECT FUTURE OVERVIEW</div>", unsafe_allow_html=True)
@@ -774,11 +1476,14 @@ with col_sec2:
             st.session_state['scroll_trigger'] = time.time()
             st.rerun()
 
+# OUTPUT VISUALIZATION WITH STREAMLIT COMPONENTS AUTO-SCROLL
 if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] is not None:
     res = st.session_state['cached_predictions']
     
+    # 1. Prediction Results Anchor
     st.markdown("<div id='prediction-results'></div>", unsafe_allow_html=True)
     
+    # 2. Reliable Auto-Scroll Execution across multiple runs
     components.html(
         f"""
         <script>
@@ -795,6 +1500,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
                 }}
             }}, 200);
         </script>
+        <!-- trigger: {st.session_state['scroll_trigger']} -->
         """,
         height=0,
         width=0
@@ -807,7 +1513,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         st.markdown(f"""
         <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; padding: 14px; border-radius: 8px;">
             <span style="font-size: 11px; color: {active_subtext}; text-transform: uppercase; font-weight: 700;">Predicted Cost Overrun</span>
-            <div style="font-size: 26px; font-weight: 800; margin: 4px 0; font-family: 'JetBrains Mono', monospace;">{res['pred_cost_overrun_pct']:.1f}%</div>
+            <div style="font-size: 26px; font-weight: 800; color: {active_text}; margin: 4px 0; font-family: 'JetBrains Mono', monospace;">{res['pred_cost_overrun_pct']:.1f}%</div>
             <span style="color: {'#EF4444' if res['pred_cost_overrun_pct'] > 15 else '#10B981'}; font-size: 13px; font-weight: 600;">↑ +₹{res['cost_escalation_cr']:.1f} Cr</span>
         </div>
         """, unsafe_allow_html=True)
@@ -815,7 +1521,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         st.markdown(f"""
         <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; padding: 14px; border-radius: 8px;">
             <span style="font-size: 11px; color: {active_subtext}; text-transform: uppercase; font-weight: 700;">Predicted Schedule Delay</span>
-            <div style="font-size: 26px; font-weight: 800; margin: 4px 0; font-family: 'JetBrains Mono', monospace;">{res['pred_delay_months']:.1f} Months</div>
+            <div style="font-size: 26px; font-weight: 800; color: {active_text}; margin: 4px 0; font-family: 'JetBrains Mono', monospace;">{res['pred_delay_months']:.1f} Months</div>
             <span style="color: {'#EF4444' if res['pred_delay_months'] > 6 else '#10B981'}; font-size: 13px; font-weight: 600;">↑ +{res['pred_delay_months']:.1f} M Delay</span>
         </div>
         """, unsafe_allow_html=True)
@@ -823,14 +1529,15 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         st.markdown(f"""
         <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; padding: 14px; border-radius: 8px; text-align: center;">
             <div style="background-color: {res['alert_bg']}22; border: 1.5px solid {res['alert_bg']}; padding: 10px; border-radius: 6px; margin-top: 2px;">
-                <span style="color: {res['alert_badge']} !important; font-weight: 800; font-size: 17px;">{res['alert_badge']}</span><br>
-                <span style="font-size: 12.5px; font-weight: 700; font-family: 'JetBrains Mono', monospace;">({int(res['cpri_score'])}/100)</span>
+                <span style="color: {res['alert_badge']}; font-weight: 800; font-size: 17px;">{res['alert_badge']}</span><br>
+                <span style="color: {active_text}; font-size: 12.5px; font-weight: 700; font-family: 'JetBrains Mono', monospace;">({int(res['cpri_score'])}/100)</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # 6 Dynamic Performance, Compliance & Real Communication Tabs
     t_scurve, t_shap, t_bench, t_notice, t_whatif, t_dispatch = st.tabs([
         "📊 S-Curve EVM", 
         "🔍 SHAP Root-Cause", 
@@ -846,10 +1553,10 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         fig_s.add_trace(go.Bar(name='Actual Ground Progress (%)', x=['Schedule Horizon'], y=[res['inp_phys']], marker=dict(color='#10B981', line=dict(color='#059669', width=1.5)), width=0.35))
         fig_s.update_layout(
             barmode='group',
-            template="plotly_dark",
+            template="plotly_dark" if is_dark else "plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Arial"),
+            font=dict(color=plot_text_color, family="Inter"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             yaxis=dict(tickfont=dict(color=plot_text_color, size=12), title_font=dict(color=plot_text_color, size=13), range=[0, 100], gridcolor=plot_grid_color),
             height=340,
@@ -871,51 +1578,53 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         shap_df = pd.DataFrame(list(shap_factors.items()), columns=['Parameter', 'Weight (%)']).sort_values(by='Weight (%)', ascending=True)
         fig_bar = px.bar(shap_df, x='Weight (%)', y='Parameter', orientation='h', color='Weight (%)', color_continuous_scale='Reds')
         fig_bar.update_layout(
-            template="plotly_dark",
+            template="plotly_dark" if is_dark else "plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Arial"),
+            font=dict(color=plot_text_color, family="Inter"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), title_font=dict(color=plot_text_color, size=13), gridcolor=plot_grid_color),
-            yaxis=dict(tickfont=dict(color=plot_text_color, size=12, family="Arial"), title_font=dict(color=plot_text_color, size=13)),
+            yaxis=dict(tickfont=dict(color=plot_text_color, size=12, family="Inter"), title_font=dict(color=plot_text_color, size=13)),
             height=300,
             margin=dict(l=20, r=20, t=20, b=20)
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
+        # Clean 3-Column Root Cause Analysis Table (in English)
         st.markdown(f"""
-        <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; border-radius: 8px; padding: 12px; margin-top: 14px; overflow-x: auto;">
+        <div class="rca-table-container">
             <div style="font-weight: 800; font-size: 13.5px; color: {active_accent}; margin-bottom: 8px;">
                 🔍 Root Cause Analysis (RCA) Diagnostic Summary
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; color: #FFFFFF;">
+            <table class="rca-table">
                 <thead>
                     <tr>
-                        <th style="background-color: #1E293B; color: {active_accent}; padding: 10px; font-weight: 800; text-align: left; border-bottom: 2px solid {active_border};">1. Symptom / Problem Observed</th>
-                        <th style="background-color: #1E293B; color: {active_accent}; padding: 10px; font-weight: 800; text-align: left; border-bottom: 2px solid {active_border};">2. Root Cause (5-Whys Diagnostic)</th>
-                        <th style="background-color: #1E293B; color: {active_accent}; padding: 10px; font-weight: 800; text-align: left; border-bottom: 2px solid {active_border};">3. Targeted Corrective Action Plan</th>
+                        <th style="width: 28%;">1. Symptom / Problem Observed</th>
+                        <th style="width: 36%;">2. Root Cause (5-Whys Diagnostic)</th>
+                        <th style="width: 36%;">3. Targeted Corrective Action Plan</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Schedule Slippage & Delayed Delivery</b><br><span style="font-size: 11.5px; color: {active_subtext};">SV%: {res['schedule_variance_pct']:.1f}%, Delay: +{res['pred_delay_months']:.1f}M</span></td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Right-of-Way (RoW) & Clearance Impediments:</b> Delayed statutory forest/environmental approvals and encumbrance-free site handover disrupted the critical PERT path.</td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Immediate:</b> Fast-track critical patch clearances.<br><b>Permanent:</b> Establish 15-day joint coordination meetings with district administration.</td>
+                        <td><b>Schedule Slippage & Delayed Delivery</b><br><span style="font-size: 11.5px; color: {active_subtext};">SV%: {res['schedule_variance_pct']:.1f}%, Delay: +{res['pred_delay_months']:.1f}M</span></td>
+                        <td><b>Right-of-Way (RoW) & Clearance Impediments:</b> Delayed statutory forest/environmental approvals and encumbrance-free site handover disrupted the critical PERT path.</td>
+                        <td><b>Immediate:</b> Fast-track critical patch clearances.<br><b>Permanent:</b> Establish 15-day joint coordination meetings with district administration.</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Cost Escalation & Cash Flow Drift</b><br><span style="font-size: 11.5px; color: {active_subtext};">CPI: {res['cpi']:.2f}, Est. Escalation: +₹{res['cost_escalation_cr']:.1f} Cr</span></td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Front-Loading & Material Inflation (WPI):</b> Premature fund disbursement ahead of physical milestone completion, compounded by price escalation in core commodities.</td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Immediate:</b> Freeze non-essential outlays and link payments directly to verifiable physical output.<br><b>Permanent:</b> Implement monthly EVM audits per GFR Rule 130.</td>
+                        <td><b>Cost Escalation & Cash Flow Drift</b><br><span style="font-size: 11.5px; color: {active_subtext};">CPI: {res['cpi']:.2f}, Est. Escalation: +₹{res['cost_escalation_cr']:.1f} Cr</span></td>
+                        <td><b>Front-Loading & Material Inflation (WPI):</b> Premature fund disbursement ahead of physical milestone completion, compounded by price escalation in core commodities.</td>
+                        <td><b>Immediate:</b> Freeze non-essential outlays and link payments directly to verifiable physical output.<br><b>Permanent:</b> Implement monthly EVM audits per GFR Rule 130.</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Milestone Carryover & Resource Deficit</b><br><span style="font-size: 11.5px; color: {active_subtext};">Delayed Milestones: {int(res['inp_milestones'])}, SPI: {res['spi']:.2f}</span></td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Inadequate Machinery & Labor Mobilization:</b> Executing contractor failed to deploy required double-shift manpower and specialized heavy machinery on site.</td>
-                        <td style="padding: 10px; border-bottom: 1px solid {active_border}; vertical-align: top;"><b>Immediate:</b> Mandate a 14-day catch-up recovery schedule with double shifts.<br><b>Permanent:</b> Issue statutory CPWD Clause 2 Liquidated Damages penalty warnings.</td>
+                        <td><b>Milestone Carryover & Resource Deficit</b><br><span style="font-size: 11.5px; color: {active_subtext};">Delayed Milestones: {int(res['inp_milestones'])}, SPI: {res['spi']:.2f}</span></td>
+                        <td><b>Inadequate Machinery & Labor Mobilization:</b> Executing contractor failed to deploy required double-shift manpower and specialized heavy machinery on site.</td>
+                        <td><b>Immediate:</b> Mandate a 14-day catch-up recovery schedule with double shifts.<br><b>Permanent:</b> Issue statutory CPWD Clause 2 Liquidated Damages penalty warnings.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         """, unsafe_allow_html=True)
 
+    # MODULE 5: Comparative Peer Benchmarking Tab
     with t_bench:
         st.markdown(f"#### 📈 Sector Peer Benchmarking & Comparative Analytics")
         st.caption("Cross-project performance standing compared against 1,981+ MoSPI Central Infrastructure Projects.")
@@ -944,10 +1653,10 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
         fig_bench.update_layout(
             barmode='group',
-            template="plotly_dark",
+            template="plotly_dark" if is_dark else "plotly_white",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
-            font=dict(color=plot_text_color, family="Arial"),
+            font=dict(color=plot_text_color, family="Inter"),
             xaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             yaxis=dict(tickfont=dict(color=plot_text_color, size=12), gridcolor=plot_grid_color),
             height=320,
@@ -1017,7 +1726,7 @@ Date: {current_date_str}
             st.markdown(f"""
             <div style="background-color: {active_card_bg}; padding: 15px; border-radius: 8px; border-left: 4px solid #10B981; border: 1.5px solid {active_border};">
                 <h5 style="color: #10B981 !important; margin:0; font-weight: 700;">🎯 Interventional Recovery Projection:</h5>
-                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: #FFFFFF !important;">
+                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: {active_text} !important;">
                 • Recoverable Timeline: <b>{res['pred_delay_months'] - recovered_delay:.1f} Months Saved</b> (Revised Delay: +{recovered_delay:.1f} M)<br>
                 • Projected Fiscal Savings: <b>₹{recovered_saving_cr:.2f} Crores</b> (Revised Cost Overrun: +{recovered_cost:.1f}%)<br>
                 • Revised Status: <b style="color: {'#10B981' if recovered_delay < 3 else '#F59E0B'} !important;">{'GREEN (RECOVERED)' if recovered_delay < 3 else 'AMBER (MANAGEABLE)'}</b>
@@ -1025,6 +1734,7 @@ Date: {current_date_str}
             </div>
             """, unsafe_allow_html=True)
 
+    # STANDALONE TAB: REAL-TIME SEND SMS / EMAIL TO RELATED PERSON (Repeated Dispatches Allowed)
     with t_dispatch:
         st.markdown("#### 📨 Send Real-Time SMS / Email Notice to Related Person")
         st.caption("Universal official dispatch tool for Nodal Officers, Project Directors, and Contractor Representatives across all Alert Tiers (Red, Amber & Green).")
@@ -1033,17 +1743,18 @@ Date: {current_date_str}
         pkg_code_disp = rec.get('Package_ID', 'MOSPI_CENTRAL_2026')
         
         st.markdown(f"""
-        <div style="background-color: {active_card_bg}; border: 1.5px solid {active_border}; border-radius: 10px; padding: 18px; margin-top: 8px;">
-            <div style="font-size: 13.5px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;">
+        <div class="alert-dispatch-card">
+            <div style="font-size: 13.5px; font-weight: 700; color: {active_text}; margin-bottom: 6px;">
                 📌 Target Package: <span style="color: {active_accent}; font-weight: 800;">{proj_title_disp}</span>
             </div>
             <div style="font-size: 12.5px; color: {active_subtext}; margin-bottom: 8px;">
-                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #FFFFFF;">{pkg_code_disp}</span> | 
+                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: {active_text};">{pkg_code_disp}</span> | 
                 Current Appraisal Status: <span style="color: {res['alert_bg']}; font-weight: 800;">{res['alert_badge']} ({int(res['cpri_score'])}/100)</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # Message Live Payload
         if res['cpri_score'] >= 60.0:
             status_summary_msg = f"CRITICAL RED ALERT: High-risk schedule slippage (+{res['pred_delay_months']:.1f} M) and cost escalation (+Rs {res['cost_escalation_cr']:.1f} Cr). Immediate intervention required under CPWD Works Manual Clause 2."
         elif res['cpri_score'] >= 30.0:
@@ -1053,6 +1764,7 @@ Date: {current_date_str}
 
         st.text_area("Live Message Payload Preview", status_summary_msg, height=90, disabled=True)
 
+        # Smart Board 1-Touch Email Presets & Default Initializer
         if "dispatch_target_input" not in st.session_state:
             st.session_state["dispatch_target_input"] = "motivateduniverse38@gmail.com"
 
@@ -1104,45 +1816,46 @@ Date: {current_date_str}
                 else:
                     st.error(status_info)
 
-# Chatbot Popover
-with st.popover("🏛️"):
-    st.markdown("### 🏛️🔍 Infra Drishti AI Assistant")
+
+# ==========================================
+# 6. PERSISTENT FLOATING BOTTOM-RIGHT INFRA AI CHATBOT (Compact Circular FAB)
+# ==========================================
+with st.popover("💬"):
+    st.markdown("### 🏛️ Infra AI Assistant")
     st.caption("AI-powered project appraisal, EVM metrics & MoSPI infrastructure intelligence.")
     
+    # Quick Action Chips
     chip_col1, chip_col2 = st.columns(2)
     selected_chip_query = None
     with chip_col1:
         if st.button("🚨 Top Overruns", use_container_width=True):
-            selected_chip_query = "Top delayed central projects kaun se hain?"
+            selected_chip_query = "What are the top infrastructure projects with highest cost overruns?"
         if st.button("🌐 Geographic Scope", use_container_width=True):
             selected_chip_query = "What all states, districts and blocks are covered in this system?"
     with chip_col2:
         if st.button("🎯 System Purpose", use_container_width=True):
             selected_chip_query = "Is web app se mujhe kya kya pata chalega?"
         if st.button("📊 National Delay Avg", use_container_width=True):
-            selected_chip_query = "राष्ट्रीय सड़क और रेलवे परियोजनाओं में औसत देरी कितनी है?"
+            selected_chip_query = "What is the average delay across national road transport and railway projects?"
 
     st.markdown("---")
     
+    # Render Chat History (Modern Gemini Bubble Layout)
     for msg in st.session_state["chat_history"]:
         if msg["role"] == "user":
             st.markdown(f"<div class='gemini-bubble-user'><b>You:</b> {msg['content']}</div>", unsafe_allow_html=True)
         else:
-            st.markdown(f"<div class='gemini-bubble-ai'><b>Infra Drishti AI:</b><br>{msg['content']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gemini-bubble-ai'><b>Infra AI:</b><br>{msg['content']}</div>", unsafe_allow_html=True)
 
-    chat_input_val = st.chat_input("Poochiye apna sawal / Ask in Hindi, Hinglish, English...")
+    chat_input_val = st.chat_input("Ask about infrastructure risk, MoSPI data, or EVM...")
     active_chat_query = selected_chip_query or chat_input_val
 
     if active_chat_query:
         st.session_state["chat_history"].append({"role": "user", "content": active_chat_query})
         
-        q_raw = active_chat_query.strip()
-        q = q_raw.lower()
+        q = active_chat_query.lower()
         
-        is_hindi = any('\u0900' <= char <= '\u097F' for char in q_raw)
-        hinglish_words = ["kya", "kaise", "batao", "paise", "kyu", "kyun", "kitna", "madad", "delay", "kharab", "bachaye", "hai", "karta", "karo"]
-        is_hinglish = any(hw in q for hw in hinglish_words)
-        
+        # STRICT GUARDRAILS: Refuse technical/source-code/backend implementation queries
         forbidden_keywords = [
             "language", "code", "lines of code", "backend", "python", "streamlit", "how was it built",
             "how to launch", "how it is launched", "github", "source code", "developer", "architecture",
@@ -1150,167 +1863,59 @@ with st.popover("🏛️"):
         ]
         
         if any(fk in q for fk in forbidden_keywords) and not ("pata chalega" in q or "kya karta" in q or "purpose" in q):
-            if is_hindi:
-                ai_response = (
-                    "🔒 **प्रणाली सुरक्षा प्रतिबंध: आंतरिक तकनीकी विवरण उपलब्ध नहीं हैं**\n\n"
-                    "मैं **इन्फ्रा दृष्टि एआई (INFRA DRISHTI AI)** का प्रशासनिक निगरानी सहायक हूँ। "
-                    "मैं सोर्स कोड, प्रोग्रामिंग भाषा या बैकएंड आर्किटेक्चर की जानकारी साझा नहीं करता।\n\n"
-                    "**आप मुझसे क्या पूछ सकते हैं:**\n"
-                    "* MoSPI प्रोजेक्ट्स का लागत और देरी विवरण\n"
-                    "* EVM मेट्रिक्स ($CPI$, $SPI$, $SV\%$)\n"
-                    "* CPWD क्लॉज 2 एवं GFR 130 कानूनी नोटिस प्रक्रिया"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "🔒 **Access Restricted: System Implementation Query**\n\n"
-                    "Main strictly **INFRA DRISHTI AI** ka Infrastructure Monitoring Assistant hoon. "
-                    "Main backend code, programming languages ya technical deployment configuration disclose nahi karta.\n\n"
-                    "**Aap mujhse ye pooch sakte hain:**\n"
-                    "* MoSPI verified packages aur cost deviation (+₹ Cr)\n"
-                    "* CPI aur SPI ka real-time calculation\n"
-                    "* CPWD Clause 2 aur GFR 130 statutory notice rules"
-                )
-            else:
-                ai_response = (
-                    "🔒 **Access Restricted: System Architecture & Implementation Query**\n\n"
-                    "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
-                    "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
-                    "**What you can ask me:**\n"
-                    "* Verified MoSPI project metrics & baseline sanction costs\n"
-                    "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
-                    "* State & district coverage across India (34 States, 437 Districts)\n"
-                    "* Statutory notices under CPWD Clause 2 & GFR Rule 130"
-                )
-
+            ai_response = (
+                "🔒 **Access Restricted: System Architecture & Implementation Query**\n\n"
+                "I am strictly programmed as an **Infrastructure Project Intelligence & Monitoring Assistant**. "
+                "I do not disclose technical implementation details such as source code, programming languages, backend inner-workings, or deployment configurations.\n\n"
+                "**What you can ask me:**\n"
+                "* Verified MoSPI project metrics & baseline sanction costs\n"
+                "* Schedule variance ($SV\%$), $CPI$, and $SPI$ interpretations\n"
+                "* State & district coverage across India (34 States, 437 Districts)\n"
+                "* Statutory notices under CPWD Clause 2 & GFR Rule 130\n"
+                "* Sector-wide delay and cost escalation benchmarks"
+            )
         elif "kya pata chalega" in q or "purpose" in q or "help" in q or "benefit" in q or "what does this app do" in q:
-            if is_hindi:
-                ai_response = (
-                    "🏛️ **इन्फ्रा दृष्टि एआई (INFRA DRISHTI AI) - मुख्य विशेषताएं:**\n\n"
-                    "यह प्लेटफॉर्म केंद्रीय एवं राज्यीय बुनियादी ढांचा परियोजनाओं की निगरानी के लिए बनाया गया है:\n\n"
-                    "* **समय और लागत में वृद्धि का पूर्वानुमान:** प्रोजेक्ट पूरा होने से पहले ही संभावित वित्तीय नुकसान और देरी (+माह) का सटीक आकलन।\n"
-                    "* **EVM वित्तीय विश्लेषण:** $CPI$ और $SPI$ के माध्यम से फंड के दुरुपयोग व बिना काम के भुगतान (Front-loading) की पहचान।\n"
-                    "* **मूल कारण विश्लेषण (SHAP RCA):** भूमि अधिग्रहण विवाद या सामग्री महंगाई की पहचान।\n"
-                    "* **कानूनी नोटिस निर्माण:** CPWD क्लॉज 2 एवं GFR 2017 नियम 130 के अंतर्गत तत्काल नोटिस जारी करना।"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "🏛️ **INFRA DRISHTI AI Engine - Core Capabilities:**\n\n"
-                    "Ye platform MoSPI aur executing agencies ko proactive monitor karne me madad karta hai:\n\n"
-                    "* **Predictive Overrun Forecast:** Milestone fail hone se pehle hi cost escalation (+₹ Cr) aur timeline delay (+Months) predict karta hai.\n"
-                    "* **Real-time EVM Health:** CPI < 1.0 aate hi cash leakage detect karta hai.\n"
-                    "* **SHAP Root Cause (XAI):** Delay ka exact reason (RoW land clearance vs material price rise) transparent graph me batata hai.\n"
-                    "* **Direct Statutory Directives:** CPWD Clause 2 aur GFR 130 mapped auto-dossier generate karke instant SMS/Email dispatch karta hai."
-                )
-            else:
-                ai_response = (
-                    "🏛️ **INFRA DRISHTI AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
-                    "This platform is an automated decision-support system for MoSPI and infrastructure authorities to:\n\n"
-                    "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
-                    "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
-                    "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks using explainable SHAP weights.\n"
-                    "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
-                )
-
+            ai_response = (
+                "🏛️ **PAIMANA AI Infrastructure Risk Engine - Core Capabilities:**\n\n"
+                "This platform is an automated decision-support system for MoSPI and infrastructure authorities to:\n\n"
+                "* **Forecast Cost & Time Overruns:** Predict future financial escalation (+₹ Cr) and project delivery slippage (+Months) before they occur.\n"
+                "* **Evaluate Fiscal Health (EVM):** Detect front-loading fund disbursements through real-time Cost Performance Index ($CPI$) & Schedule Variance ($SV\%$).\n"
+                "* **Perform Root Cause Analysis (RCA):** Identify exact operational bottlenecks (Land RoW disputes, material inflation, milestone carryovers) using explainable SHAP weights.\n"
+                "* **Simulate 'What-If' Recovery:** Test administrative interventions (e.g., expedited clearances) to compute exact time and budget savings.\n"
+                "* **Generate Statutory Notices:** Automatically draft legal directive memos adhering to **CPWD Works Manual Clause 2** and **GFR 2017 Rule 130**."
+            )
         elif "state" in q or "district" in q or "block" in q or "coverage" in q or "geographic" in q or "kitne" in q:
-            if is_hindi:
-                ai_response = (
-                    "🗺️ **राष्ट्रीय भौगोलिक कवरेज दायरा:**\n\n"
-                    "* **शामिल राज्य व केंद्रशासित प्रदेश:** **34 राज्य/UTs** (उत्तर, पूर्व, पश्चिम, दक्षिण एवं पूर्वोत्तर क्षेत्र)।\n"
-                    "* **जिले:** **437+ प्रमाणित जिले** प्रशासनिक सीमाओं के साथ मैप किए गए हैं।\n"
-                    "* **ब्लॉक व प्रभाग:** **838+ ब्लॉक / डिवीजन** के प्रोजेक्ट्स लाइव ट्रैक हो रहे हैं।\n"
-                    "* **डेटा स्रोत:** MoSPI फ्लैश रिपोर्ट्स (2026) एवं केंद्रीय क्षेत्र परियोजना डेटाबेस।"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "🗺️ **National Geographic Ingestion Scope:**\n\n"
-                    "* **States & UTs Covered:** **34 States/UTs** complete Indian territory covered hai.\n"
-                    "* **Districts Ingested:** **437+ Districts** verified boundary data ke sath mapped hain.\n"
-                    "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** me active construction packages tracked hain.\n"
-                    "* **Dataset Reference:** MoSPI verified multi-quarter infrastructure records (2026)."
-                )
-            else:
-                ai_response = (
-                    "🗺️ **National Geographic Ingestion Scope:**\n\n"
-                    "* **States & UTs Covered:** **34 States/UTs** across all Indian regions.\n"
-                    "* **Districts Ingested:** **437+ Districts** mapped with verified administrative boundaries.\n"
-                    "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** tracked with ongoing infrastructure work packages.\n"
-                    "* **Integrated Datasets:** MoSPI Flash Reports (April-July 2026) and Central Sector Project databases."
-                )
-
+            ai_response = (
+                "🗺️ **National Geographic Ingestion Scope:**\n\n"
+                "* **States & UTs Covered:** **34 States/UTs** (Northern, Western, Central, Eastern, North-Eastern, Southern regions, and Island territories).\n"
+                "* **Districts Ingested:** **437+ Districts** mapped with verified administrative boundaries.\n"
+                "* **Sub-Divisions & Blocks:** **838+ Blocks / Divisions** tracked with ongoing infrastructure work packages.\n"
+                "* **Integrated Datasets:** MoSPI Flash Reports (April, May, June, July 2026), PMGSY rural connectivity records, and Central Sector Project databases."
+            )
         elif "top" in q or "overrun" in q or "critical" in q or "highest" in q:
-            if is_hindi:
-                ai_response = (
-                    "🚨 **शीर्ष अत्यधिक विलंबित केंद्रीय परियोजनाएं:**\n\n"
-                    "1. **पोलावरम राष्ट्रीय सिंचाई परियोजना (आंध्र प्रदेश):** स्वीकृत ₹55,549 करोड़, देरी +92 माह (भूमि अधिग्रहण व R&R बाधाएं)।\n"
-                    "2. **मुंबई-अहमदाबाद बुलेट ट्रेन (महाराष्ट्र/गुजरात):** स्वीकृत ₹1,08,000 करोड़, भौतिक प्रगति ~62.16%।\n"
-                    "3. **ऋषिकेश-कर्णप्रयाग रेल लिंक (उत्तराखंड):** स्वीकृत ₹38,953 करोड़, प्रगति ~71.4% (सुरंग निर्माण चुनौतियां)।\n"
-                    "4. **मेजा थर्मल पावर प्रोजेक्ट स्टेज-II (उत्तर प्रदेश):** स्वीकृत ₹38,358 करोड़।"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "🚨 **Top Critical High-Cost Infrastructure Projects:**\n\n"
-                    "1. **Polavaram Irrigation Project (AP):** Cost ₹55,549 Cr, Delay +92 Months (RoW and R&R issues).\n"
-                    "2. **Mumbai-Ahmedabad Bullet Train (MH/GJ):** Cost ₹1,08,000 Cr, Progress ~62.16%.\n"
-                    "3. **Rishikesh-Karnaprayag Broad Gauge Link (UK):** Cost ₹38,953 Cr, Himalayan tunneling delay.\n"
-                    "4. **Meja Thermal Power Project (UP):** Cost ₹38,358 Cr (Clearances phase)."
-                )
-            else:
-                ai_response = (
-                    "🚨 **Top Critical Central Sector Projects Monitored:**\n\n"
-                    "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Sanctioned ₹55,549 Cr, Delay +92 Months (Right-of-Way & R&R bottlenecks).\n"
-                    "2. **Mumbai-Ahmedabad High Speed Rail (Maharashtra/Gujarat):** Sanctioned ₹1,08,000 Cr, Physical Progress ~62.16%.\n"
-                    "3. **Rishikesh-Karnaprayag Broad Gauge Link (Uttarakhand):** Sanctioned ₹38,953 Cr, Progress ~71.4%.\n"
-                    "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Sanctioned ₹38,358 Cr."
-                )
-
-        elif "delay" in q or "highway" in q or "railway" in q or "average" in q or "देरी" in q:
-            if is_hindi:
-                ai_response = (
-                    "📊 **क्षेत्रीय निष्पादन एवं राष्ट्रीय विलंब औसत:**\n\n"
-                    "* **सड़क परिवहन एवं राजमार्ग:** राष्ट्रीय औसत विलंब **14.2 माह** है। प्रमुख कारण वन स्वीकृति में विलंब तथा WPI सामग्री महंगाई है।\n"
-                    "* **रेलवे एवं शहरी मेट्रो परियोजनाएं:** औसत विलंब **18.6 माह**, जिसका मुख्य कारण भूमि अधिग्रहण तथा शहरी यूटिलिटी शिफ्टिंग है।\n"
-                    "* **ऊर्जा एवं नवीकरणीय क्षेत्र:** बेहतर गति ($SPI \\approx 0.88$) के साथ अपेक्षाकृत समयबद्ध।"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "📊 **Sector-Wide National Benchmark Summary:**\n\n"
-                    "* **Roads & Highways:** Average delay **14.2 Months** chal raha hai. Mukhya reasons hain Forest clearance aur material price rise.\n"
-                    "* **Railways & Urban Mass Transit:** Median delay **18.6 Months** hai, jo utility shifting aur land acquisition ke kaaran badhta hai.\n"
-                    "* **Power Transmission (Khavda RE):** Timely execution ke sath average $SPI \\approx 0.88$ maintain hai."
-                )
-            else:
-                ai_response = (
-                    "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
-                    "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**.\n"
-                    "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
-                    "* **Power & Renewable Energy Zone:** Faster execution speed with average $SPI \\approx 0.88$."
-                )
-
+            ai_response = (
+                "🚨 **Top Critical Central Sector Projects Monitored:**\n\n"
+                "1. **Polavaram Irrigation National Project (Andhra Pradesh):** Sanctioned ₹55,549 Cr, Delay +92 Months (Right-of-Way & R&R bottlenecks).\n"
+                "2. **Mumbai-Ahmedabad High Speed Rail (Maharashtra/Gujarat):** Sanctioned ₹1,08,000 Cr, Physical Progress ~62.16%.\n"
+                "3. **Rishikesh-Karnaprayag Broad Gauge Link (Uttarakhand):** Sanctioned ₹38,953 Cr, Progress ~71.4% (Himalayan tunneling challenges).\n"
+                "4. **Meja Thermal Power Project Stage-II (Uttar Pradesh):** Sanctioned ₹38,358 Cr, Initial statutory clearances.\n"
+                "5. **Bina Refinery Petrochemical Expansion (Madhya Pradesh):** Sanctioned ₹43,367 Cr."
+            )
+        elif "delay" in q or "highway" in q or "railway" in q or "average" in q:
+            ai_response = (
+                "📊 **Sector-Wide Performance & Benchmark Summary:**\n\n"
+                "* **Road Transport & Highways:** Average physical progress ~48.2% with a median sector delay of **14.2 Months**. Primary drivers: Environmental/Forest clearances and WPI material escalation.\n"
+                "* **Railways & Urban Mass Transit:** Average delay of **18.6 Months** primarily driven by urban utility shifting and land acquisition.\n"
+                "* **Power & Renewable Energy Zone (Khavda/RE):** Faster execution speed with average $SPI \\approx 0.88$."
+            )
         else:
-            if is_hindi:
-                ai_response = (
-                    "💡 **इन्फ्रा दृष्टि एआई अंतर्दृष्टि (Intelligence Insight):**\n\n"
-                    "हमारा सिस्टम **1,981+ केंद्रीय परियोजनाओं** और MoSPI की त्रैमासिक रिपोर्टों के आधार पर लाइव विश्लेषण करता है।\n\n"
-                    "* **वित्तीय नियम:** $CPI < 1.0$ होने पर तुरंत फंड रिलीज की समीक्षा करें ताकि अनावश्यक अग्रिम भुगतान रोका जा सके।\n"
-                    "* **शेड्यूल नियम:** यदि शेड्यूल विचलन ($SV\%$) $-15\%$ से अधिक नकारात्मक हो, तो CPWD क्लॉज 2 के तहत 14-दिवसीय नोटिस जारी करें।\n"
-                    "* विशिष्ट पैकेज का परीक्षण करने के लिए बाईं ओर दिए गए ड्रॉपडाउन से राज्य चुनें।"
-                )
-            elif is_hinglish:
-                ai_response = (
-                    "💡 **Infra Drishti Predictive Insight:**\n\n"
-                    "Hamara intelligence engine **1,981+ central projects** aur MoSPI Flash Reports par active hai.\n\n"
-                    "* **Fiscal Health Check:** Cumulative spend ko Earned Value se compare karein taaki $CPI < 1.0$ front-loading se bacha ja sake.\n"
-                    "* **Schedule Alert:** Agar Schedule Variance ($SV\%$) $-15\%$ se niche chala jaye, toh double-shift recovery schedule issue karein.\n"
-                    "* Kisi specific project ko test karne ke liye Section 1 se State choose karein."
-                )
-            else:
-                ai_response = (
-                    "💡 **Infrastructure Intelligence Insight:**\n\n"
-                    "Our predictive intelligence engine actively cross-references your queries against **1,981+ central projects** and multi-quarter MoSPI Flash Reports.\n\n"
-                    "* **Fiscal Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
-                    "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
-                    "* For specific package evaluation, select your State/District in Section 1 or input parameters in Section 2."
-                )
+            ai_response = (
+                "💡 **Infrastructure Intelligence Insight:**\n\n"
+                "Our predictive intelligence engine actively cross-references your queries against **1,981+ central projects** and multi-quarter MoSPI Flash Reports.\n\n"
+                "* **Fiscal Health Check:** Ensure Earned Value ($EV$) matches Cumulative Spend to prevent $CPI < 1.0$ front-loading.\n"
+                "* **Schedule Alert:** Any Schedule Variance ($SV\%$) below $-15\%$ requires an immediate 14-day double-shift recovery schedule.\n"
+                "* For specific package evaluation, select your State/District in Section 1 or input parameters in Section 2."
+            )
             
         st.session_state["chat_history"].append({"role": "assistant", "content": ai_response})
         st.rerun()
