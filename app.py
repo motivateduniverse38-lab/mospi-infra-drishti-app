@@ -573,8 +573,8 @@ if "splash_done" not in st.session_state:
                 animation: progress 4.0s linear forwards;
             }
             @keyframes progress {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(0%); }
+                0% {{ transform: translateX(-100%); }}
+                100% {{ transform: translateX(0%); }}
             }
             @keyframes flyTowardsScreen {
                 0% { transform: scale(0.95); opacity: 0; }
