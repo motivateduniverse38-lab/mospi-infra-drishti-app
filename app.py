@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 0. Global Security CSS Injection & Ultimate White-BG Black-Text Input Focus Fix
+# 0. Global Security CSS Injection, Dark Background & White Text Engine
 st.markdown("""
 <style>
     /* Completely hide Streamlit Header, Toolbar, GitHub Badges & Manage App */
@@ -41,29 +41,50 @@ st.markdown("""
     div[data-testid="stStatusWidget"] {display: none !important;}
     section[data-testid="stSidebar"] {display: none !important;}
 
-    /* GLOBAL FONT */
+    /* 1. GLOBAL BLACK THEME & ALL TEXT WHITE (EXCEPT BRAND TITLE) */
     html, body, [class*="css"], .stApp {
         font-family: 'Arial', sans-serif !important;
+        background-color: #0B0F19 !important;
+        color: #FFFFFF !important;
     }
 
-    /* LABELS VISIBILITY */
+    h1, h2, h3, h4, h5, h6, p, span, div, label {
+        color: #FFFFFF !important;
+    }
+
     label, [data-testid="stWidgetLabel"] p {
-        color: #0F172A !important;
+        color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: 14px !important;
         letter-spacing: 0.2px !important;
     }
 
-    /* =========================================================================
-       POINT 1: INPUT/SELECT CLICK & ACTIVE STATE FIX (WHITE BG + BLACK TEXT)
-       ========================================================================= */
-    /* Selectbox Default & Active */
-    div[data-baseweb="select"],
+    /* BRAND TITLE PRESERVES DISTINCT ACCENT */
+    .brand-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        color: #38BDF8 !important;
+        margin-top: -12px;
+        margin-bottom: 0px;
+    }
+    .brand-subtitle {
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #94A3B8 !important;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    /* 2. INPUTS & SELECTBOXES: CLICK/FOCUS PE WHITE BG + SHARP BLACK TEXT */
     div[data-baseweb="select"] > div,
     div[data-baseweb="select"]:focus-within > div {
         background-color: #FFFFFF !important;
         background: #FFFFFF !important;
-        border: 1.5px solid #0284C7 !important;
+        border: 1.5px solid #38BDF8 !important;
         border-radius: 6px !important;
     }
     div[data-baseweb="select"] *,
@@ -73,7 +94,7 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* All Number Inputs, Text Inputs, and TextAreas on Click/Focus */
+    /* Inputs on Click/Type: White Background & Black Text */
     div[data-baseweb="input"],
     div[data-baseweb="input"] > div,
     div[data-baseweb="input"]:focus-within,
@@ -85,10 +106,10 @@ st.markdown("""
         color: #000000 !important;
         font-weight: 700 !important;
         font-size: 14px !important;
-        border-color: #0284C7 !important;
+        border-color: #38BDF8 !important;
     }
 
-    /* Dropdown Popover List when Opened */
+    /* Dropdown Options Popup List: Pure White Background */
     div[data-baseweb="popover"], 
     div[data-baseweb="popover"] > div,
     ul[data-testid="stSelectboxVirtualList"], 
@@ -99,7 +120,7 @@ st.markdown("""
         border: 1.5px solid #CBD5E1 !important;
     }
 
-    /* Options inside Dropdown */
+    /* Dropdown Item Text: Pure Black */
     ul[data-testid="stSelectboxVirtualList"] li, 
     div[data-baseweb="menu"] div,
     div[data-baseweb="menu"] li,
@@ -112,7 +133,6 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* Option Hover */
     ul[data-testid="stSelectboxVirtualList"] li:hover,
     div[data-baseweb="menu"] div:hover,
     div[role="option"]:hover {
@@ -125,19 +145,20 @@ st.markdown("""
 if "scroll_trigger" not in st.session_state:
     st.session_state["scroll_trigger"] = 0
 
-active_bg = "#F8FAFC"
-active_card_bg = "#FFFFFF"
-active_text = "#0F172A"
-active_subtext = "#475569"
-active_border = "#CBD5E1"
-active_accent = "#0284C7"
+# Black Theme Dark Palette
+active_bg = "#0B0F19"
+active_card_bg = "#111827"
+active_text = "#FFFFFF"
+active_subtext = "#94A3B8"
+active_border = "#334155"
+active_accent = "#38BDF8"
 
-plot_text_color = "#0F172A"
-plot_grid_color = "#E2E8F0"
-tab_text_color = "#0F172A"
-notice_bg = "#FFFFFF"
-notice_text = "#0F172A"
-notice_border = "#0284C7"
+plot_text_color = "#FFFFFF"
+plot_grid_color = "#1E293B"
+tab_text_color = "#FFFFFF"
+notice_bg = "#030712"
+notice_text = "#FFFFFF"
+notice_border = "#38BDF8"
 font_base_size = "14.5px"
 
 def dispatch_realtime_alert(contact_target, project_name, pkg_id, cpri_val, delay_val, overrun_val, alert_tag):
@@ -222,7 +243,7 @@ if "splash_done" not in st.session_state:
                 font-weight: 900;
                 letter-spacing: 2px;
                 color: {active_accent};
-                text-shadow: 0 0 30px rgba(2, 132, 199, 0.6);
+                text-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
                 margin-bottom: 8px;
                 animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
                 transform-origin: center center;
@@ -231,7 +252,7 @@ if "splash_done" not in st.session_state:
                 font-size: 14px;
                 font-weight: 700;
                 letter-spacing: 3px;
-                color: #475569;
+                color: #94A3B8;
                 text-transform: uppercase;
                 margin-bottom: 25px;
                 animation: fadeOutElements 4.8s ease-in-out forwards;
@@ -239,7 +260,7 @@ if "splash_done" not in st.session_state:
             .splash-loader {{
                 width: 220px;
                 height: 4px;
-                background-color: #E2E8F0;
+                background-color: #1E293B;
                 border-radius: 4px;
                 overflow: hidden;
                 position: relative;
@@ -287,36 +308,25 @@ st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
-    html, body, [class*="css"], .stApp {{
-        font-family: 'Arial', 'Inter', sans-serif !important;
-        font-size: {font_base_size};
-        background-color: {active_bg} !important;
-        color: {active_text} !important;
-    }}
-
-    h1, h2, h3, h4, h5, h6, p, span, div, label {{
-        color: {active_text} !important;
-    }}
-
     .stButton > button {{
-        background-color: #FFFFFF !important;
-        color: {active_text} !important;
+        background-color: #1E293B !important;
+        color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: 13px !important;
         border: 1.5px solid {active_accent} !important;
         border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
         padding: 8px 14px !important;
         transition: all 0.2s ease !important;
     }}
     .stButton > button:hover {{
         background-color: {active_accent} !important;
-        color: #FFFFFF !important;
+        color: #0B0F19 !important;
         border-color: {active_accent} !important;
     }}
 
     button[data-baseweb="tab"] {{
-        color: {tab_text_color} !important;
+        color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: 13.5px !important;
         border-bottom: 2px solid transparent !important;
@@ -326,24 +336,6 @@ st.markdown(f"""
         border-bottom: 2px solid {active_accent} !important;
     }}
 
-    .brand-title {{
-        text-align: center;
-        font-size: 32px;
-        font-weight: 900;
-        letter-spacing: 1.5px;
-        color: {active_accent} !important;
-        margin-top: -12px;
-        margin-bottom: 0px;
-    }}
-    .brand-subtitle {{
-        text-align: center;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        color: {active_subtext} !important;
-        text-transform: uppercase;
-        margin-bottom: 18px;
-    }}
     .section-title {{
         font-size: 13px;
         font-weight: 800;
@@ -356,17 +348,17 @@ st.markdown(f"""
     }}
 
     .project-card-white {{
-        background-color: #FFFFFF;
-        color: {active_text} !important;
+        background-color: #111827;
+        color: #FFFFFF !important;
         border: 1.5px solid {active_border};
         border-radius: 10px;
         padding: 14px;
         margin-bottom: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }}
     .project-code-badge {{
-        background-color: #D1FAE5;
-        color: #065F46 !important;
+        background-color: #064E3B;
+        color: #34D399 !important;
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
         font-weight: 700;
@@ -376,19 +368,19 @@ st.markdown(f"""
         margin: 4px 0;
     }}
     .contractor-text {{
-        color: #059669 !important;
+        color: #34D399 !important;
         font-weight: 800;
         font-size: 13px;
         margin-bottom: 6px;
     }}
     .metric-dot-row {{
-        color: {active_text} !important;
+        color: #FFFFFF !important;
         font-size: 12.5px;
         font-weight: 600;
         margin-bottom: 5px;
     }}
     .metric-dot-green {{
-        color: #059669 !important;
+        color: #34D399 !important;
         font-weight: 700;
         font-family: 'JetBrains Mono', monospace;
     }}
@@ -405,13 +397,13 @@ st.markdown(f"""
     }}
 
     .sidebar-note {{
-        background-color: {active_card_bg};
+        background-color: #111827;
         border: 1px solid {active_border};
         border-left: 3.5px solid {active_accent};
         padding: 10px 12px;
         border-radius: 6px;
         font-size: 12px;
-        color: {active_text} !important;
+        color: #FFFFFF !important;
         margin-top: 10px;
         line-height: 1.45;
     }}
@@ -420,13 +412,13 @@ st.markdown(f"""
     }}
 
     .provenance-card {{
-        background-color: {active_card_bg};
+        background-color: #111827;
         border: 1px solid {active_border};
         border-left: 3.5px solid #10B981;
         padding: 11px 12px;
         border-radius: 8px;
         font-size: 11.5px;
-        color: {active_text} !important;
+        color: #FFFFFF !important;
         margin-top: 10px;
         line-height: 1.5;
     }}
@@ -435,7 +427,7 @@ st.markdown(f"""
     }}
 
     .rca-table-container {{
-        background-color: {active_card_bg};
+        background-color: #111827;
         border: 1.5px solid {active_border};
         border-radius: 8px;
         padding: 12px;
@@ -446,10 +438,10 @@ st.markdown(f"""
         width: 100%;
         border-collapse: collapse;
         font-size: 12.5px;
-        color: {active_text};
+        color: #FFFFFF;
     }}
     .rca-table th {{
-        background-color: #F1F5F9;
+        background-color: #1E293B;
         color: {active_accent};
         padding: 10px;
         font-weight: 800;
@@ -462,6 +454,7 @@ st.markdown(f"""
         border-bottom: 1px solid {active_border};
         vertical-align: top;
         line-height: 1.5;
+        color: #FFFFFF !important;
     }}
 
     div.stPopover {{
@@ -473,7 +466,7 @@ st.markdown(f"""
         display: block !important;
     }}
     div.stPopover > button {{
-        background: linear-gradient(135deg, #0284C7, #0369A1) !important;
+        background: linear-gradient(135deg, {active_accent}, #0284C7) !important;
         color: #FFFFFF !important;
         font-size: 24px !important;
         width: 58px !important;
@@ -489,28 +482,28 @@ st.markdown(f"""
         align-items: center !important;
         justify-content: center !important;
         border: 2px solid #FFFFFF !important;
-        box-shadow: 0 8px 24px rgba(2, 132, 199, 0.45) !important;
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45) !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         cursor: pointer !important;
     }}
     div.stPopover > button:hover {{
         transform: scale(1.1) !important;
-        box-shadow: 0 12px 30px rgba(2, 132, 199, 0.7) !important;
+        box-shadow: 0 12px 30px rgba(56, 189, 248, 0.7) !important;
     }}
 
     div[data-testid="stPopoverBody"] {{
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-        border: 1.5px solid #CBD5E1 !important;
+        background-color: #111827 !important;
+        color: #FFFFFF !important;
+        border: 1.5px solid {active_border} !important;
         border-radius: 12px !important;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.2) !important;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
         width: 370px !important;
         max-width: 90vw !important;
     }}
     
     .gemini-bubble-user {{
-        background-color: #E2E8F0;
-        color: #0F172A;
+        background-color: #1E293B;
+        color: #FFFFFF;
         padding: 8px 12px;
         border-radius: 12px 12px 2px 12px;
         margin-bottom: 8px;
@@ -520,20 +513,20 @@ st.markdown(f"""
         font-weight: 600;
     }}
     .gemini-bubble-ai {{
-        background-color: #F0F9FF;
-        color: #0F172A;
-        border-left: 3.5px solid #0284C7;
+        background-color: #0F172A;
+        color: #FFFFFF;
+        border-left: 3.5px solid {active_accent};
         padding: 10px 14px;
         border-radius: 12px 12px 12px 2px;
         margin-bottom: 12px;
         font-size: 12.5px;
         line-height: 1.55;
-        border: 1px solid #BAE6FD;
+        border: 1px solid {active_border};
         font-weight: 500;
     }}
 
     .alert-dispatch-card {{
-        background-color: {active_card_bg};
+        background-color: #111827;
         border: 1.5px solid {active_border};
         border-radius: 10px;
         padding: 18px;
@@ -823,7 +816,7 @@ GEO_HIERARCHY = {
         "Deoghar": ["AIIMS Deoghar Corridor", "Deoghar Sadar", "Madhupur"],
         "Dumka": ["Dumka Sadar", "Jharudih", "Shikaripara"],
         "Godda": ["Adani Godda Power Plant Zone", "Godda Sadar", "Mahagama"],
-        "Sahibganj": ["Sahibganj Multi-Modal Terminal", "Rajmeta", "Barharwa"],
+        "Sahibganj": ["Sahibganj Multi-Modal Terminal", "Rajmahal", "Barharwa"],
         "Palamu": ["Daltonganj", "Medininagar", "Hussainabad", "Chhatarpur"],
         "Latehar": ["Tori-Chandwa line", "Latehar Sadar", "Mahuadanr", "Balumath"],
         "West Singhbhum": ["Chaibasa", "Chakradharpur Rail Division", "Noamundi", "Gua"]
@@ -1242,15 +1235,17 @@ with col_geo:
 
     demo_btn = st.button("🚨 Load Motihari Chhatauni Demo Preset", use_container_width=True)
     
+    # Left Note 1
     st.markdown("""
     <div class="sidebar-note">
         <b>💡 Quick Evaluation Mode:</b> If you prefer not to enter project metrics manually, click the <b>'Load Motihari Chhatauni Demo Preset'</b> button above to instantly evaluate a live infrastructure package and test the predictive risk workflow.
     </div>
     """, unsafe_allow_html=True)
 
+    # Left Note 2 (Updated Heading: DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS)
     st.markdown(f"""
     <div class="provenance-card">
-        <b>🟢 100% REAL GOVERNMENT DATA (MoSPI Verified)</b><br>
+        <b>🟢 DATA SOURCED FROM MOSPI PUBLIC FLASH REPORTS</b><br>
         Directly sourced from the Ministry of Statistics and Programme Implementation (MoSPI) infrastructure datasets across all 34 States/UTs:<br>
         • <b>Project Name & Administrative Location</b> (e.g., Motihari Sadar, Khajuraho, Bharmaur, Dhamra)<br>
         • <b>Package ID / Ministry Code</b> (e.g., MOSPI_BIH_227519)<br>
@@ -1537,7 +1532,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         fig_s.add_trace(go.Bar(name='Actual Ground Progress (%)', x=['Schedule Horizon'], y=[res['inp_phys']], marker=dict(color='#10B981', line=dict(color='#059669', width=1.5)), width=0.35))
         fig_s.update_layout(
             barmode='group',
-            template="plotly_white",
+            template="plotly_dark",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
             font=dict(color=plot_text_color, family="Arial"),
@@ -1562,7 +1557,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
         shap_df = pd.DataFrame(list(shap_factors.items()), columns=['Parameter', 'Weight (%)']).sort_values(by='Weight (%)', ascending=True)
         fig_bar = px.bar(shap_df, x='Weight (%)', y='Parameter', orientation='h', color='Weight (%)', color_continuous_scale='Reds')
         fig_bar.update_layout(
-            template="plotly_white",
+            template="plotly_dark",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
             font=dict(color=plot_text_color, family="Arial"),
@@ -1635,7 +1630,7 @@ if st.session_state['ai_evaluated'] and st.session_state['cached_predictions'] i
 
         fig_bench.update_layout(
             barmode='group',
-            template="plotly_white",
+            template="plotly_dark",
             paper_bgcolor=active_card_bg,
             plot_bgcolor=active_card_bg,
             font=dict(color=plot_text_color, family="Arial"),
@@ -1708,7 +1703,7 @@ Date: {current_date_str}
             st.markdown(f"""
             <div style="background-color: {active_card_bg}; padding: 15px; border-radius: 8px; border-left: 4px solid #10B981; border: 1.5px solid {active_border};">
                 <h5 style="color: #10B981 !important; margin:0; font-weight: 700;">🎯 Interventional Recovery Projection:</h5>
-                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: {active_text} !important;">
+                <p style="margin-top: 8px; font-size: 13.5px; line-height: 1.6; color: #FFFFFF !important;">
                 • Recoverable Timeline: <b>{res['pred_delay_months'] - recovered_delay:.1f} Months Saved</b> (Revised Delay: +{recovered_delay:.1f} M)<br>
                 • Projected Fiscal Savings: <b>₹{recovered_saving_cr:.2f} Crores</b> (Revised Cost Overrun: +{recovered_cost:.1f}%)<br>
                 • Revised Status: <b style="color: {'#10B981' if recovered_delay < 3 else '#F59E0B'} !important;">{'GREEN (RECOVERED)' if recovered_delay < 3 else 'AMBER (MANAGEABLE)'}</b>
@@ -1725,11 +1720,11 @@ Date: {current_date_str}
         
         st.markdown(f"""
         <div class="alert-dispatch-card">
-            <div style="font-size: 13.5px; font-weight: 700; color: {active_text}; margin-bottom: 6px;">
+            <div style="font-size: 13.5px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;">
                 📌 Target Package: <span style="color: {active_accent}; font-weight: 800;">{proj_title_disp}</span>
             </div>
             <div style="font-size: 12.5px; color: {active_subtext}; margin-bottom: 8px;">
-                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: {active_text};">{pkg_code_disp}</span> | 
+                Package ID: <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #FFFFFF;">{pkg_code_disp}</span> | 
                 Current Appraisal Status: <span style="color: {res['alert_bg']}; font-weight: 800;">{res['alert_badge']} ({int(res['cpri_score'])}/100)</span>
             </div>
         </div>
