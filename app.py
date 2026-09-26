@@ -23,6 +23,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
 st.set_option("client.toolbarMode", "minimal")
 
 # 0. Global Security CSS Injection
@@ -219,10 +220,10 @@ st.markdown("""
 
     /* Layer 1 auth buttons */
     .layer1-auth-wrap button {
+        white-space: nowrap !important;
         min-height: 40px !important;
         border-radius: 9px !important;
         font-weight: 800 !important;
-        white-space: nowrap !important;
     }
 
     .section-title {
@@ -425,7 +426,7 @@ st.markdown("""
 
     /* LAYER 1 LANDING SCREEN */
     .landing-shell { max-width: 1500px; margin: 0 auto; padding: 4px 6px 35px 6px; }
-    .landing-title { text-align: left !important; margin-top: 0 !important; color: #38BDF8 !important; }
+    .landing-title { text-align: left !important; margin-top: 0 !important; color: #00BFFF !important; }
     .layer1-divider { height: 1px; background: #334155; margin: 4px 0 18px 0; }
     .landing-section-title { font-size: 14px !important; margin-bottom: 12px !important; }
     .layer1-note { background:#111827; border:1px solid #334155; border-left:4px solid #38BDF8; border-radius:10px; padding:13px 15px; color:#CBD5E1 !important; font-size:12px; line-height:1.5; min-height:45px; }
@@ -564,8 +565,6 @@ if "splash_done" not in st.session_state:
             [data-testid="stHeader"], 
             [data-testid="stToolbar"], 
             [data-testid="stToolbarActions"],
-            [data-testid="stStatusWidget"],
-            [data-testid="stDecoration"],
             .stAppDeployButton,
             button[title="View source on GitHub"], 
             button[title*="GitHub"],
@@ -595,8 +594,8 @@ if "splash_done" not in st.session_state:
                 font-size: 56px;
                 font-weight: 900;
                 letter-spacing: 2px;
-                color: #00BFFF;
-                text-shadow: 0 0 30px rgba(0, 191, 255, 0.6);
+                color: {active_accent};
+                text-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
                 margin-bottom: 8px;
                 animation: flyTowardsScreen 4.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
                 transform-origin: center center;
@@ -1874,6 +1873,7 @@ def render_layer2():
             st.session_state['sl_wpi'] = float(preset_rec['WPI_Inflation_Index'])
             st.session_state['ai_evaluated'] = False
             st.session_state['cached_predictions'] = None
+            st.session_state["_prediction_project_key"] = "DEMO_PRESET|Motihari Chhatauni Flyover & Junction Improvement Works"
             st.rerun()
 
     # COLUMN 2: Details About Ongoing Projects
@@ -1910,6 +1910,25 @@ def render_layer2():
                 project_options = [str(r["Project_Name"]) for r in matched_projects]
                 selected_inspect = st.selectbox("Select Construction Work to Inspect:", project_options, index=0)
                 active_row = next((r for r in matched_projects if str(r["Project_Name"]) == selected_inspect), matched_projects[0])
+
+                # Keep Section 2 synchronized with the currently selected project.
+                # This prevents the previous project's inputs/prediction from being reused.
+                current_project_key = f"{active_st}|{active_dist}|{active_blk}|{active_sec}|{selected_inspect}"
+                if st.session_state.get("_prediction_project_key") != current_project_key:
+                    row_dict = active_row.to_dict()
+                    st.session_state["selected_record"] = row_dict
+                    st.session_state["inp_cost"] = float(row_dict["Original_Cost_Cr"])
+                    st.session_state["inp_dur"] = int(row_dict["Original_Duration"])
+                    st.session_state["inp_elap"] = int(row_dict["Elapsed_Months"])
+                    st.session_state["inp_sp"] = float(row_dict["Cumulative_Spend_Cr"])
+                    st.session_state["box_phys"] = float(row_dict["Physical_Progress_Pct"])
+                    st.session_state["box_ms"] = int(row_dict["Delayed_Milestones"])
+                    st.session_state["box_rev"] = int(row_dict.get("Revisions_Count", 0))
+                    st.session_state["sl_land"] = float(row_dict["Land_Risk_Score"])
+                    st.session_state["sl_wpi"] = float(row_dict["WPI_Inflation_Index"])
+                    st.session_state["ai_evaluated"] = False
+                    st.session_state["cached_predictions"] = None
+                    st.session_state["_prediction_project_key"] = current_project_key
 
                 st.markdown(f"""
                 <div class="project-card-white">
@@ -1953,6 +1972,7 @@ def render_layer2():
                     st.session_state['sl_wpi'] = float(row_dict['WPI_Inflation_Index'])
                     st.session_state['ai_evaluated'] = False
                     st.session_state['cached_predictions'] = None
+                    st.session_state["_prediction_project_key"] = f"{active_st}|{active_dist}|{active_blk}|{active_sec}|{str(row_dict['Project_Name'])}"
                     st.rerun()
 
     # COLUMN 3: Predict Project Future Overview
